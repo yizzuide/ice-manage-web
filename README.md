@@ -23,3 +23,9 @@
    npx commitizen init cz-conventional-changelog --D --save-exact
    // 提交命令
    npx cz
+6. 提交验证
+   npm i @commitlint/config-conventional @commitlint/cli -D
+   // 配置文件
+   commit.config.js
+   // 创建 git hook
+   npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
