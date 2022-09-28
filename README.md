@@ -17,3 +17,9 @@
    npm i -D vue-eslint-parser prettier eslint @typescript-eslint/parser typescript
 4. 添加 git hook，并修改 pre-commit 的运行命令为：npm run lint-fix
    npx husky-init && npm install
+5. 安装提交模板命令
+   npm i commitizen -D
+   // 初始化
+   npx commitizen init cz-conventional-changelog --D --save-exact
+   // 提交命令
+   npx cz
