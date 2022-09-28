@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.ts,.vue",
     "lint-fix": "eslint . --ext .js,.ts,.vue --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "commit": "cz"
   },
   "dependencies": {
     "animate.css": "^4.1.1",
