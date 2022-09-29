@@ -1,18 +1,22 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  type RouteRecordRaw,
+} from "vue-router";
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   { path: "/", redirect: "/index" },
-  { path: "/:pathMatch(.*)", redirect: "/index" },
   {
     path: "/index",
     name: "index",
-    component: () => import("../components/index/IndexPage.vue"),
+    component: () => import("@/components/index/IndexPage.vue"),
   },
   {
     path: "/login",
     name: "login",
-    component: () => import("../components/login/LoginPage.vue"),
+    component: () => import("@/components/login/LoginPage.vue"),
   },
+  { path: "/:pathMatch(.*)", redirect: "/" },
 ];
 
 const router = createRouter({

@@ -1,12 +1,16 @@
 <template>
-  <div>Login: {{ a }}</div>
-  <button @click="a++">a++</button>
+  <div>Login: {{ userStore.name }}</div>
+  <button @click="changeName">修改</button>
 </template>
 
 <script setup lang="ts">
-import { $ref } from "vue/macros";
+import useUserStore from "./store/userStore";
 
-const a = $ref(0);
+const userStore = useUserStore();
+
+function changeName() {
+  userStore.name = "yoy";
+}
 </script>
 
 <style scoped></style>

@@ -25,7 +25,7 @@
    npx cz
 6. 提交验证
    npm i @commitlint/config-conventional @commitlint/cli -D
-   // 配置文件
-   commit.config.js
+   // 配置文件(cjs：CommonJS)
+   commit.config.cjs
    // 创建 git hook
    npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
