@@ -18,11 +18,16 @@ function changeName() {
 const input = ref("");
 
 useRequest()
-  .request("/api/sundial/getAll", "get", undefined, {
-    onRequest: (config) => {
-      const { url, method } = config;
-      console.log("当前请求拦截: ", url);
-      return config;
+  .request({
+    url: "/api/sundial/getAll",
+    method: "get",
+    showLoading: true,
+    interceptor: {
+      onRequest: (config) => {
+        const { url, method } = config;
+        console.log("当前请求拦截: ", url, "showLoading: ", config.showLoading);
+        return config;
+      },
     },
   })
   .then((data) => {

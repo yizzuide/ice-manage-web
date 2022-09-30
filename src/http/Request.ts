@@ -14,24 +14,31 @@ export function useRequest(): HttpRequest {
 export function Request(_: App) {
   let loading: LoadingInstance;
   HttpRequest.setGlobalInterceptor({
-    onRequest(config: AxiosRequestConfig) {
-      console.log("全局拦截: ", config.url);
-      loading = ElLoading.service({
-        lock: true,
-        text: "请求加载中...",
-        background: "rgba(0, 0, 0, 0.1)",
-      });
+    onRequest(config) {
+      console.log(
+        "全局拦截: ",
+        config.url,
+        "showLoading: ",
+        config.showLoading
+      );
+      if (config.showLoading) {
+        loading = ElLoading.service({
+          lock: true,
+          text: "请求加载中...",
+          background: "rgba(0, 0, 0, 0.1)",
+        });
+      }
       return config;
     },
     onResponse(response) {
-      loading.close();
+      loading?.close();
       if (response.data.code !== 0) {
         console.log("请求出错：", response.data.message);
       }
       return response;
     },
     onResponseCatch(error) {
-      loading.close();
+      loading?.close();
       if (error.response.status >= 400) {
         console.log("服务器响应出错：", error);
       }
@@ -45,7 +52,7 @@ export function Request(_: App) {
     interceptors: {
       onRequest(config) {
         const { url, method } = config;
-        console.log("实例拦截: ", url);
+        console.log("实例拦截: ", url, "showLoading: ", config.showLoading);
 
         // 添加token header
         const token = useLocalStorage("token");

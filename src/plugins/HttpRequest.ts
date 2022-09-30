@@ -3,11 +3,12 @@ import type {
   RequestConfig,
   IHttpRequest,
   RequestInterceptor,
+  SimpleRequestConfig,
 } from "./http-request";
 
 export default class HttpRequest implements IHttpRequest {
-  axiosInstance: AxiosInstance;
   static globalInterceptor?: RequestInterceptor;
+  axiosInstance: AxiosInstance;
   constructor(config?: RequestConfig) {
     this.axiosInstance = axios.create({
       ...config,
@@ -40,48 +41,34 @@ export default class HttpRequest implements IHttpRequest {
     HttpRequest.globalInterceptor = interceptor;
   }
 
-  request<T>(
-    url: string,
-    method: string,
-    params?: object,
-    interceptor?: RequestInterceptor
-  ): Promise<T> {
+  request<T>(requestConfig: SimpleRequestConfig): Promise<T> {
     let config = {
-      url: url,
-      method: method,
-      params: method.toLowerCase() === "get" ? params : null,
-      data: method.toLocaleLowerCase() !== "get" ? params : null,
-    } as AxiosRequestConfig;
+      url: requestConfig.url,
+      method: requestConfig.method,
+      params:
+        requestConfig.method.toLowerCase() === "get"
+          ? requestConfig.params
+          : null,
+      data:
+        requestConfig.method.toLocaleLowerCase() !== "get"
+          ? requestConfig.params
+          : null,
+      showLoading: requestConfig.showLoading ?? false,
+    } as RequestConfig;
     // 当前请求前的拦截
-    if (interceptor?.onRequest) {
-      config = interceptor.onRequest(config);
+    if (requestConfig.interceptor?.onRequest) {
+      config = requestConfig.interceptor.onRequest(config);
     }
     return new Promise((resolve, reject) => {
       this.axiosInstance
         .request(config)
         .then((result) => {
           // 当前请求响应后的拦截
-          if (interceptor?.onResponse) {
-            result = interceptor.onResponse(result);
+          if (requestConfig.interceptor?.onResponse) {
+            result = requestConfig.interceptor.onResponse(result);
           }
           resolve(result.data);
         })
-        .catch((err) => reject(err));
-    });
-  }
-  get<T>(url: string, params?: object): Promise<T> {
-    return new Promise((resolve, reject) => {
-      this.axiosInstance
-        .get(url, { params })
-        .then((result) => resolve(result.data))
-        .catch((err) => reject(err));
-    });
-  }
-  post<T>(url: string, data: object): Promise<T> {
-    return new Promise((resolve, reject) => {
-      this.axiosInstance
-        .post(url, { data })
-        .then((result) => resolve(result.data))
         .catch((err) => reject(err));
     });
   }
