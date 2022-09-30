@@ -29,3 +29,10 @@
    commit.config.cjs
    // 创建 git hook
    npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
+
+# Element Plus
+
+1. 在非 vue 文件中使用时自动导入样式
+   npm i vite-plugin-style-import consola -D
+2. 使用 sass 更改主题颜色
+   npm i sass -D

@@ -7,7 +7,3 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any> | FunctionalComponent
   export default component
 }
-
-declare module '*.jpg'
-declare module '*.png'
-declare module '*.gif'

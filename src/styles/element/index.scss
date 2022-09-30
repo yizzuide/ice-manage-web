@@ -1,0 +1,8 @@
+// 重写element-plus主题样式
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+  $colors: (
+    "primary": (
+      "base": orange,
+    ),
+  )
+);

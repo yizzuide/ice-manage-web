@@ -8,7 +8,9 @@ import router from "./router";
 
 import registerDirectives from "./directives";
 import EventBus from "./plugins/EventBus";
-import axiosInstall from "./plugins/axios-install";
+import { Request } from "./http/Request";
+
+import "./styles/index.css";
 
 const app = createApp(App);
 
@@ -17,8 +19,6 @@ registerDirectives(app);
 app.use(router);
 app.use(createPinia());
 app.use(EventBus);
-app.use(axiosInstall);
+app.use(Request);
 
 app.mount("#app");
-
-console.log(import.meta.env.__HOST_URL);
