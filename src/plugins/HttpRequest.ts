@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, type AxiosInstance } from "axios";
+import axios, { AxiosResponse, type AxiosInstance } from "axios";
 import type {
   RequestConfig,
   IHttpRequest,
@@ -16,12 +16,12 @@ export default class HttpRequest implements IHttpRequest {
 
     // 请求实例的拦截
     this.axiosInstance.interceptors.request.use(
-      config?.interceptors?.onRequest,
-      config?.interceptors?.onRequestCatch
+      config?.interceptor?.onRequest,
+      config?.interceptor?.onRequestCatch
     );
     this.axiosInstance.interceptors.response.use(
-      config?.interceptors?.onResponse,
-      config?.interceptors?.onResponseCatch
+      config?.interceptor?.onResponse,
+      config?.interceptor?.onResponseCatch
     );
 
     // 全局拦截器
@@ -61,7 +61,7 @@ export default class HttpRequest implements IHttpRequest {
     }
     return new Promise((resolve, reject) => {
       this.axiosInstance
-        .request(config)
+        .request<T, AxiosResponse<T>>(config)
         .then((result) => {
           // 当前请求响应后的拦截
           if (requestConfig.interceptor?.onResponse) {

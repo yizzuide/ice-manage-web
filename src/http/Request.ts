@@ -32,7 +32,7 @@ export function Request(_: App) {
     },
     onResponse(response) {
       loading?.close();
-      if (response.data.code !== 0) {
+      if (response.data.code !== undefined && response.data.code !== 0) {
         console.log("请求出错：", response.data.message);
       }
       return response;
@@ -49,7 +49,7 @@ export function Request(_: App) {
   instance = new HttpRequest({
     baseURL: import.meta.env.__HOST_URL,
     timeout: import.meta.env.__REQUEST_TIME_OUT,
-    interceptors: {
+    interceptor: {
       onRequest(config) {
         const { url, method } = config;
         console.log("实例拦截: ", url, "showLoading: ", config.showLoading);

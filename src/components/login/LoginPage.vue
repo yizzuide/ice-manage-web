@@ -18,7 +18,7 @@ function changeName() {
 const input = ref("");
 
 useRequest()
-  .request({
+  .request<Array<object>>({
     url: "/api/sundial/getAll",
     method: "get",
     showLoading: true,
