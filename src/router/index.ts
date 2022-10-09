@@ -1,3 +1,4 @@
+import useLocalStorage from "@/hooks/useLocalStorage";
 import {
   createRouter,
   createWebHistory,
@@ -5,7 +6,7 @@ import {
 } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
-  { path: "/", redirect: "/index" },
+  {path: "/", redirect: "/index"},
   {
     path: "/index",
     name: "index",
@@ -16,7 +17,7 @@ const routes: RouteRecordRaw[] = [
     name: "login",
     component: () => import("@/components/login/LoginPage.vue"),
   },
-  { path: "/:pathMatch(.*)", redirect: "/" },
+  {path: "/:pathMatch(.*)", redirect: "/"},
 ];
 
 const router = createRouter({
@@ -24,13 +25,14 @@ const router = createRouter({
   history: createWebHistory(),
 });
 
-const isAuthenticated = false;
+const localStorage = useLocalStorage();
+const isAuthenticated = !!localStorage.get("token");
 router.beforeEach(async (to, from) => {
   console.log("route to: ", to.path);
 
   // redirect the user to the login page
   if (!isAuthenticated && to.name !== "login") {
-    return { name: "login" };
+    return {name: "login"};
   }
 });
 

@@ -1,4 +1,4 @@
-import { Directive, DirectiveBinding, VNode, VueElement } from "vue";
+import {Directive, DirectiveBinding, VNode, VueElement} from "vue";
 
 /**
  * 自定义指令v-focus
@@ -19,7 +19,8 @@ export default function () {
       bindings: DirectiveBinding<string>,
       vNode: VNode<any, VueElement>,
       preVNode: VNode<any, VueElement>
-    ) => {},
+    ) => {
+    },
     mounted: (el: VueElement) => el.focus(),
   };
   return {

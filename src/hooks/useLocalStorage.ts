@@ -1,23 +1,36 @@
-import { Ref, ref, watch } from "vue";
+import {Ref, ref, watch} from "vue";
 
-/**
- * 缓存数据
- * @param key 存储的key
- * @param value 存储的值（支持对象与Ref）
- * @returns 存储值的Ref
- */
-export default function (key: string, value?: object | Ref<object>) {
-  const data = ref(value);
-  // 设置值：fn(key, value)
-  if (value) {
-    window.localStorage.setItem(key, JSON.stringify(data.value));
-  } else {
-    // 获取值: fn(key)
-    data.value = window.localStorage.getItem(key) as any;
+class LocalCache {
+  set(key: string, value?: any | Ref) {
+    const data = ref(value);
+    if (value) {
+      window.localStorage.setItem(key, JSON.stringify(data.value));
+    }
   }
-  watch(data, () => {
-    console.log("update store: ", data.value);
-    window.localStorage.setItem(key, JSON.stringify(data.value));
-  });
-  return data;
+
+  get(key: string) {
+    const value = window.localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+  }
+
+  getRef(key: string) {
+    const value = window.localStorage.getItem(key);
+    const data = ref();
+    if (value) {
+      data.value = JSON.parse(value);
+    }
+    watch(data, () => {
+      console.log("update store: ", data.value);
+      window.localStorage.setItem(key, JSON.stringify(data.value));
+    });
+    return data;
+  }
+
+  remove(key: string) {
+    window.localStorage.removeItem(key);
+  }
+}
+
+export default function () {
+  return new LocalCache();
 }

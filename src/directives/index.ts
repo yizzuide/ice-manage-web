@@ -1,4 +1,4 @@
-import { App } from "vue";
+import {App} from "vue";
 import focusDirective from "./focus";
 import formatTimeDirective from "./formatTime";
 
@@ -8,7 +8,7 @@ import formatTimeDirective from "./formatTime";
  */
 export default function registerDirectives(app: App<Element>) {
   // v-focus（对象导出方式）
-  const { name: focusName, vFocus } = focusDirective();
+  const {name: focusName, vFocus} = focusDirective();
   // v-format-time（元组方式）
   const [formatTimeName, vFormatTime] = formatTimeDirective();
 

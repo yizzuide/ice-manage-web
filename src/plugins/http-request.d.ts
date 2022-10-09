@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig, AxiosResponse } from "axios"
+import type {AxiosRequestConfig, AxiosResponse} from "axios"
 
 declare interface IHttpRequest {
   request<T>(requestConfig: SimpleRequestConfig): Promise<T>
@@ -6,8 +6,11 @@ declare interface IHttpRequest {
 
 declare interface RequestInterceptor<T = any, R = AxiosResponse<T, any>> {
   onRequest?(config: RequestConfig): RequestConfig,
+
   onRequestCatch?(error: any): any,
+
   onResponse?(response: R): R,
+
   onResponseCatch?(error: any): any,
 }
 

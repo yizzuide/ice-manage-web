@@ -1,0 +1,6 @@
+@import "./define.scss";
+
+// 导出给js使用
+:export {
+  primaryColor: $primaryColor;
+}

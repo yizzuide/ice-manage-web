@@ -1,4 +1,4 @@
-import { ref, watch } from "vue";
+import {ref, watch} from "vue";
 
 /**
  * 设置标题的hook

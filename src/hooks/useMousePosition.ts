@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import {ref} from "vue";
 
 /**
  * 鼠标移动位置

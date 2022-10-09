@@ -1,4 +1,5 @@
 {
+  // https://www.typescriptlang.org/tsconfig
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
@@ -15,7 +16,11 @@
     // 设置为true时，限制this为any不明确类型时编译不通过
     "noImplicitThis": false,
     // 使用使用 Volar时，指定全局组件类型
-    "types": ["element-plus/global"]
+    "types": ["element-plus/global"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
@@ -25,5 +30,6 @@
     "src/**/*.js",
     "src/**/*.vue"
   ],
+  "exclude": ["node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

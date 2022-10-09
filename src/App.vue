@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ElConfigProvider } from "element-plus";
+import {ElConfigProvider} from "element-plus";
 
 // ElConfigProvider：全局配置对象
 // size 用于设置表单组件的默认尺寸（small, middle, large）
@@ -9,9 +9,15 @@ const zIndex = 3000;
 </script>
 
 <template>
-  <el-config-provider :size="size" :z-index="zIndex">
-    <router-view></router-view>
-  </el-config-provider>
+  <div class="app">
+    <el-config-provider :size="size" :z-index="zIndex">
+      <router-view></router-view>
+    </el-config-provider>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.app {
+  height: 100%;
+}
+</style>

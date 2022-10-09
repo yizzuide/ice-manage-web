@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, type AxiosInstance } from "axios";
+import axios, {AxiosResponse, type AxiosInstance} from "axios";
 import type {
   RequestConfig,
   IHttpRequest,
@@ -9,6 +9,7 @@ import type {
 export default class HttpRequest implements IHttpRequest {
   static globalInterceptor?: RequestInterceptor;
   axiosInstance: AxiosInstance;
+
   constructor(config?: RequestConfig) {
     this.axiosInstance = axios.create({
       ...config,

@@ -1,5 +1,5 @@
-import { ref, watch, Ref } from "vue";
-import { useRouter } from "vue-router";
+import {ref, watch, Ref} from "vue";
+import {useRouter} from "vue-router";
 
 /**
  * 根据当前Route配置的meta.keepAlive来返回Route name

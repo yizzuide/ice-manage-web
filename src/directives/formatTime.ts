@@ -1,6 +1,6 @@
-import { Directive, DirectiveBinding, VueElement } from "vue";
+import {Directive, DirectiveBinding, VueElement} from "vue";
 import dayjs from "dayjs";
-import { DirectiveTuple } from "./tuple";
+import {DirectiveTuple} from "./tuple";
 
 export default function (): DirectiveTuple<string> {
   // 定义指令名

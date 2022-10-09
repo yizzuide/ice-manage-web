@@ -1,22 +1,13 @@
 <template>
-  <div>Login: {{ userStore.name }}</div>
-  <el-button type="primary" @click="changeName">修改</el-button>
-  <el-input v-model="input" placeholder="Please input" />
+  <div class="login">
+    <LoginPanel></LoginPanel>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRequest } from "../../http/Request";
-import useUserStore from "./store/userStore";
-
+import LoginPanel from "./views/LoginPanel.vue";
+/*
 const userStore = useUserStore();
-
-function changeName() {
-  userStore.name = "yoy";
-}
-
-const input = ref("");
-
 useRequest()
   .request<Array<object>>({
     url: "/api/sundial/getAll",
@@ -35,7 +26,16 @@ useRequest()
   })
   .catch((err) => {
     console.log(err);
-  });
+  }); */
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: url("../../assets/login_bg.svg") no-repeat 50% 50% / 100% 100% fixed;
+}
+</style>

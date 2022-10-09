@@ -27,11 +27,12 @@ export default defineConfig(({ command, mode }) => {
         "@": path.resolve(__dirname, "src"),
       },
     },
-    // css预处理
     css: {
       preprocessorOptions: {
+        // 添加变量预处理
         scss: {
-          additionalData: "@use '@/styles/element/index.scss' as *;",
+          additionalData: "@use '@/styles/define.scss' as *;",
+          javascriptEnabled: true,
         },
       },
     },
@@ -60,16 +61,6 @@ export default defineConfig(({ command, mode }) => {
               return `element-plus/theme-chalk/${name}.css`;
             },
           },
-        ],
-      }),
-      // 按需导入sass样式
-      Components({
-        resolvers: [
-          ElementPlusResolver({
-            importStyle: "sass",
-            // directives: true,
-            // version: "2.1.5",
-          }),
         ],
       }),
     ],
