@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --mode dev",
-    "build": "vue-tsc --noEmit && vite build --mode prod",
+    "dev": "cross-env NODE_ENV=development vite --mode dev",
+    "build": "cross-env NODE_ENV=production vue-tsc --noEmit && vite build --mode prod",
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.ts,.vue",
     "lint-fix": "eslint . --ext .js,.ts,.vue --fix",

@@ -1,3 +1,9 @@
+# 环境配置
+
+1. 设置 NODE_ENV 变量
+   npm i cross-env -g
+   在 package.json 命令里添加：cross-env NODE_ENV=xxx
+
 # ESLint
 
 1. 安装插件 ESLint 和 Prettier ESLint，添加配置：

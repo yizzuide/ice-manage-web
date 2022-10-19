@@ -1,14 +1,16 @@
 module.exports = {
+  // 作用于当前目录
   root: true,
   // vue作为主要解析器
   parser: "vue-eslint-parser",
   env: {
     browser: true,
     node: true,
-    // 支持CommonJs解析
+    // 支持CommonJs解析的文件.cjs
     commonjs: true,
     es2021: true,
   },
+  // 继承的配置
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
