@@ -1,28 +1,28 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
 import {
   createRouter,
-  createWebHistory,
+  createWebHashHistory,
   type RouteRecordRaw,
 } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
-  {path: "/", redirect: "/index"},
+  { path: "/", redirect: "/index" },
   {
     path: "/index",
     name: "index",
-    component: () => import("@/components/index/IndexPage.vue"),
+    component: () => import("@/components/home/index.vue"),
   },
   {
     path: "/login",
     name: "login",
-    component: () => import("@/components/login/LoginPage.vue"),
+    component: () => import("@/components/login/index.vue"),
   },
-  {path: "/:pathMatch(.*)", redirect: "/"},
+  { path: "/:pathMatch(.*)", redirect: "/" },
 ];
 
 const router = createRouter({
   routes,
-  history: createWebHistory(),
+  history: createWebHashHistory(),
 });
 
 const localStorage = useLocalStorage();
@@ -32,7 +32,7 @@ router.beforeEach(async (to, from) => {
 
   // redirect the user to the login page
   if (!isAuthenticated && to.name !== "login") {
-    return {name: "login"};
+    return { name: "login" };
   }
 });
 

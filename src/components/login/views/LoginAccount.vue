@@ -75,29 +75,30 @@ const loginCommit: ILogin = {
 defineExpose(loginCommit);
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .code-field {
   display: flex;
 }
 
 .verify-code {
   padding: 0 5px;
-  max-width: 80px;
-  max-height: 40px;
-}
+  width: 80px;
+  height: 32px;
 
-.verify-code .image-slot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background: var(--el-fill-color-light);
-  color: var(--el-text-color-secondary);
-  font-size: 14px;
-}
-.verify-code .dot {
-  animation: dot 2s infinite steps(3, start);
-  overflow: hidden;
+  .image-slot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 32px;
+    background: var(--el-fill-color-light);
+    color: var(--el-text-color-secondary);
+    font-size: 14px;
+  }
+
+  .dot {
+    animation: dot 2s infinite steps(3, start);
+    overflow: hidden;
+  }
 }
 </style>
