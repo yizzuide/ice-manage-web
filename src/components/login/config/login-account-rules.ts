@@ -1,7 +1,7 @@
 // 验证规则, element-plus使用的async-validator： https://github.com/yiminghe/async-validator
 export const rules = {
-  // prop="name"
-  name: [
+  // prop="username"
+  username: [
     {
       required: true,
       message: "用户名不能为空！",
@@ -34,7 +34,7 @@ export const rules = {
       trigger: "blur",
     },
     {
-      pattern: /^[a-z2-9]{4}$/,
+      pattern: /^[a-z0-9]{4}$/,
       message: "验证码长度为4！",
       trigger: "blur",
     },

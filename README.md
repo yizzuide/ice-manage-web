@@ -24,6 +24,15 @@
 6. 提交验证 npm i @commitlint/config-conventional @commitlint/cli -D // 配置文件(cjs：CommonJS)
    commit.config.cjs // 创建 git hook npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
 
+# 其它插件
+
+1. 安装 vite-svg-loader
+   // https://www.npmjs.com/package/vite-svg-loader
+   npm i vite-svg-loader -D
+2. 安装 qs
+   npm i qs --save
+   npm i @types/qs -D
+
 # Element Plus
 
 1. 在非 vue 文件中使用时自动导入样式 npm i vite-plugin-style-import consola -D

@@ -113,8 +113,8 @@
     ry="40"
     width="100"
     height="100"
-    stroke="rgb(129, 201, 149)"
-    fill="rgb(129, 201, 149)"
+    stroke="pink"
+    fill="pink"
   >
     <animateTransform
       attributeType="XML"

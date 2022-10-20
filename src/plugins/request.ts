@@ -1,0 +1,34 @@
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+
+export interface IHttpRequest {
+  request<T>(requestConfig: SimpleRequestConfig): Promise<T>;
+}
+
+export interface RequestInterceptor<T = any, R = AxiosResponse<T, any>> {
+  onRequest?(config: RequestConfig): RequestConfig;
+
+  onRequestCatch?(error: any): any;
+
+  onResponse?(response: R): R;
+
+  onResponseCatch?(error: any): any;
+}
+
+export interface RequestConfig extends AxiosRequestConfig {
+  showLoading?: boolean;
+  interceptor?: RequestInterceptor;
+}
+
+export enum ContentType {
+  FORM,
+  JSON,
+}
+
+export interface SimpleRequestConfig {
+  url: string;
+  method: string;
+  params?: any;
+  contentType?: ContentType;
+  showLoading?: boolean;
+  interceptor?: RequestInterceptor;
+}

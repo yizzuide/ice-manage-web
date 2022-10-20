@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <!-- rules: 绑定规则，model：绑定模型对象 -->
+  <div class="login-form">
+    <!-- rules: 绑定规则，model：绑定模型对象，规则和模型字段名要一样 -->
     <el-form label-width="80px" :rules="rules" :model="account" ref="formRef">
-      <el-form-item label="账号" prop="name">
-        <el-input v-model="account.name" />
+      <el-form-item label="账号" prop="username">
+        <el-input v-model="account.username" />
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input type="password" show-password v-model="account.password" />
@@ -11,6 +11,7 @@
       <el-form-item label="验证码" prop="code">
         <div class="code-field">
           <el-input v-model="account.code" />
+          <span style="width: 1em"></span>
           <el-image
             :src="verifyCodeUrl"
             class="verify-code"
@@ -28,15 +29,15 @@
 
 <script setup lang="ts">
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { ElForm, FormInstance } from "element-plus";
-import { reactive, ref } from "vue";
+import { ElForm, ElMessage, FormInstance } from "element-plus";
+import { ref } from "vue";
 import { rules } from "../config/login-account-rules";
 import { ILogin } from "../types/login";
 import useUserStore from "../store/userStore";
 
 const localStorage = useLocalStorage();
-const account = reactive({
-  name: localStorage.get("username") ?? "",
+const account = ref({
+  username: localStorage.get("username") ?? "",
   password: localStorage.get("password") ?? "",
   code: "",
 });
@@ -54,46 +55,63 @@ const userStore = useUserStore();
 const loginCommit: ILogin = {
   loginAction: async function (isKeepPassword): Promise<boolean> {
     if (!formRef.value) return false;
+
     const valid = await formRef.value.validate((valid, fields) => {
-      if (valid) {
-        // 记住密码
-        if (isKeepPassword) {
-          localStorage.set("username", account.name);
-          localStorage.set("password", account.password);
-        } else {
-          localStorage.remove("username");
-          localStorage.remove("password");
-        }
-        userStore.accountLogin(account.name, account.password);
-      } else {
-        console.log("error submit!", fields);
+      if (!valid) {
+        return valid;
       }
     });
-    return valid;
+
+    if (!valid) {
+      ElMessage.error("输入格式不正确！");
+      return false;
+    }
+
+    // 记住密码
+    if (isKeepPassword) {
+      localStorage.set("username", account.value.username);
+      localStorage.set("password", account.value.password);
+    } else {
+      localStorage.remove("username");
+      localStorage.remove("password");
+    }
+    const data = await userStore.accountLogin(
+      account.value.username,
+      account.value.password,
+      account.value.code
+    );
+    return data.code == 0;
   },
 };
 defineExpose(loginCommit);
 </script>
 
 <style scoped lang="scss">
+.login-form {
+  // :deep：深度子元素选择器
+  :deep(.el-input) {
+    // 光标颜色
+    caret-color: $primaryColor;
+  }
+}
+
 .code-field {
   display: flex;
 }
 
 .verify-code {
-  padding: 0 5px;
   width: 80px;
   height: 32px;
 
   .image-slot {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 80px;
     height: 32px;
     background: var(--el-fill-color-light);
     color: var(--el-text-color-secondary);
-    font-size: 14px;
+    font-size: 7px;
   }
 
   .dot {

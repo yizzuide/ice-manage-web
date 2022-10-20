@@ -1,10 +1,12 @@
-import axios, {AxiosResponse, type AxiosInstance} from "axios";
-import type {
+import axios, { AxiosResponse, AxiosInstance } from "axios";
+import {
   RequestConfig,
   IHttpRequest,
   RequestInterceptor,
   SimpleRequestConfig,
-} from "./http-request";
+  ContentType,
+} from "./request";
+import qs from "qs";
 
 export default class HttpRequest implements IHttpRequest {
   static globalInterceptor?: RequestInterceptor;
@@ -46,16 +48,25 @@ export default class HttpRequest implements IHttpRequest {
     let config = {
       url: requestConfig.url,
       method: requestConfig.method,
-      params:
-        requestConfig.method.toLowerCase() === "get"
-          ? requestConfig.params
-          : null,
-      data:
-        requestConfig.method.toLocaleLowerCase() !== "get"
-          ? requestConfig.params
-          : null,
       showLoading: requestConfig.showLoading ?? false,
     } as RequestConfig;
+
+    if (requestConfig.method.toLowerCase() === "get") {
+      config.params = requestConfig.params;
+    } else {
+      config.data = requestConfig.params;
+    }
+
+    if (requestConfig.contentType == ContentType.FORM) {
+      config.headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+      };
+      // json -> form string format
+      if (config.data) {
+        config.data = qs.stringify(config.data);
+      }
+    }
+
     // 当前请求前的拦截
     if (requestConfig.interceptor?.onRequest) {
       config = requestConfig.interceptor.onRequest(config);

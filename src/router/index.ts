@@ -10,12 +10,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/index",
     name: "index",
-    component: () => import("@/components/home/index.vue"),
+    component: () => import("@/components/home/HomePage.vue"),
   },
   {
     path: "/login",
     name: "login",
-    component: () => import("@/components/login/index.vue"),
+    component: () => import("@/components/login/LoginPage.vue"),
   },
   { path: "/:pathMatch(.*)", redirect: "/" },
 ];
@@ -26,10 +26,9 @@ const router = createRouter({
 });
 
 const localStorage = useLocalStorage();
-const isAuthenticated = !!localStorage.get("token");
+const isAuthenticated = localStorage.get("token");
 router.beforeEach(async (to, from) => {
   console.log("route to: ", to.path);
-
   // redirect the user to the login page
   if (!isAuthenticated && to.name !== "login") {
     return { name: "login" };

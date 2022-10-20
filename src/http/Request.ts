@@ -1,8 +1,8 @@
-import {App} from "vue";
+import { App } from "vue";
 import useLocalStorage from "../hooks/useLocalStorage";
 import HttpRequest from "../plugins/HttpRequest";
-import {ElLoading} from "element-plus";
-import {LoadingInstance} from "element-plus/es/components/loading/src/loading";
+import { ElLoading } from "element-plus";
+import { LoadingInstance } from "element-plus/es/components/loading/src/loading";
 
 let instance: HttpRequest;
 
@@ -14,7 +14,6 @@ export function Request(_: App) {
   let loading: LoadingInstance;
   HttpRequest.setGlobalInterceptor({
     onRequest(config) {
-      //console.log("全局拦截: ", config.url, "showLoading: ", config.showLoading);
       if (config.showLoading) {
         loading = ElLoading.service({
           lock: true,
@@ -26,16 +25,10 @@ export function Request(_: App) {
     },
     onResponse(response) {
       loading?.close();
-      if (response.data?.code && response.data.code !== 0) {
-        console.log("请求出错：", response.data.message);
-      }
       return response;
     },
     onResponseCatch(error) {
       loading?.close();
-      if (error.response.status >= 400) {
-        console.log("服务器响应出错：", error);
-      }
       return error;
     },
   });
@@ -45,15 +38,19 @@ export function Request(_: App) {
     timeout: import.meta.env.__REQUEST_TIME_OUT,
     interceptor: {
       onRequest(config) {
-        const {url, method} = config;
-        console.log("实例拦截: ", url, "showLoading: ", config.showLoading);
+        const { url, method } = config;
+        console.log("request url: ", url, "showLoading: ", config.showLoading);
 
         // 添加token
-        if (url !== "/login") {
+        if (url !== "/api/login") {
           const localStorage = useLocalStorage();
           const token = localStorage.get("token");
-          if (token.value && config.headers) {
-            config.headers.Authorization = `Bearer ${token}`;
+          if (token) {
+            if (config.headers) {
+              config.headers.token = `Bearer ${token}`;
+            } else {
+              config.headers = { token: `Bearer ${token}` };
+            }
           }
         }
         return config;

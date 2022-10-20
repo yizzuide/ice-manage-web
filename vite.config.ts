@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
+import svgLoader from "vite-svg-loader";
 import path from "path";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
@@ -45,6 +46,8 @@ export default defineConfig(({ command, mode }) => {
       }),
       // jsx render
       vueJsx(),
+      // svg-loader
+      svgLoader(),
       // element-plus按需引入
       AutoImport({
         resolvers: [ElementPlusResolver()],
@@ -67,17 +70,17 @@ export default defineConfig(({ command, mode }) => {
       }),
     ],
     server: {
-      port: 5173,
+      port: env.__PROXY_SERVER_PORT,
       proxy: {
         "/api": {
           secure: false,
           changeOrigin: true,
-          target: "http://localhost:8091",
+          target: env.__PROXY_HOST_URL,
           rewrite: (path) => path.replace(/^\/api/, ""),
           bypass: function (req, res, proxyOptions) {
             if (req?.headers.accept?.indexOf("html") !== -1) {
               console.log("Skipping proxy for browser request.");
-              return "/index.html";
+              return "/";
             }
           },
         },
