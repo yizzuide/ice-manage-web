@@ -4,7 +4,6 @@ class LocalCache {
   set(key: string, value?: any | Ref) {
     const data = ref(value);
     if (value) {
-      console.log("设置缓存key: ", key, " value: ", data.value);
       window.localStorage.setItem(key, JSON.stringify(data.value));
     }
   }

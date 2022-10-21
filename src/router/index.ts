@@ -26,10 +26,13 @@ const router = createRouter({
 });
 
 const localStorage = useLocalStorage();
-const isAuthenticated = localStorage.get("token");
 router.beforeEach(async (to, from) => {
-  console.log("route to: ", to.path);
-  // redirect the user to the login page
+  const isAuthenticated = localStorage.get("token");
+  // redirect auth user to index
+  if (isAuthenticated && to.name == "login") {
+    return { name: "index" };
+  }
+  // redirect not auth user to login
   if (!isAuthenticated && to.name !== "login") {
     return { name: "login" };
   }

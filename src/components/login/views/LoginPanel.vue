@@ -19,7 +19,6 @@
 import { ref } from "vue";
 import LoginAccount from "./LoginAccount.vue";
 import { ILogin } from "../types/login";
-import { ElMessage } from "element-plus";
 import router from "@/router/index";
 
 const accountRef = ref<ILogin>();
@@ -28,14 +27,10 @@ const isKeepPassword = ref(true);
 async function submit() {
   const success = await accountRef.value!.loginAction(isKeepPassword.value);
   if (success) {
-    ElMessage({
-      message: "登录成功",
-      type: "success",
-    });
+    // 加载用户详情与菜单
+
     // 跳转路由路径到主页
     router.push("/index");
-  } else {
-    ElMessage.error("服务请求异常！");
   }
 }
 </script>

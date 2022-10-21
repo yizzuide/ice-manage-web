@@ -80,7 +80,12 @@ const loginCommit: ILogin = {
       account.value.password,
       account.value.code
     );
-    return data.code == 0;
+    if (!data.isSuccess && data.message) {
+      ElMessage.error(data.message);
+    } else {
+      ElMessage.success("登录成功");
+    }
+    return data.isSuccess;
   },
 };
 defineExpose(loginCommit);

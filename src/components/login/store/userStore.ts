@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ContentType } from "@/plugins/request";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import request from "@/http/UniformRequest";
+import { HttpResult } from "@/http/HttpResult";
 
 export default defineStore("user", {
   state: () => {
@@ -23,9 +24,8 @@ export default defineStore("user", {
         contentType: ContentType.FORM,
         showLoading: true,
         interceptor: {
-          // 响应数据时，缓存token
           onResponse(response) {
-            const respData = response.data;
+            const respData = response.data as HttpResult<any>;
             if (respData.code == 0) {
               const localStorage = useLocalStorage();
               localStorage.set("token", respData.data.token);
