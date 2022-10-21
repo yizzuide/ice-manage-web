@@ -17,9 +17,10 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import router from "@/router/index";
 import LoginAccount from "./LoginAccount.vue";
 import { ILogin } from "../types/login";
-import router from "@/router/index";
+import useUserStore from "../store/userStore";
 
 const accountRef = ref<ILogin>();
 const isKeepPassword = ref(true);
@@ -28,9 +29,17 @@ async function submit() {
   const success = await accountRef.value!.loginAction(isKeepPassword.value);
   if (success) {
     // 加载用户详情与菜单
-
-    // 跳转路由路径到主页
-    router.push("/index");
+    const userStore = useUserStore();
+    Promise.all([
+      userStore.fetchUserInfo(false),
+      userStore.fetchMenuList(true),
+    ]).then((_) => {
+      if (userStore.userInfo && userStore.menuList) {
+        console.log("load finish: ", userStore.userInfo, userStore.menuList);
+        // 跳转路由路径到主页
+        router.push("/index");
+      }
+    });
   }
 }
 </script>
