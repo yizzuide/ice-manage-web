@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from "vite";
+import { ConfigEnv, defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import svgLoader from "vite-svg-loader";
@@ -12,7 +12,7 @@ import {
 } from "vite-plugin-style-import";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ command, mode }: ConfigEnv) => {
   console.log("vite mode: ", mode);
   console.log("node mode: ", process.env.NODE_ENV);
   const env = loadEnv(mode, path.resolve(process.cwd(), "./src/config"), "__");
@@ -70,7 +70,7 @@ export default defineConfig(({ command, mode }) => {
       }),
     ],
     server: {
-      port: env.__PROXY_SERVER_PORT,
+      port: Number.parseInt(env.__PROXY_SERVER_PORT),
       proxy: {
         "/api": {
           secure: false,

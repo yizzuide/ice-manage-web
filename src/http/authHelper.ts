@@ -1,8 +1,9 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
-import router from "@/router";
+import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 
 const localStorage = useLocalStorage();
+const router = useRouter();
 
 export function getToken() {
   return localStorage.get("token");
@@ -12,8 +13,10 @@ export function checkAuthFail(code: number) {
   const hasToken = localStorage.get("token");
   // auth fail code，back to login page.
   if (hasToken && code == 401) {
-    ElMessage.error("登录授权失败，请重新登录");
-    router.push("/login");
+    const valid = validToken();
+    if (!valid) {
+      router.push("/login");
+    }
   }
 }
 

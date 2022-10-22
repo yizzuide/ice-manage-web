@@ -31,7 +31,7 @@ router.beforeEach(async (to, from) => {
   if (isAuthenticated) {
     const isValid = result[1];
     // token is expire
-    if (!isValid) {
+    if (!isValid && to.name !== "login") {
       return { name: "login" };
     }
 

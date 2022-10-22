@@ -17,13 +17,14 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import router from "@/router/index";
+import { useRouter } from "vue-router";
 import LoginAccount from "./LoginAccount.vue";
 import { ILogin } from "../types/login";
 import useUserStore from "../store/userStore";
 
 const accountRef = ref<ILogin>();
 const isKeepPassword = ref(true);
+const router = useRouter();
 
 async function submit() {
   const success = await accountRef.value!.loginAction(isKeepPassword.value);
