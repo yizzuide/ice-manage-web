@@ -1,5 +1,5 @@
 import { SimpleRequestConfig } from "@/plugins/request";
-import router from "@/router";
+import { checkAuthFail } from "./authHelper";
 import { HttpResult } from "./HttpResult";
 import { useRequest } from "./Request";
 
@@ -11,10 +11,7 @@ export default function request<T>(
       .request<HttpResult<T>>(requestConfig)
       .then((data) => {
         data.isSuccess = data.code == 0;
-        // auth fail code，back to login page.
-        if (data.code == 401) {
-          router.push("/login");
-        }
+        checkAuthFail(data.code);
         resolve(data);
       })
       .catch((error) => {

@@ -1,5 +1,4 @@
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { ElMessage } from "element-plus";
+import { validToken } from "@/http/authHelper";
 import {
   createRouter,
   createWebHashHistory,
@@ -26,18 +25,16 @@ const router = createRouter({
   history: createWebHashHistory(),
 });
 
-const localStorage = useLocalStorage();
 router.beforeEach(async (to, from) => {
-  const isAuthenticated = localStorage.get("token");
-  const expire = localStorage.get("tokenExpire") as number;
+  const result = validToken();
+  const isAuthenticated = result[0];
   if (isAuthenticated) {
-    // auth user need check token is expire
-    const isValid = expire > Date.now();
+    const isValid = result[1];
+    // token is expire
     if (!isValid) {
-      localStorage.clear();
-      ElMessage.error("登录时间过期，请重新登录！");
       return { name: "login" };
     }
+
     // redirect auth user to index
     if (to.name == "login") {
       return { name: "index" };

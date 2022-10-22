@@ -1,8 +1,8 @@
 import { App } from "vue";
-import useLocalStorage from "../hooks/useLocalStorage";
 import HttpRequest from "../plugins/HttpRequest";
 import { ElLoading } from "element-plus";
 import { LoadingInstance } from "element-plus/es/components/loading/src/loading";
+import { getToken } from "./authHelper";
 
 let instance: HttpRequest;
 
@@ -43,8 +43,7 @@ export function Request(_: App) {
 
         // 添加token
         if (url !== "/api/login") {
-          const localStorage = useLocalStorage();
-          const token = localStorage.get("token");
+          const token = getToken();
           if (token) {
             if (config.headers) {
               config.headers.token = `Bearer ${token}`;

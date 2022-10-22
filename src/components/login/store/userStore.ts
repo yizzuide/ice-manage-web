@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ContentType } from "@/plugins/request";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import request from "@/http/UniformRequest";
+import request from "@/http/uniformRequest";
 import { HttpResult } from "@/http/HttpResult";
 
 interface UserInfo {
