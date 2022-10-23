@@ -2,10 +2,42 @@
   <div class="container">
     <header>头部</header>
     <section class="body">
-      <aside>菜单</aside>
+      <aside>
+        <el-menu
+          active-text-color="#ffd04b"
+          background-color="#A35524"
+          class="el-menu"
+          :default-active="homeStore.selectedMenuIndex"
+          text-color="#fff"
+          :unique-opened="true"
+          :router="true"
+          @select="menuSelect"
+        >
+          <template v-for="menu in userStore.menuList" :key="menu.id">
+            <el-menu-item
+              :index="menu.routePath"
+              v-if="!menu.children || menu.children.length == 0"
+            >
+              <template #title>{{ menu.name }}</template>
+            </el-menu-item>
+            <el-sub-menu :index="menu.routePath" v-else>
+              <template #title>{{ menu.name }}</template>
+              <el-menu-item
+                v-for="subMenu in menu.children"
+                :key="subMenu.id"
+                :index="subMenu.routePath"
+              >
+                <template #title>{{ subMenu.name }}</template>
+              </el-menu-item>
+            </el-sub-menu>
+          </template>
+        </el-menu>
+      </aside>
       <main>
         <nav>导航</nav>
-        <section>内容</section>
+        <section class="routerContent">
+          <router-view></router-view>
+        </section>
       </main>
     </section>
   </div>
@@ -13,10 +45,22 @@
 
 <script setup lang="ts">
 import useUserStore from "@/components/login/store/userStore";
+import useHomeStore from "./store/homeStore";
+
+const homeStore = useHomeStore();
 const userStore = useUserStore();
+
+function menuSelect(index: string) {
+  console.log("index: ", index);
+}
 </script>
 
 <style scoped lang="scss">
+.namedIcon {
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+}
 .container {
   height: 100%;
 
@@ -32,9 +76,13 @@ const userStore = useUserStore();
 
     > aside {
       height: 100%;
-      width: 180px;
+      width: 200px;
       color: white;
-      background-color: $darkColor;
+
+      .el-menu {
+        width: 100%;
+        height: 100%;
+      }
     }
 
     > main {
@@ -43,6 +91,10 @@ const userStore = useUserStore();
 
       nav {
         height: 32px;
+      }
+      .routerContent {
+        width: 100%;
+        height: 100%;
       }
     }
   }

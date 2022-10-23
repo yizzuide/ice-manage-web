@@ -2,8 +2,9 @@ import { defineStore } from "pinia";
 import { ContentType } from "@/plugins/request";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { cachedRequest } from "@/http/uniformRequest";
+import router, { addDynamicRoute } from "@/router";
 
-interface UserInfo {
+export interface UserInfo {
   uid: number;
   nickname: string;
   avatar: string;
@@ -14,13 +15,15 @@ interface UserInfo {
   perms: [];
 }
 
-interface Menu {
+export interface Menu {
+  id: number;
   name: string;
   icon?: string;
   routeName: string;
   routePath: string;
   componentPath: string;
   children?: Menu[];
+  order: number;
 }
 
 const localStorage = useLocalStorage();
@@ -51,13 +54,20 @@ export default defineStore("user", {
         cachedName: "menuList",
         beforeCache: (data) => {
           this.menuList = data;
-          // 添加工作台菜单
+          // 添加首页数据面板菜单
           this.menuList?.unshift({
-            name: "工作台",
-            routeName: "workbench",
-            routePath: "/home/workbench",
-            componentPath: "/home/WorkbenchPage.vue",
+            id: -1,
+            name: "首页",
+            routeName: "dashboard",
+            routePath: "/index/dashboard",
+            componentPath: "/home/DashboardPage",
+            // API返回的菜单列表第一个从0开始
+            order: -1,
           });
+          for (const menu of this.menuList) {
+            // 更新菜单排序值
+            menu.order = menu.order + 1;
+          }
         },
       });
     },
