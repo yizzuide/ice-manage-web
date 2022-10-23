@@ -36,7 +36,7 @@ async function submit() {
       userStore.fetchMenuList(true),
     ]).then((_) => {
       // 跳转路由路径到主页
-      router.push("/index");
+      router.push("/");
     });
   }
 }

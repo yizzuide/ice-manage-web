@@ -36,13 +36,16 @@ router.beforeEach(async (to, from) => {
     if (!isValid && to.name !== "login") {
       return { name: "login" };
     }
-    // redirect auth user to index
+    // redirect auth user to index/dashboard
     if (to.name == "login") {
-      return { name: "index" };
+      return { name: "dashboard" };
     }
-
     // add Routes
     addDynamicRoute();
+    // index -> dashboard
+    if (to.name == "index") {
+      return { name: "dashboard" };
+    }
   }
   // redirect not auth user to login
   if (!isAuthenticated && to.name !== "login") {
@@ -52,7 +55,7 @@ router.beforeEach(async (to, from) => {
 
 export function addDynamicRoute() {
   if (router.hasRoute("dashboard")) {
-    return;
+    return false;
   }
   // vite动态导入
   const viteComponent = import.meta.glob("@/components/**/*Page.vue");
@@ -72,6 +75,7 @@ export function addDynamicRoute() {
         path: menu.routePath,
         component: () => import("@/components/home/HomePage.vue"),
         children: [],
+        redirect: menu.children[0].routePath,
       };
       for (const subMenu of menu.children) {
         rootRoute.children.push({
@@ -84,6 +88,7 @@ export function addDynamicRoute() {
       router.addRoute(rootRoute);
     }
   }
+  return true;
 }
 
 export default router;

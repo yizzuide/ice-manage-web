@@ -7,7 +7,7 @@
           active-text-color="#ffd04b"
           background-color="#A35524"
           class="el-menu"
-          :default-active="homeStore.selectedMenuIndex"
+          :default-active="selectedMenuIndex"
           text-color="#fff"
           :unique-opened="true"
           :router="true"
@@ -44,11 +44,11 @@
 </template>
 
 <script setup lang="ts">
-import useUserStore from "@/components/login/store/userStore";
-import useHomeStore from "./store/homeStore";
+import { ref } from "vue";
+import useUserStore from "../login/store/userStore";
 
-const homeStore = useHomeStore();
 const userStore = useUserStore();
+const selectedMenuIndex = ref("/index/dashboard");
 
 function menuSelect(index: string) {
   console.log("index: ", index);
