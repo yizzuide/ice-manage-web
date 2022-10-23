@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
 import { ContentType } from "@/plugins/request";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import request from "@/http/uniformRequest";
-import { HttpResult } from "@/http/HttpResult";
+import { cachedRequest } from "@/http/uniformRequest";
 
 interface UserInfo {
   uid: number;
@@ -24,18 +23,17 @@ interface Menu {
   children?: Menu[];
 }
 
+const localStorage = useLocalStorage();
 export default defineStore("user", {
   state: () => {
     return {
       // 使用立即执行函数初始化
       userInfo: (function () {
         // 从缓存加载
-        const localStorage = useLocalStorage();
         const cachedUserInfo = localStorage.get("userInfo");
         return cachedUserInfo ? (cachedUserInfo as UserInfo) : <UserInfo>{};
       })(),
       menuList: (function () {
-        const localStorage = useLocalStorage();
         const cachedMenus = localStorage.get("menuList");
         return cachedMenus ? (cachedMenus as Menu[]) : <Menu[]>{};
       })(),
@@ -44,72 +42,54 @@ export default defineStore("user", {
   getters: {},
   actions: {
     async fetchMenuList(loading: boolean) {
-      debugger;
-      return request<Menu[]>({
-        url: "/api/manage/user/menu",
-        method: "get",
-        showLoading: loading,
-        interceptor: {
-          onResponse: (response) => {
-            const respData = response.data as HttpResult<Menu[]>;
-            if (respData.code == 0) {
-              this.menuList = respData.data;
-              // 添加工作台菜单
-              this.menuList?.unshift({
-                name: "工作台",
-                routeName: "workbench",
-                routePath: "/home/workbench",
-                componentPath: "/home/WorkbenchPage.vue",
-              });
-              const localStorage = useLocalStorage();
-              localStorage.set("menuList", this.menuList);
-            }
-            return response;
-          },
+      return cachedRequest<Menu[]>(
+        {
+          url: "/api/manage/user/menu",
+          method: "get",
+          showLoading: loading,
         },
-      });
+        "menuList",
+        (data) => {
+          this.menuList = data;
+          // 添加工作台菜单
+          this.menuList?.unshift({
+            name: "工作台",
+            routeName: "workbench",
+            routePath: "/home/workbench",
+            componentPath: "/home/WorkbenchPage.vue",
+          });
+        }
+      );
     },
     async fetchUserInfo(loading: boolean) {
-      return request<UserInfo>({
-        url: "/api/manage/user/info",
-        method: "get",
-        showLoading: loading,
-        interceptor: {
-          onResponse: (response) => {
-            const respData = response.data as HttpResult<UserInfo>;
-            if (respData.code == 0) {
-              this.userInfo = respData.data;
-              const localStorage = useLocalStorage();
-              localStorage.set("userInfo", this.userInfo);
-            }
-            return response;
-          },
+      return cachedRequest<UserInfo>(
+        {
+          url: "/api/manage/user/info",
+          method: "get",
+          showLoading: loading,
         },
-      });
+        "userInfo",
+        (data) => {
+          this.userInfo = data;
+        }
+      );
     },
     async accountLogin(username: string, password: string, code: string) {
-      return request<any>({
-        url: "/api/login",
-        params: {
-          username,
-          password,
-          code,
-        },
-        method: "post",
-        contentType: ContentType.FORM,
-        showLoading: true,
-        interceptor: {
-          onResponse(response) {
-            const respData = response.data as HttpResult<any>;
-            if (respData.code == 0) {
-              const localStorage = useLocalStorage();
-              localStorage.set("token", respData.data.token);
-              localStorage.set("tokenExpire", respData.data.expire);
-            }
-            return response;
+      return cachedRequest<any>(
+        {
+          url: "/api/login",
+          params: {
+            username,
+            password,
+            code,
           },
+          method: "post",
+          contentType: ContentType.FORM,
+          showLoading: true,
         },
-      });
+        "token,tokenExpire",
+        (data) => [data.token, data.expire]
+      );
     },
   },
 });

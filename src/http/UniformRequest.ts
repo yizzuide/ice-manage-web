@@ -12,9 +12,8 @@ export function cachedRequest<T>(
   requestConfig.interceptor = {
     onResponse(response) {
       const respData = response.data as HttpResult<T>;
-      const data = respData.data;
-      if (!data) return response;
-      if (respData.code == 0) {
+      if (respData.code == 0 && respData.data) {
+        const data = respData.data;
         const localStorage = useLocalStorage();
         const cacheDataList = beforeCache(data);
         const index = cachedName.indexOf(",");

@@ -3,9 +3,9 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 
 const router = useRouter();
+const localStorage = useLocalStorage();
 
 export function getToken(): string {
-  const localStorage = useLocalStorage();
   return localStorage.get("token");
 }
 
@@ -21,8 +21,7 @@ export function checkAuthFail(code: number) {
 }
 
 export function validToken(): [string | undefined, boolean] {
-  const localStorage = useLocalStorage();
-  const token = localStorage.get("token");
+  const token = getToken();
   if (!token) {
     return [undefined, false];
   }
