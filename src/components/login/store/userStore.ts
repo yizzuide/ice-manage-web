@@ -42,14 +42,14 @@ export default defineStore("user", {
   getters: {},
   actions: {
     async fetchMenuList(loading: boolean) {
-      return cachedRequest<Menu[]>(
-        {
+      return cachedRequest<Menu[]>({
+        requestConfig: {
           url: "/api/manage/user/menu",
           method: "get",
           showLoading: loading,
         },
-        "menuList",
-        (data) => {
+        cachedName: "menuList",
+        beforeCache: (data) => {
           this.menuList = data;
           // 添加工作台菜单
           this.menuList?.unshift({
@@ -58,25 +58,25 @@ export default defineStore("user", {
             routePath: "/home/workbench",
             componentPath: "/home/WorkbenchPage.vue",
           });
-        }
-      );
+        },
+      });
     },
     async fetchUserInfo(loading: boolean) {
-      return cachedRequest<UserInfo>(
-        {
+      return cachedRequest<UserInfo>({
+        requestConfig: {
           url: "/api/manage/user/info",
           method: "get",
           showLoading: loading,
         },
-        "userInfo",
-        (data) => {
+        cachedName: "userInfo",
+        beforeCache: (data) => {
           this.userInfo = data;
-        }
-      );
+        },
+      });
     },
     async accountLogin(username: string, password: string, code: string) {
-      return cachedRequest<any>(
-        {
+      return cachedRequest<any>({
+        requestConfig: {
           url: "/api/login",
           params: {
             username,
@@ -87,9 +87,9 @@ export default defineStore("user", {
           contentType: ContentType.FORM,
           showLoading: true,
         },
-        "token,tokenExpire",
-        (data) => [data.token, data.expire]
-      );
+        cachedName: "token,tokenExpire",
+        beforeCache: (data) => [data.token, data.expire],
+      });
     },
   },
 });

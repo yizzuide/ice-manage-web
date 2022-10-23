@@ -4,11 +4,16 @@ import { checkAuthFail } from "./authHelper";
 import { HttpResult } from "./HttpResult";
 import { useRequest } from "./Request";
 
-export function cachedRequest<T>(
+interface CachedRequestConfig<T> {
   requestConfig: SimpleRequestConfig,
   cachedName: string,
   beforeCache: (data: T) => any[] | void
+}
+
+export function cachedRequest<T>(
+  config: CachedRequestConfig<T>
 ) {
+  const {requestConfig, cachedName, beforeCache} = config;
   requestConfig.interceptor = {
     onResponse(response) {
       const respData = response.data as HttpResult<T>;
