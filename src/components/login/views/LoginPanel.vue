@@ -35,10 +35,8 @@ async function submit() {
       userStore.fetchUserInfo(false),
       userStore.fetchMenuList(true),
     ]).then((_) => {
-      if (userStore.userInfo && userStore.menuList) {
-        // 跳转路由路径到主页
-        router.push("/index");
-      }
+      // 跳转路由路径到主页
+      router.push("/index");
     });
   }
 }

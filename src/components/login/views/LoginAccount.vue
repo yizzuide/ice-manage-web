@@ -82,8 +82,6 @@ const loginCommit: ILogin = {
     );
     if (!data.isSuccess && data.message) {
       ElMessage.error(data.message);
-    } else {
-      ElMessage.success("登录成功");
     }
     return data.isSuccess;
   },

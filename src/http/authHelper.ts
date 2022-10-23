@@ -2,15 +2,15 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 
-const localStorage = useLocalStorage();
 const router = useRouter();
 
-export function getToken() {
+export function getToken(): string {
+  const localStorage = useLocalStorage();
   return localStorage.get("token");
 }
 
 export function checkAuthFail(code: number) {
-  const hasToken = localStorage.get("token");
+  const hasToken = getToken();
   // auth fail code，back to login page.
   if (hasToken && code == 401) {
     const valid = validToken();
@@ -21,6 +21,7 @@ export function checkAuthFail(code: number) {
 }
 
 export function validToken(): [string | undefined, boolean] {
+  const localStorage = useLocalStorage();
   const token = localStorage.get("token");
   if (!token) {
     return [undefined, false];

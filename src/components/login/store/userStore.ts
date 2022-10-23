@@ -44,6 +44,7 @@ export default defineStore("user", {
   getters: {},
   actions: {
     async fetchMenuList(loading: boolean) {
+      debugger;
       return request<Menu[]>({
         url: "/api/manage/user/menu",
         method: "get",
