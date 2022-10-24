@@ -1,8 +1,17 @@
+// 浏览器样式重置
 @import url("normalize.css");
 
+// 内容宽高 ——> 窗口宽高
 html,
 body,
 #app {
   width: 100%;
   height: 100%;
+  // 元素的总高度和宽度包含内边距和边框
+  box-sizing: border-box;
+}
+
+// 不显示滚动条
+::-webkit-scrollbar {
+  display: none;
 }

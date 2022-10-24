@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { ContentType } from "@/plugins/request";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { cachedRequest } from "@/http/uniformRequest";
-import router, { addDynamicRoute } from "@/router";
 
 export interface UserInfo {
   uid: number;
@@ -58,6 +57,7 @@ export default defineStore("user", {
           this.menuList?.unshift({
             id: -1,
             name: "首页",
+            icon: "Odometer",
             routeName: "dashboard",
             routePath: "/index/dashboard",
             componentPath: "/home/DashboardPage",
