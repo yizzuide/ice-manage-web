@@ -16,6 +16,7 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const getBreadcrumb = () => {
   let matchedList = route.matched.filter((r) => r.meta && r.meta.title);
+  // 第一个路由为“/”的不显示，这个是顶级菜单
   if (matchedList.length > 0 && matchedList[0].meta.title == "/") {
     return [];
   }

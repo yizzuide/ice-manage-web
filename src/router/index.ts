@@ -91,7 +91,7 @@ export function addDynamicRoute() {
           name: subMenu.routeName,
           path: subMenu.routePath,
           meta: {
-            title: menu.name,
+            title: subMenu.name,
           },
           component:
             viteComponent[`/src/components${subMenu.componentPath}.vue`],
