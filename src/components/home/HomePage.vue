@@ -19,9 +19,9 @@
       </el-aside>
       <el-container class="body">
         <el-header>
-          <HeaderContent
-            @change="(isExpand) => (isMenuCollapse = !isExpand)"
-          ></HeaderContent>
+          <HeaderContent @change="(isExpand) => (isMenuCollapse = !isExpand)">
+            <Breadcrumb></Breadcrumb>
+          </HeaderContent>
         </el-header>
         <el-main>
           <nav>导航</nav>
@@ -43,6 +43,7 @@ import { useHomeStore } from "./store/homeStore";
 import MenuItem from "./views/MenuItem.vue";
 import MenuLogo from "./views/MenuLogo.vue";
 import HeaderContent from "./views/HeaderContent.vue";
+import Breadcrumb from "./views/Breadcrumb.vue";
 
 const userStore = useUserStore();
 const homeStore = useHomeStore();
@@ -53,6 +54,7 @@ const { selectedMenuIndex } = storeToRefs(homeStore);
 
 // 刷新时初始化为上次浏览的路由路径
 const routePath = useRoute().path;
+console.log(useRoute().matched);
 if (routePath != selectedMenuIndex.value) {
   useRouter().replace(selectedMenuIndex.value);
 }
@@ -101,11 +103,13 @@ function menuSelect(index: string) {
 
   .body {
     > .el-header {
-      height: 55px;
+      height: 50px;
       border-bottom: 1px solid #e5e5e5;
     }
 
     .el-main {
+      background-color: #eee;
+
       nav {
         height: 32px;
       }

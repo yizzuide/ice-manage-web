@@ -16,6 +16,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/index",
     name: "index",
+    meta: { title: "/" },
     component: () => import("@/components/home/HomePage.vue"),
     children: [],
   },
@@ -68,6 +69,9 @@ export function addDynamicRoute() {
       router.addRoute("index", {
         name: menu.routeName,
         path: menu.routePath,
+        meta: {
+          title: menu.name,
+        },
         component: viteComponent[`/src/components${menu.componentPath}.vue`],
       });
     } else {
@@ -75,6 +79,9 @@ export function addDynamicRoute() {
       const rootRoute: RouteRecordRaw = {
         name: menu.routeName,
         path: menu.routePath,
+        meta: {
+          title: menu.name,
+        },
         component: () => import("@/components/home/HomePage.vue"),
         children: [],
         redirect: menu.children[0].routePath,
@@ -83,6 +90,9 @@ export function addDynamicRoute() {
         rootRoute.children.push({
           name: subMenu.routeName,
           path: subMenu.routePath,
+          meta: {
+            title: menu.name,
+          },
           component:
             viteComponent[`/src/components${subMenu.componentPath}.vue`],
         });

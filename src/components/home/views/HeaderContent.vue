@@ -2,11 +2,12 @@
   <div class="header-container">
     <section class="header-left">
       <span @click="expandChange">
-        <el-icon style="font-size: 20px">
+        <el-icon>
           <Expand v-if="isExpand" />
           <Fold v-else />
         </el-icon>
       </span>
+      <slot></slot>
     </section>
     <section class="header-right">个人中心</section>
   </div>
@@ -35,5 +36,8 @@ function expandChange() {
 }
 .header-left:hover {
   cursor: pointer;
+}
+.header-left {
+  line-height: 50px;
 }
 </style>
