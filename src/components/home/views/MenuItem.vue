@@ -4,12 +4,11 @@
       :index="menu.routePath"
       v-if="!menu.children || menu.children.length == 0"
     >
-      <template #title>
-        <el-icon>
-          <named-icon :icon="menu.icon"></named-icon>
-        </el-icon>
-        <span>{{ menu.name }}</span>
-      </template>
+      <!-- el-icon放在 #title 里，在 collapse 时图标没有显示，移出来解决问题 -->
+      <el-icon>
+        <named-icon :icon="menu.icon"></named-icon>
+      </el-icon>
+      <template #title>{{ menu.name }}</template>
     </el-menu-item>
     <el-sub-menu :index="menu.routePath" v-else>
       <template #title>

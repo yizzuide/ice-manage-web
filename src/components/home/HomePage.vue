@@ -2,7 +2,7 @@
   <div class="container">
     <el-container>
       <el-aside width="auto">
-        <MenuLogo></MenuLogo>
+        <MenuLogo :collapse="isMenuCollapse"></MenuLogo>
         <el-menu
           active-text-color="#ffd04b"
           background-color="#A35524"
@@ -36,13 +36,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import useUserStore from "../login/store/userStore";
 import { useHomeStore } from "./store/homeStore";
 import MenuItem from "./views/MenuItem.vue";
 import MenuLogo from "./views/MenuLogo.vue";
 import HeaderContent from "./views/HeaderContent.vue";
-import { useRoute, useRouter } from "vue-router";
 
 const userStore = useUserStore();
 const homeStore = useHomeStore();

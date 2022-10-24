@@ -1,17 +1,22 @@
 <template>
   <div class="logo">
     <img src="../../../assets/menu_logo.png" />
-    <span class="title">Ice任务管理平台</span>
+    <span
+      class="title"
+      :style="[{ display: collapse ? 'none' : 'inline-block' }]"
+      >Ice任务管理平台</span
+    >
   </div>
   <div class="divider"></div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineProps<{ collapse: boolean }>();
+</script>
 
 <style scoped lang="scss">
 .logo {
   background-color: saddlebrown;
-  width: auto;
   height: 50px;
   line-height: 50px;
   display: flex;

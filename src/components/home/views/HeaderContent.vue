@@ -2,7 +2,7 @@
   <div class="header-container">
     <section class="header-left">
       <span @click="expandChange">
-        <el-icon>
+        <el-icon style="font-size: 20px">
           <Expand v-if="isExpand" />
           <Fold v-else />
         </el-icon>
