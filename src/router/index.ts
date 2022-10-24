@@ -36,19 +36,21 @@ router.beforeEach(async (to, from) => {
     if (!isValid && to.name !== "login") {
       return { name: "login" };
     }
+
     // redirect auth user to index/dashboard
     if (to.name == "login") {
       return { name: "dashboard" };
     }
+
     // add Routes
-    addDynamicRoute();
+    const added = addDynamicRoute();
+
     // index -> dashboard
     if (to.name == "index") {
       return { name: "dashboard" };
     }
-  }
-  // redirect not auth user to login
-  if (!isAuthenticated && to.name !== "login") {
+    // redirect not auth user to login
+  } else if (to.name !== "login") {
     return { name: "login" };
   }
 });

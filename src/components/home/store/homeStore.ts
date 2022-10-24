@@ -1,10 +1,21 @@
 import { defineStore } from "pinia";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
-export default defineStore("home", {
+const localStorage = useLocalStorage();
+
+export const useHomeStore = defineStore("home", {
   state: () => {
     return {
-      selectedMenuIndex: "0",
+      selectedMenuIndex: (function () {
+        const menuIndex = localStorage.get("menuIndex");
+        return menuIndex ?? "/index/dashboard";
+      })(),
     };
   },
   getters: {},
+  actions: {
+    updateCacheMenuIndex() {
+      localStorage.set("menuIndex", this.selectedMenuIndex);
+    },
+  },
 });

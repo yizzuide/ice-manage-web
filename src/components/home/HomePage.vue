@@ -19,7 +19,9 @@
       </el-aside>
       <el-container class="body">
         <el-header>
-          <HeaderContent></HeaderContent>
+          <HeaderContent
+            @change="(isExpand) => (isMenuCollapse = !isExpand)"
+          ></HeaderContent>
         </el-header>
         <el-main>
           <nav>导航</nav>
@@ -34,17 +36,30 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
 import useUserStore from "../login/store/userStore";
+import { useHomeStore } from "./store/homeStore";
 import MenuItem from "./views/MenuItem.vue";
 import MenuLogo from "./views/MenuLogo.vue";
 import HeaderContent from "./views/HeaderContent.vue";
+import { useRoute, useRouter } from "vue-router";
 
 const userStore = useUserStore();
-const selectedMenuIndex = ref("/index/dashboard");
+const homeStore = useHomeStore();
+
 const isMenuCollapse = ref(false);
+//const selectedMenuIndex = ref<string>(homeStore.selectedMenuIndex);
+const { selectedMenuIndex } = storeToRefs(homeStore);
+
+// 刷新时初始化为上次浏览的路由路径
+const routePath = useRoute().path;
+if (routePath != selectedMenuIndex.value) {
+  useRouter().replace(selectedMenuIndex.value);
+}
 
 function menuSelect(index: string) {
-  console.log("index: ", index);
+  selectedMenuIndex.value = index;
+  homeStore.updateCacheMenuIndex();
 }
 </script>
 
