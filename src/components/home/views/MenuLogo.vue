@@ -35,6 +35,19 @@ defineProps<{ collapse: boolean }>();
     font-size: 16px;
     font-family: "Courier New", Courier, monospace, Arial, Helvetica, sans-serif;
     vertical-align: middle;
+    animation: logoTextAnimation 1s ease-out;
+  }
+}
+
+@keyframes logoTextAnimation {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
