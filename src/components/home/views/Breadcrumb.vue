@@ -5,13 +5,14 @@
       :key="bPath.path"
       :to="{ path: bPath.path }"
     >
-      {{ bPath.name }}
+      {{ bPath.title }}
     </el-breadcrumb-item>
   </el-breadcrumb>
 </template>
 
 <script setup lang="ts">
 import { useRoute } from "vue-router";
+import { RouteInfo } from "../types/route-info";
 
 const route = useRoute();
 const getBreadcrumb = () => {
@@ -20,9 +21,9 @@ const getBreadcrumb = () => {
   if (matchedList.length > 0 && matchedList[0].meta.title == "/") {
     return [];
   }
-  const breadcrumbPaths = <{ name: string; path: string }[]>[];
+  const breadcrumbPaths = <RouteInfo[]>[];
   matchedList.forEach((r) => {
-    breadcrumbPaths.push({ name: r.meta.title as string, path: r.path });
+    breadcrumbPaths.push({ title: r.meta.title as string, path: r.path });
   });
   return breadcrumbPaths;
 };

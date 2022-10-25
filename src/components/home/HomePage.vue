@@ -23,11 +23,11 @@
             <Breadcrumb></Breadcrumb>
           </HeaderContent>
         </el-header>
+        <nav>
+          <Tags ref="tags"></Tags>
+        </nav>
         <el-main>
-          <nav>导航</nav>
-          <section class="routerContent">
-            <router-view></router-view>
-          </section>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -44,6 +44,9 @@ import MenuItem from "./views/MenuItem.vue";
 import MenuLogo from "./views/MenuLogo.vue";
 import HeaderContent from "./views/HeaderContent.vue";
 import Breadcrumb from "./views/Breadcrumb.vue";
+import Tags from "./views/Tags.vue";
+import { MenuItemClicked } from "element-plus";
+import { IRouteChange } from "./types/route-info";
 
 const userStore = useUserStore();
 const homeStore = useHomeStore();
@@ -53,15 +56,27 @@ const isMenuCollapse = ref(false);
 const { selectedMenuIndex } = storeToRefs(homeStore);
 
 // 刷新时初始化为上次浏览的路由路径
-const routePath = useRoute().path;
-console.log(useRoute().matched);
-if (routePath != selectedMenuIndex.value) {
-  useRouter().replace(selectedMenuIndex.value);
+const route = useRoute();
+const router = useRouter();
+if (route.path != selectedMenuIndex.value) {
+  router.replace(selectedMenuIndex.value);
 }
 
-function menuSelect(index: string) {
+const tags = ref<{ handleChangeRoute: IRouteChange }>();
+
+function menuSelect(
+  index: string,
+  indexPath: string[],
+  item: MenuItemClicked,
+  routeResult: Promise<void>
+) {
   selectedMenuIndex.value = index;
   homeStore.updateCacheMenuIndex();
+  const preRoutePath = route.path;
+  // 获取跳转后的路由对象
+  routeResult.then((_) => {
+    tags.value?.handleChangeRoute(preRoutePath, route);
+  });
 }
 </script>
 
@@ -107,16 +122,13 @@ function menuSelect(index: string) {
       border-bottom: 1px solid #e5e5e5;
     }
 
+    nav {
+      height: 32px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
     .el-main {
       background-color: #eee;
-
-      nav {
-        height: 32px;
-      }
-
-      .routerContent {
-        height: 100%;
-      }
     }
   }
 }
