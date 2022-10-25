@@ -14,7 +14,7 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     // 设置为true时，限制this为any不明确类型时编译不通过
-    "noImplicitThis": false,
+    "noImplicitThis": true,
     // 使用使用 Volar时，指定全局组件类型
     "types": ["element-plus/global"],
     "baseUrl": ".",

@@ -36,7 +36,6 @@ export const useHomeStore = defineStore("home", {
         return;
       }
       // 添加新的Tag
-      this.selectedMenuTitle = tagInfo.title;
       this.tagList.push(tagInfo);
     },
 
@@ -45,7 +44,6 @@ export const useHomeStore = defineStore("home", {
       // 查找是否已添加，如果有就激活当前
       for (const tag of this.tagList) {
         if (tag.path == activePath) {
-          this.selectedMenuTitle = tag.title;
           tag.active = true;
           findFlag = true;
           break;
