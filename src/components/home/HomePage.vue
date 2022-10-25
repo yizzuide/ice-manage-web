@@ -63,7 +63,6 @@ if (route.path != selectedMenuIndex.value) {
 }
 
 const tags = ref<{ handleChangeRoute: IRouteChange }>();
-
 function menuSelect(
   index: string,
   indexPath: string[],
@@ -71,7 +70,6 @@ function menuSelect(
   routeResult: Promise<void>
 ) {
   selectedMenuIndex.value = index;
-  homeStore.updateCacheMenuIndex();
   const preRoutePath = route.path;
   // 获取跳转后的路由对象
   routeResult.then((_) => {

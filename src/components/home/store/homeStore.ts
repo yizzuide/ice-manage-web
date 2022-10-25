@@ -11,6 +11,10 @@ export const useHomeStore = defineStore("home", {
         const menuIndex = localStorage.get("menuIndex");
         return menuIndex ?? "/index/dashboard";
       })(),
+      selectedMenuTitle: (function () {
+        const menuTitle = localStorage.get("menuTitle");
+        return menuTitle ?? "首页";
+      })(),
       tagList: <RouteTagInfo[]>[
         {
           title: "首页",
@@ -23,9 +27,23 @@ export const useHomeStore = defineStore("home", {
   },
   getters: {},
   actions: {
-    // 更新选择的菜单Index
-    updateCacheMenuIndex() {
+    // 更新选择的菜单
+    updateCacheMenu() {
       localStorage.set("menuIndex", this.selectedMenuIndex);
+      localStorage.set("menuTitle", this.selectedMenuTitle);
+    },
+
+    // 初化始上次选择的Tag
+    initMenuTag() {
+      const preRoutePath = this.tagList[0].path;
+      if (this.selectedMenuIndex != preRoutePath) {
+        this.addOrUpdateTagInfo(preRoutePath, {
+          title: this.selectedMenuTitle,
+          path: this.selectedMenuIndex,
+          active: true,
+          closable: true,
+        });
+      }
     },
 
     // 添加或更新TagInfo
@@ -36,6 +54,7 @@ export const useHomeStore = defineStore("home", {
         return;
       }
       // 添加新的Tag
+      this.selectedMenuTitle = tagInfo.title;
       this.tagList.push(tagInfo);
     },
 
@@ -44,6 +63,7 @@ export const useHomeStore = defineStore("home", {
       // 查找是否已添加，如果有就激活当前
       for (const tag of this.tagList) {
         if (tag.path == activePath) {
+          this.selectedMenuTitle = tag.title;
           tag.active = true;
           findFlag = true;
           break;

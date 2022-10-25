@@ -14,21 +14,28 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { RouteLocationNormalizedLoaded, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalizedLoaded, useRouter } from "vue-router";
 
 import { useHomeStore } from "../store/homeStore";
-import { IRouteChange, RouteTagInfo } from "../types/route-info";
+import { IRouteChange } from "../types/route-info";
 
 const homeStore = useHomeStore();
 const { selectedMenuIndex, tagList } = storeToRefs(homeStore);
 const router = useRouter();
+
+// 初始化选择的菜单
+homeStore.initMenuTag();
+
+// 页面刷新前先执行
+window.addEventListener("beforeunload", () => {
+  homeStore.updateCacheMenu();
+});
 
 // 点击标签加载路由
 function selectTag(path: string) {
   if (selectedMenuIndex.value != path) {
     const preRoutePath = router.currentRoute.value.path;
     selectedMenuIndex.value = path;
-    homeStore.updateCacheMenuIndex();
     router.push(path);
     // 激活路由
     homeStore.activeRouteTagInfo(preRoutePath, path);
@@ -66,6 +73,7 @@ const handleChangeRoute: IRouteChange = (
     closable: route.path != tagList.value[0].path,
   });
 };
+
 defineExpose({ handleChangeRoute });
 </script>
 
