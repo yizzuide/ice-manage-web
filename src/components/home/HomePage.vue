@@ -24,7 +24,7 @@
           </HeaderContent>
         </el-header>
         <nav>
-          <Tags ref="tags"></Tags>
+          <Tags></Tags>
         </nav>
         <el-main>
           <router-view></router-view>
@@ -45,8 +45,6 @@ import MenuLogo from "./views/MenuLogo.vue";
 import HeaderContent from "./views/HeaderContent.vue";
 import Breadcrumb from "./views/Breadcrumb.vue";
 import Tags from "./views/Tags.vue";
-import { MenuItemClicked } from "element-plus";
-import { IRouteChange } from "./types/route-info";
 
 const userStore = useUserStore();
 const homeStore = useHomeStore();
@@ -62,19 +60,8 @@ if (route.path != selectedMenuIndex.value) {
   router.replace(selectedMenuIndex.value);
 }
 
-const tags = ref<{ handleChangeRoute: IRouteChange }>();
-function menuSelect(
-  index: string,
-  indexPath: string[],
-  item: MenuItemClicked,
-  routeResult: Promise<void>
-) {
+function menuSelect(index: string) {
   selectedMenuIndex.value = index;
-  const preRoutePath = route.path;
-  // 获取跳转后的路由对象
-  routeResult.then((_) => {
-    tags.value?.handleChangeRoute(preRoutePath, route);
-  });
 }
 </script>
 

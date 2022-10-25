@@ -14,21 +14,18 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { RouteLocationNormalizedLoaded, useRouter } from "vue-router";
-
+import { watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useHomeStore } from "../store/homeStore";
-import { IRouteChange } from "../types/route-info";
 
 const homeStore = useHomeStore();
 const { selectedMenuIndex, tagList } = storeToRefs(homeStore);
 const router = useRouter();
-
-// 初始化选择的菜单
-homeStore.initMenuTag();
+const route = useRoute();
 
 // 页面刷新前先执行
 window.addEventListener("beforeunload", () => {
-  homeStore.updateCacheMenu();
+  homeStore.updateCacheMenuInfo();
 });
 
 // 点击标签加载路由
@@ -59,22 +56,18 @@ function removeTag(path: string) {
   selectTag(activePath);
 }
 
-const handleChangeRoute: IRouteChange = (
-  preRoutePath: string,
-  route: RouteLocationNormalizedLoaded
-) => {
-  if (preRoutePath == route.path) {
-    return;
+// watch监听路由的path
+watch(
+  () => route.path,
+  (activePath, preRoutePath) => {
+    homeStore.addOrUpdateTagInfo(preRoutePath, {
+      title: route.meta.title as string,
+      path: activePath,
+      active: true,
+      closable: activePath != tagList.value[0].path,
+    });
   }
-  homeStore.addOrUpdateTagInfo(preRoutePath, {
-    title: route.meta.title as string,
-    path: route.path,
-    active: true,
-    closable: route.path != tagList.value[0].path,
-  });
-};
-
-defineExpose({ handleChangeRoute });
+);
 </script>
 
 <style scoped lang="scss">
@@ -87,7 +80,11 @@ defineExpose({ handleChangeRoute });
 
   .el-tag {
     cursor: pointer;
+    user-select: none;
     margin-right: 15px;
+  }
+  .el-tag:hover {
+    border: 1px solid sandybrown;
   }
 }
 </style>
