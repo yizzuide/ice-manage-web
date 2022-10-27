@@ -32,6 +32,10 @@
 2. 安装 qs
    npm i qs --save
    npm i @types/qs -D
+3. 安装 echarts
+   npm i echarts --save
+4. 安装监控异步组件
+   npm i @vueuse/core -S
 
 # Element Plus
 
