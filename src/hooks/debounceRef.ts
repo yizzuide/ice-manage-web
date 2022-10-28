@@ -1,7 +1,7 @@
-import {customRef} from "vue";
+import { customRef } from "vue";
 
 /**
- * 自定义节流/防抖的Ref
+ * 自定义节流/防抖的Ref（使用案例：Input输入框延迟更新value）
  * @param value 引用的值
  * @param onUpdate 更新时回调
  * @returns
@@ -11,7 +11,7 @@ export default function (value: any, onUpdate?: () => void) {
   return customRef((track, trigger) => {
     let timer: NodeJS.Timeout;
     return {
-      // 调用.value时，收集依赖，返回值
+      // 调用.value时，收集依赖，然后返回值
       get() {
         track();
         return value;

@@ -13,9 +13,9 @@ export function getToken(): string {
 export function checkAuthFail(code: number) {
   // auth fail code，back to login page.
   if (code == 401) {
-    ElMessage.error("当前请求授权失败！");
     const valid = validToken();
     if (!valid) {
+      console.log("请求授权失败，正在跳转到/login");
       router.push("/login");
     }
   }

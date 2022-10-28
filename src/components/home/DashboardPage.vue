@@ -1,9 +1,24 @@
 <template>
-  <Suspense>
-    <template #default>
-      <DanceNumber ref="asyncTarget"></DanceNumber>
+  <AsyncComponent :component="() => import('./views/DanceNumber.vue')">
+    <template #deps>
+      <div class="chart-container">
+        <el-card class="chart-part chart-part-left">
+          <TopicsPie></TopicsPie>
+        </el-card>
+        <el-card class="chart-part chart-part-right">
+          <BucketsPie></BucketsPie>
+        </el-card>
+      </div>
+      <div class="chart-container">
+        <el-card class="chart-part chart-part-left">
+          <QueueBar></QueueBar>
+        </el-card>
+        <el-card class="chart-part chart-part-right">
+          <DaysStatGrid></DaysStatGrid>
+        </el-card>
+      </div>
     </template>
-    <template #fallback>
+    <template #placeholder>
       <div>
         <el-row :gutter="24">
           <el-col :span="6"
@@ -37,50 +52,15 @@
         </div>
       </div>
     </template>
-  </Suspense>
-  <div class="chart-container" v-if="targetIsVisible">
-    <el-card class="chart-part chart-part-left">
-      <TopicsPie></TopicsPie>
-    </el-card>
-    <el-card class="chart-part chart-part-right">
-      <BucketsPie></BucketsPie>
-    </el-card>
-  </div>
-  <div class="chart-container" v-if="targetIsVisible">
-    <el-card class="chart-part chart-part-left">
-      <QueueBar></QueueBar>
-    </el-card>
-    <el-card class="chart-part chart-part-right">
-      <DaysStatGrid></DaysStatGrid>
-    </el-card>
-  </div>
+  </AsyncComponent>
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, onUnmounted, ref } from "vue";
-import { useIntersectionObserver } from "@vueuse/core";
 import TopicsPie from "./views/TopicsPie.vue";
 import BucketsPie from "./views/BucketsPie.vue";
 import QueueBar from "./views/QueueBar.vue";
 import DaysStatGrid from "./views/DaysStatGrid.vue";
-
-// 定义异步组件，与Suspense联合使用
-const DanceNumber = defineAsyncComponent(
-  () => import("./views/DanceNumber.vue")
-);
-// 监控异步组件交互是否可用
-const asyncTarget = ref();
-const targetIsVisible = ref(false);
-const { stop } = useIntersectionObserver(
-  asyncTarget,
-  ([{ isIntersecting }]) => {
-    // isIntersecting 是否进入可视区域
-    if (isIntersecting) {
-      targetIsVisible.value = isIntersecting;
-    }
-  }
-);
-onUnmounted(() => stop());
+import AsyncComponent from "../views/AsyncComponent.vue";
 </script>
 
 <style scoped lang="scss">

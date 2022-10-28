@@ -1,5 +1,5 @@
-import {ref, watch, Ref} from "vue";
-import {useRouter} from "vue-router";
+import { ref, watch, Ref } from "vue";
+import { useRouter } from "vue-router";
 
 /**
  * 根据当前Route配置的meta.keepAlive来返回Route name
@@ -7,7 +7,7 @@ import {useRouter} from "vue-router";
  */
 export default function () {
   const router = useRouter();
-  // 添加有路由名，且keepAlive配置为true的缓存组件名
+  // 添加路由名，且keepAlive配置为true的缓存组件名
   const keepAliveList: Ref<string[]> = ref([]);
   const keepAliveSet = new Set<string>();
   watch(
