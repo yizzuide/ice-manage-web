@@ -1,5 +1,5 @@
 <template>
-  <div id="pie-topics" style="width: 350px; height: 280px"></div>
+  <div id="pie-topics" style="width: 100%; height: 280px"></div>
 </template>
 
 <script setup lang="ts">

@@ -36,15 +36,16 @@ function load() {
   const option = {
     title: {
       text: "五天任务处理结果统计",
+      subtext: "Ice的JobStat分析",
       left: "center",
     },
     tooltip: {
       trigger: "axis",
     },
     legend: {
-      orient: "horizontal",
-      top: "20",
-      right: "20",
+      orient: "vertical",
+      top: "15",
+      right: "0",
       data: ["处理成功", "处理失败"],
     },
     grid: {
@@ -66,14 +67,14 @@ function load() {
         name: "处理成功",
         type: "line",
         stack: "Total",
-        color: "#39AF78",
+        color: "#8CDD66",
         data: successData,
       },
       {
         name: "处理失败",
         type: "line",
         stack: "Total",
-        color: "red",
+        color: "#DE776C",
         data: failData,
       },
     ],

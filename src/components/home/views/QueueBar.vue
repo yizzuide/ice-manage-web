@@ -1,5 +1,5 @@
 <template>
-  <div id="bar-queues" style="width: 350px; height: 280px"></div>
+  <div id="bar-queues" style="width: 100%; height: 320px"></div>
 </template>
 
 <script setup lang="ts">

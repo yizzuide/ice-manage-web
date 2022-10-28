@@ -1,5 +1,5 @@
 <template>
-  <div id="pie-buckets" style="width: 350px; height: 280px"></div>
+  <div id="pie-buckets" style="width: 100%; height: 280px"></div>
 </template>
 
 <script setup lang="ts">
@@ -39,7 +39,9 @@ function load() {
       trigger: "item",
     },
     legend: {
-      top: "bottom",
+      orient: "vertical",
+      top: "50",
+      right: "0",
     },
     toolbox: {
       show: true,
@@ -54,7 +56,7 @@ function load() {
       {
         name: "Index of Buckets",
         type: "pie",
-        radius: [25, 75],
+        radius: [25, 110],
         center: ["50%", "50%"],
         roseType: "area",
         itemStyle: {
