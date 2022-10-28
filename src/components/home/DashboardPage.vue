@@ -4,35 +4,53 @@
       <DanceNumber ref="asyncTarget"></DanceNumber>
     </template>
     <template #fallback>
-      <el-row :gutter="24">
-        <el-col :span="6"
-          ><el-card><el-skeleton :rows="1" animated /></el-card
-        ></el-col>
-        <el-col :span="6"
-          ><el-card><el-skeleton :rows="1" animated /></el-card
-        ></el-col>
-        <el-col :span="6"
-          ><el-card><el-skeleton :rows="1" animated /></el-card
-        ></el-col>
-        <el-col :span="6"
-          ><el-card><el-skeleton :rows="1" animated /></el-card
-        ></el-col>
-      </el-row>
+      <div>
+        <el-row :gutter="24">
+          <el-col :span="6"
+            ><el-card><el-skeleton :rows="1" animated /></el-card
+          ></el-col>
+          <el-col :span="6"
+            ><el-card><el-skeleton :rows="1" animated /></el-card
+          ></el-col>
+          <el-col :span="6"
+            ><el-card><el-skeleton :rows="1" animated /></el-card
+          ></el-col>
+          <el-col :span="6"
+            ><el-card><el-skeleton :rows="1" animated /></el-card
+          ></el-col>
+        </el-row>
+        <div class="chart-container">
+          <el-card class="chart-part chart-part-left">
+            <el-skeleton :rows="5" animated />
+          </el-card>
+          <el-card class="chart-part chart-part-left">
+            <el-skeleton :rows="5" animated />
+          </el-card>
+        </div>
+        <div class="chart-container">
+          <el-card class="chart-part chart-part-left">
+            <el-skeleton :rows="5" animated />
+          </el-card>
+          <el-card class="chart-part chart-part-left">
+            <el-skeleton :rows="5" animated />
+          </el-card>
+        </div>
+      </div>
     </template>
   </Suspense>
-  <div class="middleContent" v-if="targetIsVisible">
-    <el-card class="part part-left">
+  <div class="chart-container" v-if="targetIsVisible">
+    <el-card class="chart-part chart-part-left">
       <TopicsPie></TopicsPie>
     </el-card>
-    <el-card class="part part-right">
+    <el-card class="chart-part chart-part-right">
       <BucketsPie></BucketsPie>
     </el-card>
   </div>
-  <div class="footerContent" v-if="targetIsVisible">
-    <el-card class="part part-left">
+  <div class="chart-container" v-if="targetIsVisible">
+    <el-card class="chart-part chart-part-left">
       <QueueBar></QueueBar>
     </el-card>
-    <el-card class="part part-right">
+    <el-card class="chart-part chart-part-right">
       <DaysStatGrid></DaysStatGrid>
     </el-card>
   </div>
@@ -66,36 +84,19 @@ onUnmounted(() => stop());
 </script>
 
 <style scoped lang="scss">
-.middleContent {
+.chart-container {
   margin-top: 15px;
   display: flex;
   justify-content: space-between;
-
-  .part {
-    width: 50%;
-    height: 320px;
-  }
-  .part-left {
-    margin-right: 5px;
-  }
-  .part-right {
-    margin-left: 5px;
-  }
 }
-.footerContent {
-  margin-top: 15px;
-  display: flex;
-  justify-content: space-between;
-
-  .part {
-    width: 50%;
-    height: 320px;
-  }
-  .part-left {
-    margin-right: 5px;
-  }
-  .part-right {
-    margin-left: 5px;
-  }
+.chart-part {
+  width: 50%;
+  height: 320px;
+}
+.chart-part-left {
+  margin-right: 5px;
+}
+.chart-part-right {
+  margin-left: 5px;
 }
 </style>

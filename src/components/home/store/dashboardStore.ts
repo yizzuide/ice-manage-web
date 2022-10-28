@@ -31,7 +31,6 @@ export const useDashboardStore = defineStore("dashboard", {
           request<JobStatInfo>({
             url: "/api/job/getJobStat",
             method: "get",
-            showLoading: true,
           }).then((respData) => {
             if (respData.code == 0) {
               this.jobStatInfo = respData.data!;
