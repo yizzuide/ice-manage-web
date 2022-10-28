@@ -31,7 +31,7 @@ function load() {
 
   const option = {
     title: {
-      text: "Topic的Job数据统计",
+      text: "Topic的任务数量统计",
       subtext: "Ice的JobStat分析",
       left: "center",
     },

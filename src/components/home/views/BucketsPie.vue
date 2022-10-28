@@ -25,7 +25,7 @@ onMounted(() => {
 });
 
 function load() {
-  const topicsPie = echarts.init(
+  const bucketsPie = echarts.init(
     document.getElementById("pie-buckets") as HTMLElement
   );
 
@@ -64,7 +64,7 @@ function load() {
       },
     ],
   };
-  topicsPie.setOption(option);
+  bucketsPie.setOption(option);
 }
 </script>
 

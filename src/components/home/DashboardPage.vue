@@ -1,10 +1,4 @@
 <template>
-  <div>
-    数字动画：总job添加数量，总job处理成功数量，当天job添加数量，当天job处理成功数量
-  </div>
-  <div>饼图：每个topic的job数量，delay bucket的job数量</div>
-  <div>柱状图：job pool数量, ready queue的job数量，dead queue的job数量</div>
-  <div>折线图：显示每天（共五天）的job处理成功数量与失败数量</div>
   <Suspense>
     <template #default>
       <DanceNumber ref="asyncTarget"></DanceNumber>
@@ -27,11 +21,19 @@
     </template>
   </Suspense>
   <div class="middleContent" v-if="targetIsVisible">
-    <el-card class="part">
+    <el-card class="part part-left">
       <TopicsPie></TopicsPie>
     </el-card>
-    <el-card class="part">
+    <el-card class="part part-right">
       <BucketsPie></BucketsPie>
+    </el-card>
+  </div>
+  <div class="footerContent" v-if="targetIsVisible">
+    <el-card class="part part-left">
+      <QueueBar></QueueBar>
+    </el-card>
+    <el-card class="part part-right">
+      <DaysStatGrid></DaysStatGrid>
     </el-card>
   </div>
 </template>
@@ -41,8 +43,8 @@ import { defineAsyncComponent, onUnmounted, ref } from "vue";
 import { useIntersectionObserver } from "@vueuse/core";
 import TopicsPie from "./views/TopicsPie.vue";
 import BucketsPie from "./views/BucketsPie.vue";
-import { useDashboardStore } from "./store/dashboardStore";
-import { storeToRefs } from "pinia";
+import QueueBar from "./views/QueueBar.vue";
+import DaysStatGrid from "./views/DaysStatGrid.vue";
 
 // 定义异步组件，与Suspense联合使用
 const DanceNumber = defineAsyncComponent(
@@ -61,9 +63,6 @@ const { stop } = useIntersectionObserver(
   }
 );
 onUnmounted(() => stop());
-
-const dashboardStore = useDashboardStore();
-const { jobStatInfo } = storeToRefs(dashboardStore);
 </script>
 
 <style scoped lang="scss">
@@ -75,6 +74,28 @@ const { jobStatInfo } = storeToRefs(dashboardStore);
   .part {
     width: 50%;
     height: 320px;
+  }
+  .part-left {
+    margin-right: 5px;
+  }
+  .part-right {
+    margin-left: 5px;
+  }
+}
+.footerContent {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+
+  .part {
+    width: 50%;
+    height: 320px;
+  }
+  .part-left {
+    margin-right: 5px;
+  }
+  .part-right {
+    margin-left: 5px;
   }
 }
 </style>

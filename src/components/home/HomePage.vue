@@ -108,7 +108,7 @@ function menuSelect(index: string) {
     }
 
     nav {
-      height: 32px;
+      min-height: 32px;
       border-bottom: 1px solid #e5e5e5;
     }
 

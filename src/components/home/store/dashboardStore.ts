@@ -10,6 +10,11 @@ export interface JobStatInfo {
   finishTodayCount: number;
   topics: KVItem;
   delayBuckets: KVItem;
+  jobPoolCount: number;
+  readyQueueCount: number;
+  deadQueueCount: number;
+  successDaysCount: KVItem;
+  failDaysCount: KVItem;
 }
 
 export const useDashboardStore = defineStore("dashboard", {

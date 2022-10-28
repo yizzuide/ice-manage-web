@@ -5,15 +5,13 @@ import { HttpResult } from "./HttpResult";
 import { useRequest } from "./Request";
 
 interface CachedRequestConfig<T> {
-  requestConfig: SimpleRequestConfig,
-  cachedName: string,
-  beforeCache: (data: T) => any[] | void
+  requestConfig: SimpleRequestConfig;
+  cachedName: string;
+  beforeCache: (data: T) => any[] | void;
 }
 
-export function cachedRequest<T>(
-  config: CachedRequestConfig<T>
-) {
-  const {requestConfig, cachedName, beforeCache} = config;
+export function cachedRequest<T>(config: CachedRequestConfig<T>) {
+  const { requestConfig, cachedName, beforeCache } = config;
   requestConfig.interceptor = {
     onResponse(response) {
       const respData = response.data as HttpResult<T>;
@@ -56,8 +54,8 @@ export default function request<T>(
     useRequest()
       .request<HttpResult<T>>(requestConfig)
       .then((data) => {
-        data.isSuccess = data.code == 0;
         checkAuthFail(data.code);
+        data.isSuccess = data.code == 0;
         resolve(data);
       })
       .catch((error) => {

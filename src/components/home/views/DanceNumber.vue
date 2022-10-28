@@ -9,7 +9,7 @@
     <el-col :span="6">
       <el-card shadow="hover" class="dance-number-content">
         <div class="dance-number">{{ danceNumber.finishTotal }}</div>
-        <div class="number-label">总job执行成功数量</div>
+        <div class="number-label">总job处理成功数量</div>
       </el-card>
     </el-col>
     <el-col :span="6">
@@ -21,7 +21,7 @@
     <el-col :span="6">
       <el-card shadow="hover" class="dance-number-content">
         <div class="dance-number">{{ danceNumber.finishTodayCount }}</div>
-        <div class="number-label">今天job执行成功数量</div>
+        <div class="number-label">今天job处理成功数量</div>
       </el-card>
     </el-col>
   </el-row>

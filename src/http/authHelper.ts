@@ -1,6 +1,7 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import { toNumber } from "lodash";
 
 const router = useRouter();
 const localStorage = useLocalStorage();
@@ -10,9 +11,9 @@ export function getToken(): string {
 }
 
 export function checkAuthFail(code: number) {
-  const hasToken = getToken();
   // auth fail code，back to login page.
-  if (hasToken && code == 401) {
+  if (code == 401) {
+    ElMessage.error("当前请求授权失败！");
     const valid = validToken();
     if (!valid) {
       router.push("/login");
@@ -25,7 +26,7 @@ export function validToken(): [string | undefined, boolean] {
   if (!token) {
     return [undefined, false];
   }
-  const expire = localStorage.get("tokenExpire") as number;
+  const expire = toNumber(localStorage.get("tokenExpire"));
   const isValid = expire > Date.now();
   // auth user need check token is expire
   if (!isValid) {
