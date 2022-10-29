@@ -3,19 +3,21 @@
     <el-container>
       <el-aside width="auto">
         <MenuLogo :collapse="isMenuCollapse"></MenuLogo>
-        <el-menu
-          active-text-color="#ffd04b"
-          background-color="#A35524"
-          text-color="#fff"
-          class="el-menu"
-          :default-active="selectedMenuIndex"
-          :collapse="isMenuCollapse"
-          :unique-opened="true"
-          :router="true"
-          @select="menuSelect"
-        >
-          <MenuItem :menu-list="userStore.menuList"></MenuItem>
-        </el-menu>
+        <el-scrollbar>
+          <el-menu
+            active-text-color="#ffd04b"
+            background-color="#A35524"
+            text-color="#fff"
+            class="el-menu"
+            :default-active="selectedMenuIndex"
+            :collapse="isMenuCollapse"
+            :unique-opened="true"
+            :router="true"
+            @select="menuSelect"
+          >
+            <MenuItem :menu-list="userStore.menuList"></MenuItem>
+          </el-menu>
+        </el-scrollbar>
       </el-aside>
       <el-container class="body">
         <el-header>
@@ -26,17 +28,19 @@
         <nav>
           <Tags></Tags>
         </nav>
-        <el-main>
-          <router-view v-slot="{ Component, route }">
-            <template v-if="Component">
-              <transition name="fade-transform" mode="out-in" appear>
-                <keep-alive :include="keepAliveList">
-                  <component :is="Component" :key="route.path"></component>
-                </keep-alive>
-              </transition>
-            </template>
-          </router-view>
-        </el-main>
+        <el-scrollbar>
+          <el-main>
+            <router-view v-slot="{ Component, route }">
+              <template v-if="Component">
+                <transition name="fade-transform" mode="out-in" appear>
+                  <keep-alive :include="keepAliveList">
+                    <component :is="Component" :key="route.path"></component>
+                  </keep-alive>
+                </transition>
+              </template>
+            </router-view>
+          </el-main>
+        </el-scrollbar>
       </el-container>
     </el-container>
   </div>
@@ -93,13 +97,13 @@ function menuSelect(index: string) {
     .el-aside {
       overflow-y: hidden;
     }
-    // 菜单可滚动
-    .el-menu {
-      overflow-y: scroll;
-    }
     // el-menu[width="auto"] + 下面设置未收起的配置实现菜单向左收缩的效果
     .el-menu:not(.el-menu--collapse) {
       width: 200px;
+    }
+    .el-scrollbar {
+      background-color: #a35524;
+      overflow-y: scroll;
     }
     // 展开子菜单列表背景色
     :deep(.is-opened .el-menu-item) {
@@ -120,6 +124,10 @@ function menuSelect(index: string) {
     nav {
       min-height: 32px;
       border-bottom: 1px solid #e5e5e5;
+    }
+
+    .el-scrollbar {
+      background-color: #eee;
     }
 
     .el-main {

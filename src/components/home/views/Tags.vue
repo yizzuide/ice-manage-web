@@ -74,6 +74,7 @@ watch(
 .el-row {
   height: 100%;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   padding: 0 20px;
   overflow-x: scroll;
