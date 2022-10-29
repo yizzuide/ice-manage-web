@@ -2,7 +2,7 @@ import { App } from "vue";
 import HttpRequest from "../plugins/HttpRequest";
 import { ElLoading } from "element-plus";
 import { LoadingInstance } from "element-plus/es/components/loading/src/loading";
-import { getToken } from "./authHelper";
+import { getToken, setToken } from "./authHelper";
 
 let instance: HttpRequest;
 
@@ -53,6 +53,14 @@ export function Request(_: App) {
           }
         }
         return config;
+      },
+      onResponse(response) {
+        // 检测响应头是否有自动刷新的token
+        const token = response.headers["token"];
+        if (token) {
+          setToken(token);
+        }
+        return response;
       },
     },
   });

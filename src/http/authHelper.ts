@@ -10,6 +10,10 @@ export function getToken(): string {
   return localStorage.get("token");
 }
 
+export function setToken(token: string) {
+  localStorage.set("token", token);
+}
+
 export function checkAuthFail(code: number) {
   // auth fail code，back to login page.
   if (code == 401) {
