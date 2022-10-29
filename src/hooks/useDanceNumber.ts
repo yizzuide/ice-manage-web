@@ -8,7 +8,7 @@ import gsap from "gsap";
  */
 export default function <T extends object>(bindObject: T, target: any) {
   return {
-    start: function () {
+    start: function (duration?: number) {
       const proxyBindObject = reactive<T>(bindObject);
       watchEffect(
         () => {
@@ -16,7 +16,7 @@ export default function <T extends object>(bindObject: T, target: any) {
             if (isRef(target)) {
               target = target.value;
             }
-            showDanceNumber(proxyBindObject, key, target[key]);
+            showDanceNumber(proxyBindObject, key, target[key], duration);
           });
         },
         {
@@ -27,9 +27,14 @@ export default function <T extends object>(bindObject: T, target: any) {
   };
 }
 
-function showDanceNumber(bindObject: any, field: string, targetValue: number) {
+function showDanceNumber(
+  bindObject: any,
+  field: string,
+  targetValue: number,
+  duration?: number
+) {
   gsap.to(bindObject, {
-    duration: 1,
+    duration: duration ?? 1,
     [field]: targetValue ?? 0,
     onUpdate: () => {
       bindObject[field as keyof typeof bindObject] = parseInt(

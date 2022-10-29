@@ -71,6 +71,7 @@ export function addDynamicRoute() {
         path: menu.routePath,
         meta: {
           title: menu.name,
+          keepAlive: false,
         },
         component: viteComponent[`/src/components${menu.componentPath}.vue`],
       });
@@ -81,6 +82,7 @@ export function addDynamicRoute() {
         path: menu.routePath,
         meta: {
           title: menu.name,
+          keepAlive: false,
         },
         component: () => import("@/components/home/HomePage.vue"),
         children: [],
@@ -92,6 +94,7 @@ export function addDynamicRoute() {
           path: subMenu.routePath,
           meta: {
             title: subMenu.name,
+            keepAlive: false,
           },
           component:
             viteComponent[`/src/components${subMenu.componentPath}.vue`],

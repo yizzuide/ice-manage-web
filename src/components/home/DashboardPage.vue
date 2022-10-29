@@ -55,7 +55,7 @@
   </AsyncComponent>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" title="dashboard">
 import TopicsPie from "./views/TopicsPie.vue";
 import BucketsPie from "./views/BucketsPie.vue";
 import QueueBar from "./views/QueueBar.vue";

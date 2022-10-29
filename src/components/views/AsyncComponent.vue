@@ -1,17 +1,19 @@
 <template>
-  <Suspense>
-    <template #default>
-      <div ref="asyncTarget">
-        <component :is="asyncCompInstance"></component>
-      </div>
-    </template>
-    <template #fallback>
-      <slot name="placeholder"></slot>
-    </template>
-  </Suspense>
-  <!-- 依赖异步组件的相关组件，只有异步组件加载完才会加载 -->
-  <div v-if="targetIsVisible">
-    <slot name="deps"></slot>
+  <div class="async-container">
+    <Suspense>
+      <template #default>
+        <div ref="asyncTarget">
+          <component :is="asyncCompInstance"></component>
+        </div>
+      </template>
+      <template #fallback>
+        <slot name="placeholder"></slot>
+      </template>
+    </Suspense>
+    <!-- 依赖异步组件的相关组件，只有异步组件加载完才会加载 -->
+    <div v-if="targetIsVisible">
+      <slot name="deps"></slot>
+    </div>
   </div>
 </template>
 

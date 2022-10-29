@@ -46,7 +46,7 @@ const counter = reactive({
 // 等待请求job统计数据（数据由pinia统一管理）
 await dashboardStore.fetchJobStatInfo();
 // 显示数字动画
-useDanceNumber(counter, jobStatInfo).start();
+useDanceNumber(counter, jobStatInfo).start(0.5);
 </script>
 
 <style scoped lang="scss">

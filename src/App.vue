@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ElConfigProvider} from "element-plus";
+import { ElConfigProvider } from "element-plus";
 
 // ElConfigProvider：全局配置对象
 // size 用于设置表单组件的默认尺寸（small, middle, large）

@@ -27,7 +27,15 @@
           <Tags></Tags>
         </nav>
         <el-main>
-          <router-view></router-view>
+          <router-view v-slot="{ Component, route }">
+            <template v-if="Component">
+              <transition name="fade-transform" mode="out-in">
+                <keep-alive :include="keepAliveList">
+                  <component :is="Component" :key="route.path"></component>
+                </keep-alive>
+              </transition>
+            </template>
+          </router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -45,7 +53,9 @@ import MenuLogo from "./views/MenuLogo.vue";
 import HeaderContent from "./views/HeaderContent.vue";
 import Breadcrumb from "./views/Breadcrumb.vue";
 import Tags from "./views/Tags.vue";
+import useAliveRouteNames from "@/hooks/useAliveRouteNames";
 
+const keepAliveList = useAliveRouteNames();
 const userStore = useUserStore();
 const homeStore = useHomeStore();
 
@@ -114,6 +124,16 @@ function menuSelect(index: string) {
 
     .el-main {
       background-color: #eee;
+
+      .fade-transform-enter-from,
+      .fade-transform-leave-to {
+        opacity: 0;
+      }
+
+      .fade-transform-enter-active,
+      .fade-transform-leave-active {
+        transition: opacity 0.5s ease;
+      }
     }
   }
 }
