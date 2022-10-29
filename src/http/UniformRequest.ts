@@ -1,7 +1,7 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { SimpleRequestConfig } from "@/plugins/request";
 import { checkAuthFail } from "./authHelper";
-import { HttpResult } from "./HttpResult";
+import { HttpResult } from "./HttpDefine";
 import { useRequest } from "./Request";
 
 interface CachedRequestConfig<T> {
@@ -59,6 +59,7 @@ export default function request<T>(
         resolve(data);
       })
       .catch((error) => {
+        console.log("request error: ", error);
         // http status code > 4xx -> error data
         resolve({ code: -1, isSuccess: false, message: "服务内部错误！" });
       });

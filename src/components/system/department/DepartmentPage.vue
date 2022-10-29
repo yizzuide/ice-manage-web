@@ -14,13 +14,14 @@
         <el-date-picker
           v-model="searchDate"
           type="daterange"
+          value-format="YYYY-MM-DD HH:mm:ss"
           start-placeholder="开始时间"
           end-placeholder="结束时间"
           :default-value="[new Date(2022, 0, 1), new Date(2022, 1, 1)]"
         />
       </el-col>
       <el-col :span="4">
-        <el-button :icon="Search">搜索</el-button>
+        <el-button :icon="Search" @click="search">搜索</el-button>
       </el-col>
     </el-row>
 
@@ -31,19 +32,21 @@
     </el-row>
     <el-table
       :data="tableData"
-      table-layout="fixed"
+      table-layout="auto"
       style="width: 100%; margin-top: 10px"
       max-height="250"
       row-key="id"
       default-expand-all
     >
-      <el-table-column prop="id" label="ID" width="80" />
-      <el-table-column prop="name" label="名称" width="120" />
-      <el-table-column sortable prop="date" label="时间" />
-      <el-table-column fixed="right" label="Operations" width="120">
+      <el-table-column prop="id" label="ID" width="120" />
+      <el-table-column prop="departmentName" label="名称" />
+      <el-table-column prop="phone" label="电话" />
+      <el-table-column prop="address" label="地址" />
+      <el-table-column sortable prop="createTime" label="时间" width="180" />
+      <el-table-column fixed="right" label="Operations">
         <template #default="scope">
           <div style="display: flex">
-            <el-button :icon="Edit" type="warning"></el-button>
+            <el-button :icon="Edit" color="#EAFD57"></el-button>
             <el-button
               :icon="Delete"
               type="danger"
@@ -59,52 +62,28 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Search, Plus, Edit, Delete } from "@element-plus/icons-vue";
+import { Department, useDepartmentStore } from "./store/departmentStore";
 
 const searchDepartmentName = ref("");
-const searchDate = ref("");
+const searchDate = ref<Date[]>();
+const tableData = ref(<Department[]>[]);
 
-interface User {
-  id: number;
-  date: string;
-  name: string;
-  hasChildren?: boolean;
-  children?: User[];
+const departmentStore = useDepartmentStore();
+search();
+
+function search() {
+  departmentStore
+    .fetchPage({
+      pageStart: 1,
+      pageSize: 10,
+      startDate: searchDate.value?.[0],
+      endDate: searchDate.value?.[1],
+      entity: {
+        departmentName: searchDepartmentName.value,
+      },
+    })
+    .then((_) => (tableData.value = departmentStore.departmentList));
 }
-
-const tableData: User[] = [
-  {
-    id: 1,
-    date: "2016-05-02",
-    name: "Morgan",
-  },
-  {
-    id: 2,
-    date: "2016-05-04",
-    name: "John",
-  },
-  {
-    id: 3,
-    date: "2016-05-01",
-    name: "Tom",
-    children: [
-      {
-        id: 31,
-        date: "2016-05-01",
-        name: "Tom 1",
-      },
-      {
-        id: 32,
-        date: "2016-05-01",
-        name: "Tom 2",
-      },
-    ],
-  },
-  {
-    id: 4,
-    date: "2016-05-03",
-    name: "Lisa",
-  },
-];
 
 const handleDelete = (index: number, row: any) => {
   console.log(index, row);

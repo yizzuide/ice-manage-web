@@ -51,7 +51,12 @@ export default class HttpRequest implements IHttpRequest {
       showLoading: requestConfig.showLoading ?? false,
     } as RequestConfig;
 
-    if (requestConfig.method.toLowerCase() === "get") {
+    // 'delete', 'head', 'options', 'get' 四个方法是不带data的
+    if (
+      ["get", "delete", "head", "options"].indexOf(
+        requestConfig.method.toLowerCase()
+      ) != -1
+    ) {
       config.params = requestConfig.params;
     } else {
       config.data = requestConfig.params;
