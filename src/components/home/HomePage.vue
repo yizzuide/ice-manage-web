@@ -29,7 +29,7 @@
         <el-main>
           <router-view v-slot="{ Component, route }">
             <template v-if="Component">
-              <transition name="fade-transform" mode="out-in">
+              <transition name="fade-transform" mode="out-in" appear>
                 <keep-alive :include="keepAliveList">
                   <component :is="Component" :key="route.path"></component>
                 </keep-alive>
@@ -128,11 +128,12 @@ function menuSelect(index: string) {
       .fade-transform-enter-from,
       .fade-transform-leave-to {
         opacity: 0;
+        transform: translateX(-15px);
       }
 
       .fade-transform-enter-active,
       .fade-transform-leave-active {
-        transition: opacity 0.5s ease;
+        transition: all 0.5s ease;
       }
     }
   }
