@@ -66,7 +66,7 @@ export default class HttpRequest implements IHttpRequest {
       config.headers = {
         "Content-Type": "application/x-www-form-urlencoded",
       };
-      // json -> form string format
+      // post json data -> form string format
       if (config.data) {
         config.data = qs.stringify(config.data);
       }

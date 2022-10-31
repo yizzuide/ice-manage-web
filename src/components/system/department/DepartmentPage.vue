@@ -32,17 +32,12 @@
     </el-row>
     <el-table
       :data="tableData"
-      table-layout="auto"
       style="width: 100%; margin-top: 10px"
       max-height="250"
       row-key="id"
-      default-expand-all
     >
-      <el-table-column prop="id" label="ID" width="120" />
+      <el-table-column prop="id" label="ID" />
       <el-table-column prop="departmentName" label="名称" />
-      <el-table-column prop="phone" label="电话" />
-      <el-table-column prop="address" label="地址" />
-      <el-table-column sortable prop="createTime" label="时间" width="180" />
       <el-table-column fixed="right" label="Operations">
         <template #default="scope">
           <div style="display: flex">
