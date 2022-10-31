@@ -13,14 +13,19 @@ interface NodeProxy<T> extends Node {
   target: T;
 }
 
-// 代理实现Node接口，TS的类型编译为JS后会移除，这里需要添加真实方法实现
+/**
+ * Node接口代理实现（TS的类型编译为JS后会移除，这里需要添加真实方法实现）
+ * @param target    目标
+ * @param methods   代理方法
+ * @returns Node接口代理对象
+ */
 export function proxyImplNode<T extends Node>(
   target: T,
-  nodeConfig: Node
+  methods: Node
 ): NodeProxy<T> {
   return {
     target,
-    ...nodeConfig,
+    ...methods,
   };
 }
 
@@ -31,18 +36,17 @@ export function proxyImplNode<T extends Node>(
  * @returns 树节点列表
  */
 export default function buildTree<T extends Node>(
-  nodeList: T[],
+  nodeList: NodeProxy<T>[],
   parentId?: number
 ): T[] {
-  const orderNodeList: T[] = [];
+  const orderNodeList: NodeProxy<T>[] = [];
   for (const node of nodeList) {
     if (node.getParentId() == null || node.getParentId() == parentId) {
-      node.setChildren(
-        (node as Node as NodeProxy<T>).target,
-        buildTree(nodeList, node.getId())
-      );
+      node.setChildren(node.target, buildTree(nodeList, node.getId()));
       orderNodeList.push(node);
     }
   }
-  return orderNodeList.sort((n1, n2) => n1.getOrder() - n2.getOrder());
+  return orderNodeList
+    .sort((n1, n2) => n1.getOrder() - n2.getOrder())
+    .map((n) => n.target);
 }

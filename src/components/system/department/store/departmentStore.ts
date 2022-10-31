@@ -28,6 +28,7 @@ export const useDepartmentStore = defineStore("department", {
         params: pageData,
         showLoading: true,
       }).then((respData) => {
+        // 使用代理实现nodeTree需要的接口方法
         const proxyNodeList = respData.data!.list.map((d) =>
           proxyImplNode(d, {
             getId() {
@@ -58,8 +59,8 @@ export const useDepartmentStore = defineStore("department", {
           .filter((n) => n.target.pid != 0);
         this.departmentList = [
           ...buildTree(proxyNodeList, 0),
-          ...singleNodeList,
-        ].map((n) => n.target);
+          ...singleNodeList.map((n) => n.target),
+        ];
         console.log("data: ", this.departmentList);
       });
     },
