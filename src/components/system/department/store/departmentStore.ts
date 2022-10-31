@@ -46,20 +46,21 @@ export const useDepartmentStore = defineStore("department", {
           })
         );
         // 查找单个且没有父节点关联的（不需要构建节点树）
-        const singleNodeList: Department[] = proxyNodeList
+        const singleNodeList = proxyNodeList
           .filter((n) => {
             for (const pn of proxyNodeList) {
-              if (n.pid == pn.id) {
+              if (n.target.pid == pn.target.id) {
                 return false;
               }
             }
             return true;
           })
-          .filter((n) => n.pid != 0);
+          .filter((n) => n.target.pid != 0);
         this.departmentList = [
           ...buildTree(proxyNodeList, 0),
           ...singleNodeList,
-        ];
+        ].map((n) => n.target);
+        console.log("data: ", this.departmentList);
       });
     },
   },

@@ -8,10 +8,18 @@ export interface Node {
   setChildren(parentNode: Node, nodes: Node[]): void;
 }
 
+// Node接口代理
+interface NodeProxy<T> extends Node {
+  target: T;
+}
+
 // 代理实现Node接口，TS的类型编译为JS后会移除，这里需要添加真实方法实现
-export function proxyImplNode<T extends Node>(target: T, nodeConfig: Node) {
+export function proxyImplNode<T extends Node>(
+  target: T,
+  nodeConfig: Node
+): NodeProxy<T> {
   return {
-    ...target,
+    target,
     ...nodeConfig,
   };
 }
@@ -29,7 +37,10 @@ export default function buildTree<T extends Node>(
   const orderNodeList: T[] = [];
   for (const node of nodeList) {
     if (node.getParentId() == null || node.getParentId() == parentId) {
-      node.setChildren(node, buildTree(nodeList, node.getId()));
+      node.setChildren(
+        (node as Node as NodeProxy<T>).target,
+        buildTree(nodeList, node.getId())
+      );
       orderNodeList.push(node);
     }
   }
