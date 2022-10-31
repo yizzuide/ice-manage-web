@@ -1,6 +1,6 @@
 import { PageData, QueryPageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
-import buildTree, { Node, proxyImplNode } from "@/tools/nodeTree";
+import { buildProxyNodeTree, Node } from "@/tools/nodeTree";
 import { defineStore } from "pinia";
 
 export interface Department extends Node {
@@ -28,39 +28,42 @@ export const useDepartmentStore = defineStore("department", {
         params: pageData,
         showLoading: true,
       }).then((respData) => {
-        // 使用代理实现nodeTree需要的接口方法
-        const proxyNodeList = respData.data!.list.map((d) =>
-          proxyImplNode(d, {
-            getId() {
-              return d.id;
-            },
-            getParentId() {
-              return d.pid;
-            },
-            getOrder() {
-              return d.orderNum;
-            },
-            setChildren(parentNode, nodes) {
-              const depart = parentNode as Department;
-              depart.children = nodes as Department[];
-            },
-          })
+        const departmentList = respData.data!.list;
+        // 构建树节点列表
+        const departmentNodeTree = buildProxyNodeTree(
+          departmentList,
+          (target) => {
+            return {
+              getId() {
+                return target.id;
+              },
+              getParentId() {
+                return target.pid;
+              },
+              getOrder() {
+                return target.orderNum;
+              },
+              setChildren(parentNode, nodes) {
+                const depart = parentNode as Department;
+                depart.children = nodes as Department[];
+              },
+            };
+          },
+          0
         );
+
         // 查找单个且没有父节点关联的（不需要构建节点树）
-        const singleNodeList = proxyNodeList
+        const singleNodeList = departmentList
           .filter((n) => {
-            for (const pn of proxyNodeList) {
-              if (n.target.pid == pn.target.id) {
+            for (const pn of departmentList) {
+              if (n.pid == pn.id) {
                 return false;
               }
             }
             return true;
           })
-          .filter((n) => n.target.pid != 0);
-        this.departmentList = [
-          ...buildTree(proxyNodeList, 0),
-          ...singleNodeList.map((n) => n.target),
-        ];
+          .filter((n) => n.pid != 0);
+        this.departmentList = [...departmentNodeTree, ...singleNodeList];
         console.log("data: ", this.departmentList);
       });
     },

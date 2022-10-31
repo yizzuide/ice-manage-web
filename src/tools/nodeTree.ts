@@ -8,7 +8,9 @@ export interface Node {
   setChildren(parentNode: Node, nodes: Node[]): void;
 }
 
-// Node接口代理
+/**
+ * Node接口代理
+ */
 interface NodeProxy<T> extends Node {
   target: T;
 }
@@ -30,12 +32,28 @@ export function proxyImplNode<T extends Node>(
 }
 
 /**
- * 通用树节点构建
- * @param nodeList 节点列表
+ * 通用自动代理Node接口的树节点构建
+ * @param nodeList  节点列表
+ * @param proxyMethods Node接口方法实现
+ * @param parentId 父节点ID
+ * @returns
+ */
+export function buildProxyNodeTree<T extends Node>(
+  nodeList: T[],
+  proxyMethods: (target: T) => Node,
+  parentId?: number
+) {
+  const nodeProxyList = nodeList.map((n) => proxyImplNode(n, proxyMethods(n)));
+  return buildTree(nodeProxyList, parentId);
+}
+
+/**
+ * 树节点构建
+ * @param nodeList 代理节点列表
  * @param parentId 父节点ID
  * @returns 树节点列表
  */
-export default function buildTree<T extends Node>(
+function buildTree<T extends Node>(
   nodeList: NodeProxy<T>[],
   parentId?: number
 ): T[] {
