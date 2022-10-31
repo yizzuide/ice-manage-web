@@ -36,9 +36,12 @@
       max-height="250"
       row-key="id"
     >
-      <el-table-column prop="id" label="ID" />
-      <el-table-column prop="departmentName" label="名称" />
-      <el-table-column fixed="right" label="Operations">
+      <el-table-column prop="id" label="ID" width="120" />
+      <el-table-column prop="departmentName" label="名称" width="200" />
+      <el-table-column prop="phone" label="电话" width="150" />
+      <el-table-column prop="address" label="地址" width="200" />
+      <el-table-column prop="createTime" label="添加时间" width="200" />
+      <el-table-column fixed="right" label="Operations" width="120">
         <template #default="scope">
           <div style="display: flex">
             <el-button :icon="Edit" color="#EAFD57"></el-button>

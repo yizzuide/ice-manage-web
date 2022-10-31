@@ -10,6 +10,7 @@ export interface Department extends Node {
   phone: string;
   address: string;
   createTime: string;
+  orderNum: number;
   children?: Department[];
 }
 
@@ -27,26 +28,38 @@ export const useDepartmentStore = defineStore("department", {
         params: pageData,
         showLoading: true,
       }).then((respData) => {
-        this.departmentList = buildTree(
-          respData.data!.list.map((d) =>
-            proxyImplNode(d, {
-              getId() {
-                return d.id;
-              },
-              getParentId() {
-                return d.pid;
-              },
-              getOrder() {
-                return 0;
-              },
-              setChildren(parentNode, nodes) {
-                const depart = parentNode as Department;
-                depart.children = nodes as Department[];
-              },
-            })
-          ),
-          0
+        const proxyNodeList = respData.data!.list.map((d) =>
+          proxyImplNode(d, {
+            getId() {
+              return d.id;
+            },
+            getParentId() {
+              return d.pid;
+            },
+            getOrder() {
+              return d.orderNum;
+            },
+            setChildren(parentNode, nodes) {
+              const depart = parentNode as Department;
+              depart.children = nodes as Department[];
+            },
+          })
         );
+        // 查找单个且没有父节点关联的（不需要构建节点树）
+        const singleNodeList: Department[] = proxyNodeList
+          .filter((n) => {
+            for (const pn of proxyNodeList) {
+              if (n.pid == pn.id) {
+                return false;
+              }
+            }
+            return true;
+          })
+          .filter((n) => n.pid != 0);
+        this.departmentList = [
+          ...buildTree(proxyNodeList, 0),
+          ...singleNodeList,
+        ];
       });
     },
   },
