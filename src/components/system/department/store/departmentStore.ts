@@ -28,10 +28,9 @@ export const useDepartmentStore = defineStore("department", {
         params: pageData,
         showLoading: true,
       }).then((respData) => {
-        const departmentList = respData.data!.list;
         // 构建树节点列表
-        const departmentNodeTree = buildProxyNodeTree(
-          departmentList,
+        this.departmentList = buildProxyNodeTree(
+          respData.data!.list,
           (target) => {
             return {
               getId() {
@@ -48,23 +47,8 @@ export const useDepartmentStore = defineStore("department", {
                 depart.children = nodes as Department[];
               },
             };
-          },
-          0
+          }
         );
-
-        // 查找单个且没有父节点关联的（不需要构建节点树）
-        const singleNodeList = departmentList
-          .filter((n) => {
-            for (const pn of departmentList) {
-              if (n.pid == pn.id) {
-                return false;
-              }
-            }
-            return true;
-          })
-          .filter((n) => n.pid != 0);
-        this.departmentList = [...departmentNodeTree, ...singleNodeList];
-        console.log("data: ", this.departmentList);
       });
     },
   },
