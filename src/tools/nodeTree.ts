@@ -73,14 +73,14 @@ function buildTree<T extends Node>(
       .forEach((nodes) => treeList.push(...nodes));
     return treeList;
   } else {
-    const orderNodeList: NodeProxy<T>[] = [];
+    const nodeProxyList: NodeProxy<T>[] = [];
     for (const node of nodeList) {
       if (node.getParentId() === null || node.getParentId() == parentId) {
         node.setChildren(node.target, buildTree(nodeList, node.getId()));
-        orderNodeList.push(node);
+        nodeProxyList.push(node);
       }
     }
-    return orderNodeList
+    return nodeProxyList
       .sort((n1, n2) => n1.getOrder() - n2.getOrder())
       .map((n) => n.target);
   }
