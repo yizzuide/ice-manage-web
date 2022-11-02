@@ -1,5 +1,3 @@
-import { ref } from "vue";
-
 interface Board {
   type?: "text" | "number" | "select";
   isPassword?: boolean;

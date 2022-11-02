@@ -47,11 +47,16 @@
         <el-table-column prop="departmentName" label="名称" width="200" />
         <el-table-column prop="phone" label="电话" width="150" />
         <el-table-column prop="address" label="地址" width="200" />
+        <el-table-column prop="orderNum" label="排序" width="80" />
         <el-table-column prop="createTime" label="添加时间" width="200" />
         <el-table-column fixed="right" label="Operations" width="120">
           <template #default="scope">
             <div style="display: flex">
-              <el-button :icon="Edit" color="#EAFD57"></el-button>
+              <el-button
+                :icon="Edit"
+                color="#EAFD57"
+                @click="handleEdit(scope.$index, scope.row)"
+              ></el-button>
               <el-button
                 :icon="Delete"
                 type="danger"
@@ -112,6 +117,20 @@ const addRow = () => {
 
 const changeSelectedRow = (row: Department) => {
   selectedRow = row;
+};
+
+const handleEdit = (index: number, row: Department) => {
+  dialogConfig.value.title = "修改部门";
+  dialogConfig.value.request.url = "/api/department/update";
+  dialogConfig.value.request.method = "put";
+  dialogConfig.value.model = {
+    id: row.id,
+    departmentName: row.departmentName,
+    phone: row.phone,
+    address: row.address,
+    orderNum: row.orderNum,
+  };
+  showDialog.value = true;
 };
 
 const handleDelete = (index: number, row: any) => {

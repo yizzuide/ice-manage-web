@@ -6,6 +6,7 @@ import { defineStore } from "pinia";
 export interface Department extends Node {
   id: number;
   pid: number;
+  parentName: string;
   departmentName: string;
   phone: string;
   address: string;

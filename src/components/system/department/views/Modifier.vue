@@ -65,6 +65,10 @@ watch(
   () => props.visible,
   (isVisible) => (showDialog.value = isVisible)
 );
+watch(
+  () => props.config.model,
+  (model) => (data.value = model)
+);
 
 function onClose(command: () => void) {
   emit("close", false);

@@ -23,6 +23,18 @@ export const dialogConfig = ref<DialogConfig>({
         trigger: "blur",
       },
     ],
+    orderNum: [
+      {
+        required: true,
+        message: "排序不能为空！",
+        trigger: "blur",
+      },
+      {
+        pattern: /\d+/,
+        message: "排序必须为数字！",
+        trigger: "blur",
+      },
+    ],
   },
   board: [
     {
