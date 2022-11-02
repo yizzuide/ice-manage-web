@@ -52,5 +52,15 @@ export const useDepartmentStore = defineStore("department", {
         );
       });
     },
+    removeRecord(id: number) {
+      return request({
+        url: "/api/department/del",
+        method: "delete",
+        params: {
+          id,
+        },
+        showLoading: true,
+      });
+    },
   },
 });

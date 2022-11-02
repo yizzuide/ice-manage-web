@@ -44,7 +44,7 @@
 import { ref, watch } from "vue";
 import { isFunction } from "@vueuse/shared";
 import { ElMessage, FormInstance } from "element-plus";
-import { DialogConfig } from "../types/dialog";
+import { DialogConfig } from "./data-dialog";
 import request from "@/http/uniformRequest";
 
 const props = defineProps<{

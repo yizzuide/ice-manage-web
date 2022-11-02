@@ -67,11 +67,11 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <Modifier
+    <DataDialog
       :visible="showDialog"
       :config="dialogConfig"
       @close="onDialogClose"
-    ></Modifier>
+    ></DataDialog>
   </div>
 </template>
 
@@ -79,8 +79,9 @@
 import { ref } from "vue";
 import { Search, Plus, Edit, Delete } from "@element-plus/icons-vue";
 import { Department, useDepartmentStore } from "./store/departmentStore";
-import Modifier from "./views/Modifier.vue";
-import { dialogConfig } from "./types/depart-dialog-config";
+import DataDialog from "../../views/DataDialog.vue";
+import { dialogConfig } from "./types/depart-data-dialog";
+import { ElMessageBox } from "element-plus";
 
 const departmentStore = useDepartmentStore();
 const searchDepartmentName = ref("");
@@ -108,6 +109,14 @@ function search() {
 const addRow = () => {
   dialogConfig.value.title = "添加部门";
   dialogConfig.value.request.url = "/api/department/add";
+  dialogConfig.value.model = {
+    id: null,
+    departmentName: "",
+    phone: "",
+    address: "",
+    orderNum: 0,
+    parentName: "",
+  };
   if (selectedRow) {
     dialogConfig.value.model.parentName = selectedRow.departmentName;
     dialogConfig.value.model.pid = selectedRow.id;
@@ -134,7 +143,11 @@ const handleEdit = (index: number, row: Department) => {
 };
 
 const handleDelete = (index: number, row: any) => {
-  console.log(index, row);
+  ElMessageBox.confirm("确定删除吗？", "警告").then(() => {
+    departmentStore.removeRecord(row.id).then(() => {
+      search();
+    });
+  });
 };
 
 function onDialogClose(conform: boolean) {

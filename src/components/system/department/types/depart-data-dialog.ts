@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { DialogConfig } from "./dialog";
+import { DialogConfig } from "../../../views/data-dialog";
 
 export const dialogConfig = ref<DialogConfig>({
   title: "",
