@@ -17,9 +17,8 @@ export function setToken(token: string) {
 export function checkAuthFail(code: number) {
   // auth fail code，back to login page.
   if (code == 401) {
-    const valid = validToken();
+    const valid = validToken()[1];
     if (!valid) {
-      console.log("请求授权失败，正在跳转到/login");
       router.push("/login");
     }
   }

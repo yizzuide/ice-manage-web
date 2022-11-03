@@ -16,6 +16,7 @@ import { DialogConfig, Model } from "@/components/views/data-dialog";
 import { ModifierDepartment } from "./config/depart-data-dialog";
 import ListPage from "@/components/views/ListPage.vue";
 import { useDepartmentStore } from "./store/departmentStore";
+import { ElMessage } from "element-plus";
 
 const departmentStore = useDepartmentStore();
 let tableDataRef: Ref<Model[]>;
@@ -76,9 +77,13 @@ function operation(
     return;
   }
   if (name == "remove") {
-    departmentStore
-      .removeRecord(selectedRow.id)
-      .then(() => search(reqParams, tableDataRef));
+    departmentStore.removeRecord(selectedRow.id).then((data) => {
+      if (!data.isSuccess) {
+        ElMessage.error(data.message);
+        return;
+      }
+      search(reqParams, tableDataRef);
+    });
   }
 }
 </script>
