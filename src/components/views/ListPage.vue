@@ -39,6 +39,7 @@
         style="width: 100%; margin-top: 10px"
         max-height="250"
         row-key="id"
+        default-expand-all
         highlight-current-row
         @current-change="changeSelectedRow"
       >
@@ -73,7 +74,13 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination background layout="prev, pager, next" :total="pageCount" />
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :page-count="pageCount"
+        :current-page="pageIndex"
+        @current-change="changePageIndex"
+      />
     </el-card>
     <DataDialog
       :visible="showDialog"
@@ -85,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref } from "vue";
+import { Ref, ref, watch } from "vue";
 import { Search, Plus, Edit, Delete } from "@element-plus/icons-vue";
 import DataDialog from "./DataDialog.vue";
 import { ElMessageBox } from "element-plus";
@@ -112,6 +119,7 @@ let selectedRow: Model;
 const isNormalPageType = !props.page.type || props.page.type == "normal";
 const dialogConfig = ref(props.page.struct.dialogConfig);
 const showDialog = ref(false);
+const pageIndex = ref<number>(1);
 
 search();
 
@@ -119,11 +127,17 @@ function search() {
   emit(
     "search",
     {
+      searchIndex: pageIndex.value,
       searchName: searchName.value,
       searchDate: searchDate.value,
     },
     tableData
   );
+}
+
+function changePageIndex(index: number) {
+  pageIndex.value = index;
+  search();
 }
 
 const addRow = () => {

@@ -3,6 +3,7 @@ import { DialogConfig, Model } from "./data-dialog";
 export type OperationNamed = "add" | "edit" | "remove";
 
 export type SearchParams = {
+  searchIndex: number;
   searchName?: string;
   searchDate?: Date[];
 };
