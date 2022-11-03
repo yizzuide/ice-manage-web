@@ -168,7 +168,6 @@ function onDialogClose(conform: boolean) {
   }
 }
 .el-pagination {
-  width: 100%;
   margin: 15px auto;
 }
 </style>

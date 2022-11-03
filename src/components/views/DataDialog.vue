@@ -20,7 +20,7 @@
             :show-password="item.isPassword"
             :disabled="item.isDisable"
             autocomplete="off"
-            v-if="item.type === undefined || item.type == 'text'"
+            v-if="!item.type || item.type == 'text'"
           />
           <el-input-number
             v-model="data[item.fieldName]"
@@ -28,6 +28,18 @@
             :max="10"
             v-else-if="item.type == 'number'"
           />
+          <el-select
+            v-model="data[item.fieldName]"
+            placeholder="请选择"
+            v-else-if="item.type == 'select'"
+          >
+            <el-option
+              v-for="opt in item.selectValues"
+              :key="opt.value"
+              :label="opt.label"
+              :value="opt.value"
+            />
+          </el-select>
         </el-form-item>
       </div>
     </el-form>
@@ -44,12 +56,12 @@
 import { ref, watch } from "vue";
 import { isFunction } from "@vueuse/shared";
 import { ElMessage, FormInstance } from "element-plus";
-import { DialogConfig } from "./data-dialog";
+import { DialogConfig, Model } from "./data-dialog";
 import request from "@/http/uniformRequest";
 
 const props = defineProps<{
   visible: boolean;
-  config: DialogConfig;
+  config: DialogConfig<Model>;
 }>();
 
 const emit = defineEmits<{

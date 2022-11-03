@@ -1,5 +1,10 @@
 export type Model = Record<string, any>;
 
+interface SelectOptions {
+  label: string;
+  value: number;
+}
+
 interface Board {
   // text is default
   type?: "text" | "number" | "select";
@@ -7,7 +12,7 @@ interface Board {
   isDisable?: boolean;
   label: string;
   fieldName: string;
-  selectValues?: [];
+  selectValues?: SelectOptions[];
 }
 
 export interface DialogConfig<T extends Model> {
