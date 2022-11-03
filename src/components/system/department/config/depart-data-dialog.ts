@@ -1,7 +1,7 @@
-import { ref } from "vue";
+import { Model } from "@/components/views/list-page";
 import { DialogConfig } from "../../../views/data-dialog";
 
-export const dialogConfig = ref<DialogConfig>({
+export const departDialogConfig: DialogConfig<Model> = {
   title: "",
   request: {
     url: "",
@@ -60,4 +60,4 @@ export const dialogConfig = ref<DialogConfig>({
       isDisable: true,
     },
   ],
-});
+};

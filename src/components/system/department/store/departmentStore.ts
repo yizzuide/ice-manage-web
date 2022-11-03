@@ -1,9 +1,10 @@
+import { Model } from "@/components/views/list-page";
 import { PageData, QueryPageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
 import { buildProxyNodeTree, Node } from "@/tools/nodeTree";
 import { defineStore } from "pinia";
 
-export interface Department extends Node {
+export interface Department extends Node, Model {
   id: number;
   pid: number;
   parentName: string;

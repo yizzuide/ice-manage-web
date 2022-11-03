@@ -1,3 +1,5 @@
+import { Model } from "./list-page";
+
 interface Board {
   type?: "text" | "number" | "select";
   isPassword?: boolean;
@@ -7,10 +9,10 @@ interface Board {
   selectValues?: [];
 }
 
-export interface DialogConfig {
+export interface DialogConfig<T extends Model> {
   title: string;
   rules?: Record<string, any>;
-  model: Record<string, any>;
+  model: T;
   board: Board[];
   request: {
     url: string;
