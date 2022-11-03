@@ -1,7 +1,16 @@
-import { Model } from "@/components/views/list-page";
-import { DialogConfig } from "../../../views/data-dialog";
+import { DialogConfig, Model } from "@/components/views/data-dialog";
 
-export const departDialogConfig: DialogConfig<Model> = {
+export interface ModifierDepartment extends Model {
+  id?: number;
+  departmentName: string;
+  phone: string;
+  address: string;
+  orderNum: number;
+  pid?: number;
+  parentName?: string;
+}
+
+export const departDialogConfig: DialogConfig<ModifierDepartment> = {
   title: "",
   request: {
     url: "",

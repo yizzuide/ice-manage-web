@@ -1,6 +1,7 @@
-import { Model } from "./list-page";
+export type Model = Record<string, any>;
 
 interface Board {
+  // text is default
   type?: "text" | "number" | "select";
   isPassword?: boolean;
   isDisable?: boolean;

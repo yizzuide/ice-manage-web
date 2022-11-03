@@ -1,10 +1,9 @@
-import { Model } from "@/components/views/list-page";
 import { PageData, QueryPageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
 import { buildProxyNodeTree, Node } from "@/tools/nodeTree";
 import { defineStore } from "pinia";
 
-export interface Department extends Node, Model {
+export interface Department extends Node {
   id: number;
   pid: number;
   parentName: string;
@@ -20,6 +19,7 @@ export const useDepartmentStore = defineStore("department", {
   state: () => {
     return {
       departmentList: <Department[]>[],
+      pageCount: 0,
     };
   },
   actions: {
@@ -30,6 +30,7 @@ export const useDepartmentStore = defineStore("department", {
         params: pageData,
         showLoading: true,
       }).then((respData) => {
+        this.pageCount = respData.data!.pageCount;
         // 构建树节点列表
         this.departmentList = buildProxyNodeTree(
           respData.data!.list,

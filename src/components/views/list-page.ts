@@ -1,6 +1,6 @@
-import { DialogConfig } from "./data-dialog";
+import { DialogConfig, Model } from "./data-dialog";
 
-export type Model = Record<string, any>;
+export type OperationNamed = "add" | "edit" | "remove";
 
 export type SearchParams = {
   searchName?: string;
@@ -13,8 +13,9 @@ export interface TableItem {
   width?: number;
 }
 
-export interface Page {
-  type: "readonly" | "normal";
+export interface Page<T extends Model> {
+  // normal is default
+  type?: "normal" | "readonly";
   struct: {
     search: {
       firstInput: {
@@ -22,8 +23,9 @@ export interface Page {
       };
     };
     table: {
+      hiddenOperationColumn?: boolean;
       items: TableItem[];
     };
-    dialogConfig?: DialogConfig;
+    dialogConfig?: DialogConfig<T>;
   };
 }

@@ -1,8 +1,7 @@
 import { Page } from "@/components/views/list-page";
-import { departDialogConfig } from "./depart-data-dialog";
+import { departDialogConfig, ModifierDepartment } from "./depart-data-dialog";
 
-export const departListPage: Page = {
-  type: "normal",
+export const departListPage: Page<ModifierDepartment> = {
   struct: {
     search: {
       firstInput: {

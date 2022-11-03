@@ -1,18 +1,21 @@
 <template>
   <ListPage
     :page="departListPage"
+    :page-count="departmentStore.pageCount"
     @search="search"
     @operation="operation"
-  ></ListPage>
+  >
+  </ListPage>
 </template>
 
 <script setup lang="ts">
-import { useDepartmentStore } from "./store/departmentStore";
-import ListPage from "@/components/views/ListPage.vue";
-import { departListPage } from "./config/depart-list-page";
-import { Model, SearchParams } from "@/components/views/list-page";
 import { Ref } from "vue";
-import { DialogConfig } from "@/components/views/data-dialog";
+import { departListPage } from "./config/depart-list-page";
+import { OperationNamed, SearchParams } from "@/components/views/list-page";
+import { DialogConfig, Model } from "@/components/views/data-dialog";
+import { ModifierDepartment } from "./config/depart-data-dialog";
+import ListPage from "@/components/views/ListPage.vue";
+import { useDepartmentStore } from "./store/departmentStore";
 
 const departmentStore = useDepartmentStore();
 let tableDataRef: Ref<Model[]>;
@@ -31,24 +34,25 @@ function search(params: SearchParams, tableData: Ref<Model[]>) {
         departmentName: params.searchName,
       },
     })
-    .then((_) => (tableData.value = departmentStore.departmentList));
+    .then(() => (tableData.value = departmentStore.departmentList));
 }
 
 function operation(
-  name: "add" | "edit" | "remove",
+  name: OperationNamed,
   selectedRow: Model,
-  dialogConfig: Ref<DialogConfig<Model> | undefined>
+  dialogConfig: Ref<DialogConfig<Model>>
 ) {
-  const config = dialogConfig.value!;
+  const config = (dialogConfig as Ref<DialogConfig<ModifierDepartment>>).value;
   if (name === "add") {
     config.title = "添加部门";
     config.request.url = "/api/department/add";
     config.model = {
-      id: null,
+      id: undefined,
       departmentName: "",
       phone: "",
       address: "",
       orderNum: 0,
+      pid: 0,
       parentName: "",
     };
     if (selectedRow) {

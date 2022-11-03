@@ -25,7 +25,7 @@
           <el-button :icon="Search" @click="search">搜索</el-button>
         </div>
       </div>
-      <el-row v-if="page.type == 'normal'">
+      <el-row v-if="isNormalPageType">
         <el-button
           :icon="Plus"
           color="#52C37D"
@@ -53,10 +53,10 @@
           fixed="right"
           label="操作"
           width="120"
-          v-if="page.type == 'normal'"
+          v-if="!page.struct.table.hiddenOperationColumn"
         >
           <template #default="scope">
-            <div style="display: flex">
+            <div style="display: flex" v-if="isNormalPageType">
               <el-button
                 :icon="Edit"
                 color="#FBEC45"
@@ -68,15 +68,18 @@
                 @click="handleDelete(scope.$index, scope.row)"
               ></el-button>
             </div>
+            <!-- type="readonly" -->
+            <slot name="operation" :row="scope.row" v-else></slot>
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination background layout="prev, pager, next" :total="pageCount" />
     </el-card>
     <DataDialog
       :visible="showDialog"
       :config="dialogConfig!"
       @close="onDialogClose"
-      v-if="page.type == 'normal'"
+      v-if="isNormalPageType"
     ></DataDialog>
   </div>
 </template>
@@ -86,18 +89,18 @@ import { Ref, ref } from "vue";
 import { Search, Plus, Edit, Delete } from "@element-plus/icons-vue";
 import DataDialog from "./DataDialog.vue";
 import { ElMessageBox } from "element-plus";
-import { Model, Page, SearchParams } from "./list-page";
+import { OperationNamed, Page, SearchParams } from "./list-page";
 import dayjs from "dayjs";
-import { DialogConfig } from "./data-dialog";
+import { DialogConfig, Model } from "./data-dialog";
 
-const props = defineProps<{ page: Page }>();
+const props = defineProps<{ page: Page<Model>; pageCount: number }>();
 const emit = defineEmits<{
   (e: "search", params: SearchParams, tableData: Ref<Model[]>): void;
   (
     e: "operation",
-    name: "add" | "edit" | "remove",
+    name: OperationNamed,
     selectedRow: Model,
-    dialogConfig: Ref<DialogConfig<Model> | undefined>
+    dialogConfig: Ref<DialogConfig<Model>>
   ): void;
 }>();
 
@@ -105,6 +108,8 @@ const searchName = ref("");
 const searchDate = ref<Date[]>();
 const tableData = ref(<Model[]>[]);
 let selectedRow: Model;
+
+const isNormalPageType = !props.page.type || props.page.type == "normal";
 const dialogConfig = ref(props.page.struct.dialogConfig);
 const showDialog = ref(false);
 
@@ -122,7 +127,12 @@ function search() {
 }
 
 const addRow = () => {
-  emit("operation", "add", selectedRow, dialogConfig);
+  emit(
+    "operation",
+    "add",
+    selectedRow,
+    dialogConfig as Ref<DialogConfig<Model>>
+  );
   showDialog.value = true;
 };
 
@@ -131,13 +141,13 @@ const changeSelectedRow = (row: Model) => {
 };
 
 const handleEdit = (index: number, row: Model) => {
-  emit("operation", "edit", row, dialogConfig);
+  emit("operation", "edit", row, dialogConfig as Ref<DialogConfig<Model>>);
   showDialog.value = true;
 };
 
 const handleDelete = (index: number, row: Model) => {
   ElMessageBox.confirm("确定删除吗？", "警告").then(() => {
-    emit("operation", "remove", row, dialogConfig);
+    emit("operation", "remove", row, dialogConfig as Ref<DialogConfig<Model>>);
   });
 };
 
@@ -156,5 +166,9 @@ function onDialogClose(conform: boolean) {
     margin-right: 15px;
     margin-bottom: 15px;
   }
+}
+.el-pagination {
+  width: 100%;
+  margin: 15px auto;
 }
 </style>
