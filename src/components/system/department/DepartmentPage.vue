@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-card>
-      <el-row :gutter="24">
-        <el-col :span="6">
+      <div class="search-row">
+        <div class="search-item">
           <el-input
             placeholder="输入部门名称"
             :prefix-icon="Search"
@@ -10,8 +10,8 @@
             :formatter="(value: string) => value.replace(/\s/g, '')"
             clearable
           ></el-input>
-        </el-col>
-        <el-col :span="10">
+        </div>
+        <div class="search-item">
           <el-date-picker
             v-model="searchDate"
             type="daterange"
@@ -20,13 +20,12 @@
             end-placeholder="结束时间"
             :default-value="[new Date(2022, 0, 1), new Date(2022, 1, 1)]"
           />
-        </el-col>
-        <el-col :span="4">
+        </div>
+        <div class="search-item">
           <el-button :icon="Search" @click="search">搜索</el-button>
-        </el-col>
-      </el-row>
-
-      <el-row style="margin-top: 20px">
+        </div>
+      </div>
+      <el-row>
         <el-button
           :icon="Plus"
           color="#52C37D"
@@ -49,17 +48,17 @@
         <el-table-column prop="address" label="地址" width="200" />
         <el-table-column prop="orderNum" label="排序" width="80" />
         <el-table-column prop="createTime" label="添加时间" width="200" />
-        <el-table-column fixed="right" label="Operations" width="120">
+        <el-table-column fixed="right" label="操作" width="120">
           <template #default="scope">
             <div style="display: flex">
               <el-button
                 :icon="Edit"
-                color="#EAFD57"
+                color="#FBEC45"
                 @click="handleEdit(scope.$index, scope.row)"
               ></el-button>
               <el-button
                 :icon="Delete"
-                type="danger"
+                color="#E92D46"
                 @click="handleDelete(scope.$index, scope.row)"
               ></el-button>
             </div>
@@ -80,7 +79,7 @@ import { ref } from "vue";
 import { Search, Plus, Edit, Delete } from "@element-plus/icons-vue";
 import { Department, useDepartmentStore } from "./store/departmentStore";
 import DataDialog from "../../views/DataDialog.vue";
-import { dialogConfig } from "./types/depart-data-dialog";
+import { dialogConfig } from "./config/depart-data-dialog";
 import { ElMessageBox } from "element-plus";
 
 const departmentStore = useDepartmentStore();
@@ -156,4 +155,14 @@ function onDialogClose(conform: boolean) {
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.search-row {
+  display: flex;
+  flex-wrap: wrap;
+
+  .search-item {
+    margin-right: 15px;
+    margin-bottom: 15px;
+  }
+}
+</style>
