@@ -1,6 +1,8 @@
 <template>
   <ListPage
     :page="menuListPage"
+    :total="menuStore.totalSize"
+    :page-size="10"
     :page-count="menuStore.pageCount"
     @search="onSearch"
     @operation="onOperation"

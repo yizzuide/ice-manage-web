@@ -24,6 +24,7 @@ export const useMenuStore = defineStore("menu", {
     return {
       menuList: <Menu[]>[],
       pageCount: 0,
+      totalSize: 0,
     };
   },
   actions: {
@@ -35,6 +36,7 @@ export const useMenuStore = defineStore("menu", {
         showLoading: true,
       }).then((respData) => {
         this.pageCount = respData.data!.pageCount;
+        this.totalSize = respData.data!.totalSize;
         // 构建树节点列表
         this.menuList = buildProxyNodeTree(respData.data!.list, (target) => {
           return {

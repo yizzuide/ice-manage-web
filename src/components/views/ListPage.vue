@@ -76,7 +76,9 @@
       </el-table>
       <el-pagination
         background
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
+        :total="total"
+        :page-size="pageSize"
         :page-count="pageCount"
         :current-page="pageIndex"
         @current-change="changePageIndex"
@@ -92,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch } from "vue";
+import { Ref, ref } from "vue";
 import { Search, Plus, Edit, Delete } from "@element-plus/icons-vue";
 import DataDialog from "./DataDialog.vue";
 import { ElMessageBox } from "element-plus";
@@ -100,7 +102,12 @@ import { OperationNamed, Page, SearchParams } from "./list-page";
 import dayjs from "dayjs";
 import { DialogConfig, Model } from "./data-dialog";
 
-const props = defineProps<{ page: Page<Model>; pageCount: number }>();
+const props = defineProps<{
+  page: Page<Model>;
+  pageSize: number;
+  pageCount: number;
+  total: number;
+}>();
 const emit = defineEmits<{
   (e: "search", params: SearchParams, tableData: Ref<Model[]>): void;
   (
@@ -182,6 +189,8 @@ function onDialogClose(conform: boolean) {
   }
 }
 .el-pagination {
-  margin: 15px auto;
+  display: flex;
+  margin-top: 15px;
+  justify-content: center;
 }
 </style>
