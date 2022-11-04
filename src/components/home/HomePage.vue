@@ -75,7 +75,8 @@ if (route.path != selectedMenuIndex.value) {
 }
 
 function menuSelect(index: string) {
-  selectedMenuIndex.value = index;
+  // 已通过Tags组件watch来修改
+  //selectedMenuIndex.value = index;
 }
 </script>
 

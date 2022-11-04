@@ -60,6 +60,7 @@ function removeTag(path: string) {
 watch(
   () => route.path,
   (activePath, preRoutePath) => {
+    selectedMenuIndex.value = activePath;
     homeStore.addOrUpdateTagInfo(preRoutePath, {
       title: route.meta.title as string,
       path: activePath,

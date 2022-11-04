@@ -86,6 +86,7 @@ export function addDynamicRoute() {
         },
         component: () => import("@/components/home/HomePage.vue"),
         children: [],
+        // 父路由重定向到第一个子路由
         redirect: menu.children[0].routePath,
       };
       for (const subMenu of menu.children) {
