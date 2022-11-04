@@ -45,6 +45,7 @@ function onOperation(
     config.request.url = "/api/menu/add";
     config.model = <Menu>{};
     config.model.order = 0;
+    (config.model.parentId = 0), (config.model.parentName = "");
     if (selectedRow) {
       config.model.parentName = selectedRow.label;
       config.model.parentId = selectedRow.id;

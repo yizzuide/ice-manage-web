@@ -30,6 +30,20 @@ export const menuDialogConfig: DialogConfig<ModifierMenu> = {
         trigger: "blur",
       },
     ],
+    code: [
+      {
+        required: true,
+        message: "授权码不能为空！",
+        trigger: "blur",
+      },
+    ],
+    type: [
+      {
+        required: true,
+        message: "类型不能为空！",
+        trigger: "blur",
+      },
+    ],
     order: [
       {
         required: true,
@@ -78,10 +92,6 @@ export const menuDialogConfig: DialogConfig<ModifierMenu> = {
     {
       label: "路由路径",
       fieldName: "routePath",
-    },
-    {
-      label: "路由名",
-      fieldName: "routeName",
     },
     {
       label: "路由名",
