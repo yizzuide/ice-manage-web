@@ -58,5 +58,15 @@ export const useMenuStore = defineStore("menu", {
         });
       });
     },
+    removeRecord(id: number) {
+      return request({
+        url: "/api/menu/del",
+        method: "delete",
+        params: {
+          id,
+        },
+        showLoading: true,
+      });
+    },
   },
 });

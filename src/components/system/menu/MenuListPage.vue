@@ -17,10 +17,15 @@ import ListPage from "@/components/views/ListPage.vue";
 import { menuListPage } from "./config/menu-list-page";
 import { Menu, useMenuStore } from "./store/menuStore";
 import { ModifierMenu } from "./config/menu-data-dialog";
+import { ElMessage } from "element-plus";
 
 const menuStore = useMenuStore();
+let tableDataRef: Ref<Model[]>;
+let reqParams: SearchParams;
 
 function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
+  reqParams = params;
+  tableDataRef = tableData;
   menuStore
     .fetchPage({
       pageStart: params.searchIndex,
@@ -68,6 +73,15 @@ function onOperation(
       order: selectedRow.order,
     };
     return;
+  }
+  if (name == "remove") {
+    menuStore.removeRecord(selectedRow.id).then((data) => {
+      if (!data.isSuccess) {
+        ElMessage.error(data.message);
+        return;
+      }
+      onSearch(reqParams, tableDataRef);
+    });
   }
 }
 </script>
