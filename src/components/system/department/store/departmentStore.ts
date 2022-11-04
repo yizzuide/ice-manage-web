@@ -20,6 +20,7 @@ export const useDepartmentStore = defineStore("department", {
     return {
       departmentList: <Department[]>[],
       pageCount: 0,
+      totalSize: 0,
     };
   },
   actions: {
@@ -31,6 +32,7 @@ export const useDepartmentStore = defineStore("department", {
         showLoading: true,
       }).then((respData) => {
         this.pageCount = respData.data!.pageCount;
+        this.totalSize = respData.data!.totalSize;
         // 构建树节点列表
         this.departmentList = buildProxyNodeTree(
           respData.data!.list,

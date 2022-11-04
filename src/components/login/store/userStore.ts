@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ContentType } from "@/plugins/request";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { cachedRequest } from "@/http/uniformRequest";
+import request, { cachedRequest } from "@/http/uniformRequest";
 
 export interface UserInfo {
   uid: number;
@@ -99,6 +99,13 @@ export default defineStore("user", {
         },
         cachedName: "token,tokenExpire",
         beforeCache: (data) => [data.token, data.expire],
+      });
+    },
+    logout() {
+      return request({
+        url: "/api/logout",
+        method: "get",
+        showLoading: true,
       });
     },
   },

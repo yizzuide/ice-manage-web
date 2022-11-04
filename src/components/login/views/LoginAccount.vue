@@ -103,18 +103,15 @@ defineExpose(loginCommit);
 }
 
 .verify-code {
-  width: 80px;
+  width: 120px;
   height: 32px;
 
   .image-slot {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    width: 80px;
-    height: 32px;
+    justify-content: center;
     background: var(--el-fill-color-light);
     color: var(--el-text-color-secondary);
-    font-size: 7px;
+    font-size: 14px;
   }
 
   .dot {

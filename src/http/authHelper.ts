@@ -1,9 +1,8 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { useRouter } from "vue-router";
+import router from "@/router";
 import { ElMessage } from "element-plus";
 import { toNumber } from "lodash";
 
-const router = useRouter();
 const localStorage = useLocalStorage();
 
 export function getToken(): string {
@@ -19,7 +18,7 @@ export function checkAuthFail(code: number) {
   if (code == 401) {
     const valid = validToken()[1];
     if (!valid) {
-      router.push("/login");
+      router.replace({ name: "login" });
     }
   }
 }

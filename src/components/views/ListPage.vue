@@ -48,6 +48,7 @@
             :prop="item.prop"
             :label="item.label"
             :width="item.width ?? 120"
+            :formatter="item.format"
           />
         </template>
         <el-table-column

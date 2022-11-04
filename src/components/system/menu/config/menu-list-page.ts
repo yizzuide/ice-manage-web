@@ -1,6 +1,12 @@
 import { Page } from "@/components/views/list-page";
 import { menuDialogConfig, ModifierMenu } from "./menu-data-dialog";
 
+enum MenuType {
+  DIRECTORY,
+  MENU,
+  BUTTON,
+}
+
 export const menuListPage: Page<ModifierMenu> = {
   struct: {
     search: {
@@ -28,6 +34,17 @@ export const menuListPage: Page<ModifierMenu> = {
           prop: "type",
           label: "类型",
           width: 150,
+          format: (row) => {
+            const type = row.type as MenuType;
+            switch (type) {
+              case MenuType.DIRECTORY:
+                return "目录";
+              case MenuType.MENU:
+                return "菜单";
+              case MenuType.BUTTON:
+                return "按钮";
+            }
+          },
         },
         {
           prop: "code",

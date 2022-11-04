@@ -8,10 +8,11 @@ export type SearchParams = {
   searchDate?: Date[];
 };
 
-export interface TableItem {
+export interface TableItem<T> {
   prop: string;
   label: string;
   width?: number;
+  format?: (row: T) => string;
 }
 
 export interface Page<T extends Model> {
@@ -25,7 +26,7 @@ export interface Page<T extends Model> {
     };
     table: {
       hiddenOperationColumn?: boolean;
-      items: TableItem[];
+      items: TableItem<T>[];
     };
     dialogConfig?: DialogConfig<T>;
   };

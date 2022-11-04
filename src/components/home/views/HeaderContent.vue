@@ -9,21 +9,60 @@
       </span>
       <slot></slot>
     </section>
-    <section class="header-right">个人中心</section>
+    <section class="header-right">
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          <el-avatar :src="userInfo.avatar">
+            {{
+              userInfo.nickname.length > 2
+                ? userInfo.nickname.charAt(0)
+                : userInfo.nickname
+            }}
+          </el-avatar>
+          <el-icon class="el-icon--right">
+            <arrow-down />
+          </el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>个人设置</el-dropdown-item>
+            <el-dropdown-item divided @click="onLogout"
+              >退出登录</el-dropdown-item
+            >
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useUserInfo } from "@/components/login/hooks/useUserInfo";
 import { Expand, Fold } from "@element-plus/icons-vue";
 import { ref } from "vue";
+import { ArrowDown } from "@element-plus/icons-vue";
+import useUserStore from "@/components/login/store/userStore";
+import useLocalStorage from "@/hooks/useLocalStorage";
+import router from "@/router";
 
 const emit = defineEmits<{ (e: "change", isExpand: boolean): void }>();
+const userStore = useUserStore();
+const userInfo = useUserInfo();
 
 const isExpand = ref(true);
 
 function expandChange() {
   isExpand.value = !isExpand.value;
   emit("change", isExpand.value);
+}
+
+function onLogout() {
+  userStore.logout().then((respData) => {
+    if (respData.isSuccess) {
+      router.replace("/login");
+      useLocalStorage().clear();
+    }
+  });
 }
 </script>
 
@@ -39,5 +78,16 @@ function expandChange() {
 }
 .header-left {
   line-height: 50px;
+}
+.el-avatar {
+  background-color: $primaryColor;
+  color: white;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
 }
 </style>

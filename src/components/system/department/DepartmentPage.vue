@@ -1,7 +1,9 @@
 <template>
   <ListPage
     :page="departListPage"
+    :page-size="10"
     :page-count="departmentStore.pageCount"
+    :total="departmentStore.totalSize"
     @search="search"
     @operation="operation"
   >
