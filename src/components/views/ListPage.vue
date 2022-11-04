@@ -104,7 +104,7 @@ import dayjs from "dayjs";
 import { DialogConfig, Model } from "./data-dialog";
 
 const props = defineProps<{
-  page: Page<Model>;
+  page: Page<any>;
   pageSize: number;
   pageCount: number;
   total: number;

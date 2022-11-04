@@ -14,6 +14,7 @@ export interface Menu extends Node {
   routeName: string;
   componentPath: string;
   order: number;
+  createTime: string;
   parentId?: number;
   parentName?: string;
   children?: Menu[];

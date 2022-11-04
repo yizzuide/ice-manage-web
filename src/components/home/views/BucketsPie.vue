@@ -31,7 +31,7 @@ function load() {
 
   const option = {
     title: {
-      text: "延迟分桶数量统计",
+      text: "延迟分桶任务统计",
       subtext: "Ice的JobStat分析",
       left: "center",
     },

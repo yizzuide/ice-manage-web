@@ -7,10 +7,12 @@ import { getToken, setToken } from "./authHelper";
 let instance: HttpRequest;
 
 export function useRequest(): HttpRequest {
+  // 如果为空，重新加载
+  !instance && Request();
   return instance;
 }
 
-export function Request(_: App) {
+export function Request(_?: App) {
   let loading: LoadingInstance;
   HttpRequest.setGlobalInterceptor({
     onRequest(config) {

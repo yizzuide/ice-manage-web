@@ -51,6 +51,23 @@ function onOperation(
     }
     return;
   }
+  if (name == "edit") {
+    config.title = "修改菜单";
+    config.request.url = "/api/menu/update";
+    config.request.method = "put";
+    config.model = {
+      id: selectedRow.id,
+      label: selectedRow.label,
+      icon: selectedRow.icon,
+      code: selectedRow.code,
+      type: selectedRow.type,
+      routePath: selectedRow.routePath,
+      routeName: selectedRow.routeName,
+      componentPath: selectedRow.componentPath,
+      order: selectedRow.order,
+    };
+    return;
+  }
 }
 </script>
 

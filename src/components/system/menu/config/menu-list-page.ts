@@ -54,7 +54,7 @@ export const menuListPage: Page<ModifierMenu> = {
         {
           prop: "routePath",
           label: "路由路径",
-          width: 150,
+          width: 200,
         },
         {
           prop: "routeName",
@@ -64,7 +64,7 @@ export const menuListPage: Page<ModifierMenu> = {
         {
           prop: "componentPath",
           label: "组件路径",
-          width: 150,
+          width: 200,
         },
         {
           prop: "order",
