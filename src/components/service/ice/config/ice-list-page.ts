@@ -1,13 +1,13 @@
 import { Page } from "@/components/views/list-page";
 import { JobInfo } from "../store/iceStore";
+import dayjs from "dayjs";
+import { formatTimestamp } from "@/directives/formatTime";
 
 export const iceListPage: Page<JobInfo> = {
   type: "readonly",
   struct: {
     search: {
-      firstInput: {
-        placeholder: "请输入Job的id",
-      },
+      custom: true,
     },
     table: {
       items: [
@@ -34,23 +34,15 @@ export const iceListPage: Page<JobInfo> = {
           prop: "bucketIndex",
           label: "延迟桶位置",
           width: 120,
-          format: (row: JobInfo) => {
-            if (row.bucketIndex == -1) {
-              return "无";
-            }
-            return `${row.bucketIndex}`;
-          },
+          format: (row: JobInfo) =>
+            row.bucketIndex == -1 ? "无" : `${row.bucketIndex}`,
         },
         {
           prop: "executionTime",
           label: "下次执行时间",
           width: 150,
-          format: (row: JobInfo) => {
-            if (row.bucketIndex == -1) {
-              return "无";
-            }
-            return `${row.bucketIndex}`;
-          },
+          format: (row: JobInfo) =>
+            row.executionTime == -1 ? "无" : formatTimestamp(row.executionTime),
         },
         {
           prop: "hadRetryCount",
@@ -66,11 +58,13 @@ export const iceListPage: Page<JobInfo> = {
           prop: "pushTime",
           label: "推送时间",
           width: 150,
+          format: (row: JobInfo) => formatTimestamp(row.pushTime),
         },
         {
           prop: "updateTime",
           label: "更新时间",
           width: 150,
+          format: (row: JobInfo) => formatTimestamp(row.updateTime),
         },
       ],
     },

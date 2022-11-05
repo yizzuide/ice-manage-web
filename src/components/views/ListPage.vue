@@ -2,24 +2,29 @@
   <div>
     <el-card>
       <div class="search-row">
-        <div class="search-item">
-          <el-input
-            :placeholder="page.struct.search.firstInput.placeholder"
-            :prefix-icon="Search"
-            v-model="searchName"
-            :formatter="(value: string) => value.replace(/\s/g, '')"
-            clearable
-          ></el-input>
+        <div class="search-row" v-if="!page.struct.search.custom">
+          <div class="search-item">
+            <el-input
+              :placeholder="page.struct.search.firstInput!.placeholder"
+              :prefix-icon="Search"
+              v-model="searchName"
+              :formatter="(value: string) => value.replace(/\s/g, '')"
+              clearable
+            ></el-input>
+          </div>
+          <div class="search-item">
+            <el-date-picker
+              v-model="searchDate"
+              type="daterange"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              start-placeholder="开始时间"
+              end-placeholder="结束时间"
+              :default-value="[dayjs().subtract(1, 'month'), dayjs()]"
+            />
+          </div>
         </div>
-        <div class="search-item">
-          <el-date-picker
-            v-model="searchDate"
-            type="daterange"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            :default-value="[dayjs().subtract(1, 'month'), dayjs()]"
-          />
+        <div class="search-row" v-else>
+          <slot name="search"></slot>
         </div>
         <div class="search-item">
           <el-button :icon="Search" @click="search">搜索</el-button>

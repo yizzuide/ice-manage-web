@@ -13,7 +13,7 @@ import { NamedIcon } from "./plugins/NamedIcon";
 // 导入全局样式
 import "./styles/global.scss";
 import define from "./styles/define.module.scss";
-
+// 主题工具
 import { changeTheme, EleTheme } from "./tools/eleTheme";
 
 const app = createApp(App);
