@@ -16,14 +16,7 @@ export const departDialogConfig: DialogConfig<ModifierDepartment> = {
     url: "",
     method: "post",
   },
-  model: {
-    departmentName: "",
-    phone: "",
-    address: "",
-    orderNum: 0,
-    pid: 0,
-    parentName: "",
-  },
+  model: <ModifierDepartment>{},
   rules: {
     departmentName: [
       {

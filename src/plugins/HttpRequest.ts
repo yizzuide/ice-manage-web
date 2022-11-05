@@ -47,15 +47,15 @@ export default class HttpRequest implements IHttpRequest {
   request<T>(requestConfig: SimpleRequestConfig): Promise<T> {
     let config = {
       url: requestConfig.url,
-      method: requestConfig.method,
+      method: requestConfig.method ?? "get",
       showLoading: requestConfig.showLoading ?? false,
     } as RequestConfig;
 
     // 'delete', 'head', 'options', 'get' 四个方法是不带data的
     if (
-      ["get", "delete", "head", "options"].indexOf(
-        requestConfig.method.toLowerCase()
-      ) != -1
+      ["get", "delete", "head", "options"].includes(
+        config.method!.toLowerCase()
+      )
     ) {
       config.params = requestConfig.params;
     } else {

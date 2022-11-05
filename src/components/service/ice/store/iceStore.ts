@@ -28,7 +28,6 @@ export const useIceStore = defineStore("ice", {
     async fetchPage(params: any) {
       return request<PageData<JobInfo>>({
         url: "/api/job/jobInfoList",
-        method: "get",
         params,
         showLoading: true,
       }).then((respData) => {

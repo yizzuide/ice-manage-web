@@ -61,17 +61,10 @@ function onOperation(
     config.title = "修改菜单";
     config.request.url = "/api/menu/update";
     config.request.method = "put";
-    config.model = {
-      id: selectedRow!.id,
-      label: selectedRow!.label,
-      icon: selectedRow!.icon,
-      code: selectedRow!.code,
-      type: selectedRow!.type,
-      routePath: selectedRow!.routePath,
-      routeName: selectedRow!.routeName,
-      componentPath: selectedRow!.componentPath,
-      order: selectedRow!.order,
-    };
+    // 复制对象属性过滤之：解构剩余参数（适用于排除的参数小于5个）
+    const { parentId, parentName, createTime, children, ...updateParams } =
+      selectedRow as Menu;
+    config.model = updateParams;
     return;
   }
   if (name == "remove") {

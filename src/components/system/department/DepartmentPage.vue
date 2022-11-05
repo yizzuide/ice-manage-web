@@ -49,14 +49,8 @@ function operation(
   if (name === "add") {
     config.title = "添加部门";
     config.request.url = "/api/department/add";
-    config.model = {
-      id: undefined,
-      departmentName: "",
-      phone: "",
-      address: "",
+    config.model = <ModifierDepartment>{
       orderNum: 0,
-      pid: 0,
-      parentName: "",
     };
     if (selectedRow) {
       config.model.parentName = selectedRow.departmentName;
@@ -69,13 +63,14 @@ function operation(
     config.title = "修改部门";
     config.request.url = "/api/department/update";
     config.request.method = "put";
-    config.model = {
-      id: selectedRow!.id,
-      departmentName: selectedRow!.departmentName,
-      phone: selectedRow!.phone,
-      address: selectedRow!.address,
-      orderNum: selectedRow!.orderNum,
-    };
+    // 复制对象属性过滤之：使用箭头函数解构对象（当前为selectedRow），立即执行返回新对象(适用于属性不超过5个)
+    config.model = (({ id, departmentName, phone, address, orderNum }) => ({
+      id,
+      departmentName,
+      phone,
+      address,
+      orderNum,
+    }))(selectedRow as ModifierDepartment);
     return;
   }
   if (name == "remove") {

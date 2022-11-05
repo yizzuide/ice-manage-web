@@ -26,7 +26,7 @@ export enum ContentType {
 
 export interface SimpleRequestConfig {
   url: string;
-  method: string;
+  method?: string;
   params?: any;
   contentType?: ContentType;
   showLoading?: boolean;
