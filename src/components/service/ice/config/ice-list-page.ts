@@ -8,6 +8,11 @@ export const iceListPage: Page<JobInfo> = {
     search: {
       custom: true,
     },
+    command: {
+      add: {
+        label: "推送",
+      },
+    },
     table: {
       items: [
         {

@@ -38,6 +38,10 @@ function buildTree<T extends Node>(
   nodeList: NodeProxy<T>[],
   parentId?: number
 ): T[] {
+  if (parentId === null) {
+    throw new Error("parent id must be not null");
+  }
+  // 如果没有这个参数
   if (parentId === undefined) {
     const treeList: T[] = [];
     // find root nodes

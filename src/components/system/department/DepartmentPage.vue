@@ -85,14 +85,4 @@ function operation(
 }
 </script>
 
-<style scoped lang="scss">
-.search-row {
-  display: flex;
-  flex-wrap: wrap;
-
-  .search-item {
-    margin-right: 15px;
-    margin-bottom: 15px;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

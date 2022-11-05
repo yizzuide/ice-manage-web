@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-card>
-      <div class="search-row">
-        <div class="search-row" v-if="!page.struct.search.custom">
+      <div class="interact-row">
+        <div class="interact-row" v-if="!page.struct.search.custom">
           <div class="search-item">
             <el-input
               :placeholder="page.struct.search.firstInput!.placeholder"
@@ -23,23 +23,28 @@
             />
           </div>
         </div>
-        <div class="search-row" v-else>
+        <div class="interact-row" v-else>
           <slot name="search"></slot>
         </div>
         <div class="search-item">
           <el-button :icon="Search" @click="search">搜索</el-button>
         </div>
       </div>
-      <el-row v-if="isNormalPageType">
+      <div
+        class="interact-row"
+        v-if="isNormalPageType || page.struct.command?.add"
+      >
         <el-button
           :icon="Plus"
           color="#52C37D"
           style="color: white"
           @click="addRow"
-          >新增</el-button
+          >{{ page.struct.command?.add?.label ?? "新增" }}</el-button
         >
-      </el-row>
-      <slot name="command" :row="selectedRow" v-else></slot>
+      </div>
+      <div class="interact-row" v-else>
+        <slot name="command" :row="selectedRow"></slot>
+      </div>
       <el-table
         :data="tableData"
         style="width: 100%; margin-top: 10px"
@@ -187,7 +192,7 @@ function onDialogClose(conform: boolean) {
 </script>
 
 <style scoped lang="scss">
-.search-row {
+.interact-row {
   display: flex;
   flex-wrap: wrap;
 

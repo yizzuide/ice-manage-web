@@ -31,9 +31,10 @@ export const useIceStore = defineStore("ice", {
         params,
         showLoading: true,
       }).then((respData) => {
-        this.pageCount = respData.data!.pageCount;
-        this.totalSize = respData.data!.totalSize;
-        this.jobInfoList = respData.data!.list;
+        const { pageCount, totalSize, list } = respData.data!;
+        this.pageCount = pageCount;
+        this.totalSize = totalSize;
+        this.jobInfoList = list;
       });
     },
   },

@@ -47,7 +47,7 @@ export default class HttpRequest implements IHttpRequest {
   request<T>(requestConfig: SimpleRequestConfig): Promise<T> {
     let config = {
       url: requestConfig.url,
-      method: requestConfig.method ?? "get",
+      method: requestConfig.method || "get",
       showLoading: requestConfig.showLoading ?? false,
     } as RequestConfig;
 

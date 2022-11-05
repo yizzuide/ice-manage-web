@@ -27,6 +27,11 @@ export interface Page<T extends Model> {
         placeholder: string;
       };
     };
+    command?: {
+      add?: {
+        label: string;
+      };
+    };
     table: {
       // 是否隐藏操作列表
       hiddenOperationColumn?: boolean;
