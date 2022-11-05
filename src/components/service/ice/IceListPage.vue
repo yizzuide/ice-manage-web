@@ -17,17 +17,29 @@
         ></el-input>
       </div>
     </template>
+    <template #operation="{ row }">
+      <div style="display: flex">
+        <el-button :icon="MoreFilled" @click="onLoadDetail(row)"></el-button>
+        <el-button
+          :icon="TopRight"
+          color="#E92D46"
+          @click="onRePush(row)"
+          :disabled="!row.rePush"
+        ></el-button>
+      </div>
+    </template>
   </ListPage>
 </template>
 
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import { Search } from "@element-plus/icons-vue";
+import { Search, MoreFilled, TopRight } from "@element-plus/icons-vue";
 import { DialogConfig, Model } from "@/components/views/data-dialog";
 import { SearchParams } from "@/components/views/list-page";
 import ListPage from "@/components/views/ListPage.vue";
 import { iceListPage } from "./config/ice-list-page";
-import { useIceStore } from "./store/iceStore";
+import { JobInfo, useIceStore } from "./store/iceStore";
+import { ElMessageBox } from "element-plus";
 
 const searchName = ref("");
 const iceStore = useIceStore();
@@ -40,6 +52,12 @@ function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
       order: -1,
     })
     .then(() => (tableData.value = iceStore.jobInfoList));
+}
+
+function onLoadDetail(row: JobInfo) {}
+
+function onRePush(row: JobInfo) {
+  ElMessageBox.confirm("确定要重推Job吗？", "警告").then(() => {});
 }
 </script>
 

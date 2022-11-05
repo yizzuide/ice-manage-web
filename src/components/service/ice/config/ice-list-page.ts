@@ -1,6 +1,5 @@
 import { Page } from "@/components/views/list-page";
 import { JobInfo } from "../store/iceStore";
-import dayjs from "dayjs";
 import { formatTimestamp } from "@/directives/formatTime";
 
 export const iceListPage: Page<JobInfo> = {

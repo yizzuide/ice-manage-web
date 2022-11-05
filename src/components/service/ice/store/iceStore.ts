@@ -1,7 +1,6 @@
 import { Model } from "@/components/views/data-dialog";
 import { PageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
-import { number } from "echarts";
 import { defineStore } from "pinia";
 
 export interface JobInfo extends Model {
