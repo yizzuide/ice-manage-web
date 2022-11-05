@@ -42,8 +42,8 @@ function search(params: SearchParams, tableData: Ref<Model[]>) {
 
 function operation(
   name: OperationNamed,
-  selectedRow: Model,
-  dialogConfig: Ref<DialogConfig<Model>>
+  dialogConfig: Ref<DialogConfig<Model>>,
+  selectedRow?: Model
 ) {
   const config = (dialogConfig as Ref<DialogConfig<ModifierDepartment>>).value;
   if (name === "add") {
@@ -70,16 +70,16 @@ function operation(
     config.request.url = "/api/department/update";
     config.request.method = "put";
     config.model = {
-      id: selectedRow.id,
-      departmentName: selectedRow.departmentName,
-      phone: selectedRow.phone,
-      address: selectedRow.address,
-      orderNum: selectedRow.orderNum,
+      id: selectedRow!.id,
+      departmentName: selectedRow!.departmentName,
+      phone: selectedRow!.phone,
+      address: selectedRow!.address,
+      orderNum: selectedRow!.orderNum,
     };
     return;
   }
   if (name == "remove") {
-    departmentStore.removeRecord(selectedRow.id).then((data) => {
+    departmentStore.removeRecord(selectedRow!.id).then((data) => {
       if (!data.isSuccess) {
         ElMessage.error(data.message);
         return;

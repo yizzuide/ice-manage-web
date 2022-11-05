@@ -41,8 +41,8 @@ function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
 
 function onOperation(
   name: OperationNamed,
-  selectedRow: Model,
-  dialogConfig: Ref<DialogConfig<Model>>
+  dialogConfig: Ref<DialogConfig<Model>>,
+  selectedRow?: Model
 ) {
   const config = (dialogConfig as Ref<DialogConfig<ModifierMenu>>).value;
   if (name === "add") {
@@ -62,20 +62,20 @@ function onOperation(
     config.request.url = "/api/menu/update";
     config.request.method = "put";
     config.model = {
-      id: selectedRow.id,
-      label: selectedRow.label,
-      icon: selectedRow.icon,
-      code: selectedRow.code,
-      type: selectedRow.type,
-      routePath: selectedRow.routePath,
-      routeName: selectedRow.routeName,
-      componentPath: selectedRow.componentPath,
-      order: selectedRow.order,
+      id: selectedRow!.id,
+      label: selectedRow!.label,
+      icon: selectedRow!.icon,
+      code: selectedRow!.code,
+      type: selectedRow!.type,
+      routePath: selectedRow!.routePath,
+      routeName: selectedRow!.routeName,
+      componentPath: selectedRow!.componentPath,
+      order: selectedRow!.order,
     };
     return;
   }
   if (name == "remove") {
-    menuStore.removeRecord(selectedRow.id).then((data) => {
+    menuStore.removeRecord(selectedRow!.id).then((data) => {
       if (!data.isSuccess) {
         ElMessage.error(data.message);
         return;

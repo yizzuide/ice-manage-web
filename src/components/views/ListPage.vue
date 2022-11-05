@@ -34,6 +34,7 @@
           >新增</el-button
         >
       </el-row>
+      <slot name="command" :row="selectedRow" v-else></slot>
       <el-table
         :data="tableData"
         style="width: 100%; margin-top: 10px"
@@ -89,7 +90,6 @@
       :visible="showDialog"
       :config="dialogConfig!"
       @close="onDialogClose"
-      v-if="isNormalPageType"
     ></DataDialog>
   </div>
 </template>
@@ -114,15 +114,15 @@ const emit = defineEmits<{
   (
     e: "operation",
     name: OperationNamed,
-    selectedRow: Model,
-    dialogConfig: Ref<DialogConfig<Model>>
+    dialogConfig: Ref<DialogConfig<Model>>,
+    selectedRow?: Model
   ): void;
 }>();
 
 const searchName = ref("");
 const searchDate = ref<Date[]>();
 const tableData = ref(<Model[]>[]);
-let selectedRow: Model;
+const selectedRow = ref<Model>();
 
 const isNormalPageType = !props.page.type || props.page.type == "normal";
 const dialogConfig = ref(props.page.struct.dialogConfig);
@@ -152,24 +152,24 @@ const addRow = () => {
   emit(
     "operation",
     "add",
-    selectedRow,
-    dialogConfig as Ref<DialogConfig<Model>>
+    dialogConfig as Ref<DialogConfig<Model>>,
+    selectedRow.value
   );
   showDialog.value = true;
 };
 
 const changeSelectedRow = (row: Model) => {
-  selectedRow = row;
+  selectedRow.value = row;
 };
 
 const handleEdit = (index: number, row: Model) => {
-  emit("operation", "edit", row, dialogConfig as Ref<DialogConfig<Model>>);
+  emit("operation", "edit", dialogConfig as Ref<DialogConfig<Model>>, row);
   showDialog.value = true;
 };
 
 const handleDelete = (index: number, row: Model) => {
   ElMessageBox.confirm("确定删除吗？", "警告").then(() => {
-    emit("operation", "remove", row, dialogConfig as Ref<DialogConfig<Model>>);
+    emit("operation", "remove", dialogConfig as Ref<DialogConfig<Model>>, row);
   });
 };
 
