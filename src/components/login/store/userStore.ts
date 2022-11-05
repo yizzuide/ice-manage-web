@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ContentType } from "@/plugins/request";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import request, { cachedRequest } from "@/http/uniformRequest";
+import { DynamicMenu } from "@/tools/dynamicRoutes";
 
 export interface UserInfo {
   uid: number;
@@ -14,7 +15,7 @@ export interface UserInfo {
   perms: [];
 }
 
-export interface Menu {
+export interface Menu extends DynamicMenu {
   id: number;
   name: string;
   icon?: string;
@@ -63,7 +64,7 @@ export default defineStore("user", {
             componentPath: "/home/DashboardPage",
             // API返回的菜单列表第一个从0开始
             order: -1,
-          });
+          } as Menu);
           for (const menu of this.menuList) {
             // 更新菜单排序值
             menu.order = menu.order + 1;

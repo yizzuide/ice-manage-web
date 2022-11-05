@@ -1,3 +1,5 @@
+import { createProxy, createProxyList, ObjectProxy } from "./interfaceProxy";
+
 /**
  * 树节点结构
  */
@@ -8,40 +10,22 @@ export interface Node {
   setChildren(parentNode: Node, nodes: Node[]): void;
 }
 
-/**
- * Node接口代理
- */
-interface NodeProxy<T> extends Node {
-  target: T;
-}
+// 定义代理类型
+type NodeProxy<T> = ObjectProxy<T> & Node;
 
 /**
  * 通用自动代理Node接口的树节点构建
  * @param nodeList  节点列表
- * @param proxyMethods Node接口方法实现
+ * @param methods Node接口方法实现
  * @param parentId 父节点ID
  * @returns
  */
 export function buildProxyNodeTree<T extends Node>(
   nodeList: T[],
-  proxyMethods: (target: T) => Node,
+  methods: (target: T) => Node,
   parentId?: number
 ) {
-  const nodeProxyList = nodeList.map((n) => proxyImplNode(n, proxyMethods(n)));
-  return buildTree(nodeProxyList, parentId);
-}
-
-/**
- * Node接口代理实现（TS的类型编译为JS后会移除，这里需要添加真实方法实现）
- * @param target    目标
- * @param methods   代理方法
- * @returns Node接口代理对象
- */
-function proxyImplNode<T extends Node>(target: T, methods: Node): NodeProxy<T> {
-  return {
-    target,
-    ...methods,
-  };
+  return buildTree(createProxyList(nodeList, methods), parentId);
 }
 
 /**

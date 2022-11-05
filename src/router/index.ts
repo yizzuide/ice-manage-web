@@ -1,5 +1,6 @@
 import useUserState, { Menu } from "@/components/login/store/userStore";
 import { validToken } from "@/http/authHelper";
+import { DynamicMenu, genDynamicMenu } from "@/tools/dynamicRoutes";
 import {
   createRouter,
   createWebHashHistory,
@@ -18,6 +19,7 @@ const routes: RouteRecordRaw[] = [
     name: "index",
     meta: { title: "/" },
     component: () => import("@/components/home/HomePage.vue"),
+    // 主页模板路由挂载匿名顶级路由
     children: [],
   },
   { path: "/:pathMatch(.*)", redirect: "/" },
@@ -60,50 +62,31 @@ export function addDynamicRoute() {
   if (router.hasRoute("dashboard")) {
     return false;
   }
-  // vite动态导入
-  const viteComponent = import.meta.glob("@/components/**/*Page.vue");
+  // vite静态文件分析：[string, () => Promise<unknown>]
+  const viteComponents = import.meta.glob("@/components/**/*Page.vue");
   const menuList = useUserState().menuList;
-  for (const menu of menuList) {
-    // 添加匿名顶级页面
-    if (!menu.children || menu.children.length == 0) {
-      router.addRoute("index", {
-        name: menu.routeName,
-        path: menu.routePath,
-        meta: {
-          title: menu.name,
-          keepAlive: false,
-        },
-        component: viteComponent[`/src/components${menu.componentPath}.vue`],
-      });
-    } else {
-      // 添加根菜单
-      const rootRoute: RouteRecordRaw = {
-        name: menu.routeName,
-        path: menu.routePath,
-        meta: {
-          title: menu.name,
-          keepAlive: false,
-        },
-        component: () => import("@/components/home/HomePage.vue"),
-        children: [],
-        // 父路由重定向到第一个子路由
-        redirect: menu.children[0].routePath,
+  const routes = genDynamicMenu<Menu>(
+    {
+      router: router,
+      indexRouteName: "index",
+      indexComponent: () => import("@/components/home/HomePage.vue"),
+      resolveComponent: (dynamicMenu: DynamicMenu) =>
+        viteComponents[`/src/components${dynamicMenu.getComponentPath()}.vue`],
+    },
+    menuList,
+    (target: Menu) => {
+      return {
+        getTitle: () => target.name,
+        isKeepAlive: () => false,
+        getRouteName: () => target.routeName,
+        getRoutePath: () => target.routePath,
+        getComponentPath: () => target.componentPath,
+        getChildren: () => target.children!,
       };
-      for (const subMenu of menu.children) {
-        rootRoute.children.push({
-          name: subMenu.routeName,
-          path: subMenu.routePath,
-          meta: {
-            title: subMenu.name,
-            keepAlive: false,
-          },
-          component:
-            viteComponent[`/src/components${subMenu.componentPath}.vue`],
-        });
-      }
-      router.addRoute(rootRoute);
     }
-  }
+  );
+  console.log("routes: ", routes);
+  routes.forEach((r) => router.addRoute(r));
   return true;
 }
 
