@@ -8,7 +8,7 @@
     <template #header>
       <span class="dialog-title">{{ config.title }}</span>
     </template>
-    <el-form :model="data" :rules="config.rules" ref="formRef">
+    <el-form :model="config.model" :rules="config.rules" ref="formRef">
       <div v-for="item in config.board" :key="item.fieldName">
         <el-form-item
           :label="item.label"
@@ -16,20 +16,20 @@
           label-width="140px"
         >
           <el-input
-            v-model="data[item.fieldName]"
+            v-model="config.model![item.fieldName]"
             :show-password="item.isPassword"
             :disabled="item.isDisable"
             autocomplete="off"
             v-if="!item.type || item.type == 'text'"
           />
           <el-input-number
-            v-model="data[item.fieldName]"
+            v-model="config.model![item.fieldName]"
             :min="0"
             :max="10"
             v-else-if="item.type == 'number'"
           />
           <el-select
-            v-model="data[item.fieldName]"
+            v-model="config.model![item.fieldName]"
             placeholder="请选择"
             v-else-if="item.type == 'select'"
           >
@@ -68,18 +68,14 @@ const emit = defineEmits<{
   (e: "close", conform: boolean): void;
 }>();
 
-const data = ref(props.config.model);
+// 组件在哪里修改，就在哪里定义Ref
 const showDialog = ref(props.visible);
 const formRef = ref<FormInstance>();
 
-// 监听父组件的props修改
+// 监听父组件的修改来双向修改
 watch(
   () => props.visible,
   (isVisible) => (showDialog.value = isVisible)
-);
-watch(
-  () => props.config.model,
-  (model) => (data.value = model)
 );
 
 function onClose(command: () => void) {
@@ -99,7 +95,7 @@ function doConform() {
     request({
       url: props.config.request.url,
       method: props.config.request.method,
-      params: data.value,
+      params: props.config.model,
       showLoading: true,
     }).then((_) => {
       showDialog.value = false;
