@@ -29,7 +29,7 @@ export const useDashboardStore = defineStore("dashboard", {
         // 模拟延时
         setTimeout(() => {
           request<JobStatInfo>({
-            url: "/api/job/getJobStat",
+            url: "/api/job/jobStat",
             method: "get",
           }).then((respData) => {
             if (respData.code == 0) {

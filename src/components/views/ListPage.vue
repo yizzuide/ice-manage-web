@@ -90,6 +90,7 @@
       :visible="showDialog"
       :config="dialogConfig!"
       @close="onDialogClose"
+      v-if="page.struct.dialogConfig"
     ></DataDialog>
   </div>
 </template>
@@ -115,6 +116,7 @@ const emit = defineEmits<{
     e: "operation",
     name: OperationNamed,
     dialogConfig: Ref<DialogConfig<Model>>,
+    // 除了name="add"时为空，其它都有值
     selectedRow?: Model
   ): void;
 }>();
