@@ -59,7 +59,7 @@ import ListPage from "@/components/views/ListPage.vue";
 import { iceListPage } from "./config/ice-list-page";
 import { icePushDataDialog, Job } from "./config/ice-data-dialog";
 import { JobInspectInfo, useIceStore } from "./store/iceStore";
-import { ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import DataDialog from "@/components/views/DataDialog.vue";
 
 const searchName = ref("");
@@ -83,7 +83,10 @@ function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
 }
 
 function onPush() {
-  pushDialogConfig.value.request.url = "/api/job/push";
+  pushDialogConfig.value.type = "normal";
+  pushDialogConfig.value.title = "推送延迟任务";
+  pushDialogConfig.value.desc =
+    "该功能仅用于测试环境，正式环境请在后台使用Ice API！";
   pushDialogConfig.value.model = <Job>{
     delay: 10000,
     ttr: 30000,
@@ -115,7 +118,15 @@ function onLoadJobDetail(row: JobInspectInfo) {
 }
 
 function onRePushJob(row: JobInspectInfo) {
-  ElMessageBox.confirm("确定要重推Job吗？", "警告").then(() => {});
+  ElMessageBox.confirm("确定要重推Job吗？", "警告").then(() => {
+    iceStore.rePushJob(row.id, row.topic).then((respData) => {
+      if (respData.isSuccess) {
+        ElMessage.info("重新推送成功！");
+      } else {
+        ElMessage.warning(respData.message);
+      }
+    });
+  });
 }
 </script>
 

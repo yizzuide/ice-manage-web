@@ -3,6 +3,7 @@ import { Model } from "@/components/views/data-dialog";
 import { HttpResult, PageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
 import { Job } from "../config/ice-data-dialog";
+import { ContentType } from "@/plugins/request";
 
 export interface JobInspectInfo extends Model {
   id: string;
@@ -38,9 +39,21 @@ export const useIceStore = defineStore("ice", {
         this.jobInfoList = list;
       });
     },
-    async fetchJobDetail(jobId: string, topic: string) {
+    fetchJobDetail(jobId: string, topic: string) {
       return request<Job>({
         url: "/api/job/jobDetail",
+        params: {
+          jobId,
+          topic,
+        },
+        showLoading: true,
+      });
+    },
+    rePushJob(jobId: string, topic: string) {
+      return request<unknown>({
+        url: "/api/job/rePush",
+        method: "put",
+        contentType: ContentType.FORM,
         params: {
           jobId,
           topic,
