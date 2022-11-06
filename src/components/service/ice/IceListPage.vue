@@ -62,8 +62,8 @@ import { JobInspectInfo, useIceStore } from "./store/iceStore";
 import { ElMessage, ElMessageBox } from "element-plus";
 import DataDialog from "@/components/views/DataDialog.vue";
 
-const searchName = ref("");
 const iceStore = useIceStore();
+const searchName = ref("");
 let tableDataRef: Ref<Model[]>;
 let reqParams: SearchParams;
 

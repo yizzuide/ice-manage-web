@@ -93,7 +93,7 @@ watch(
 );
 
 function onClose(command: () => void) {
-  emit("close", false);
+  hide(false);
   if (isFunction(command)) {
     command();
   }
@@ -119,15 +119,22 @@ function doConform() {
       params: model.value,
       showLoading: true,
     }).then((respData) => {
-      showDialog.value = false;
+      let hasFinish = false;
       if (respData.isSuccess) {
-        emit("close", true);
+        hasFinish = true;
       } else {
         ElMessage.error(respData.message);
-        emit("close", false);
       }
+      hide(hasFinish);
     });
   });
+}
+
+// 隐藏对话框
+function hide(finish: boolean) {
+  formRef.value?.clearValidate();
+  showDialog.value = false;
+  emit("close", finish);
 }
 </script>
 
