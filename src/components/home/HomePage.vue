@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-container>
-      <el-aside width="auto">
+      <el-aside :width="isMenuCollapse ? 'auto' : '200px'">
         <MenuLogo :collapse="isMenuCollapse"></MenuLogo>
         <el-scrollbar>
           <el-menu
@@ -94,9 +94,12 @@ function menuSelect(index: string) {
       border-right: none;
       user-select: none;
     }
-    // 内容不滚动
     .el-aside {
+      // 内容不滚动
       overflow-y: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      transition: width 0.5s linear;
     }
     // el-menu[width="auto"] + 下面设置未收起的配置实现菜单向左收缩的效果
     .el-menu:not(.el-menu--collapse) {
