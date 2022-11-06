@@ -1,6 +1,6 @@
 <template>
   <div class="logo">
-    <img src="../../../assets/menu_logo.png" />
+    <img src="@/assets/menu_logo.png" />
     <span
       class="title"
       :style="[{ display: collapse ? 'none' : 'inline-block' }]"
