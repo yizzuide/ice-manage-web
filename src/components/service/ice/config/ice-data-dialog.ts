@@ -11,6 +11,7 @@ export interface Job {
 
 export const icePushDataDialog: DialogConfig<Job> = {
   title: "推送延迟任务",
+  desc: "该功能仅用于测试环境，正式环境请在后台使用Ice API！",
   request: {
     url: "",
     method: "post",
@@ -78,7 +79,7 @@ export const icePushDataDialog: DialogConfig<Job> = {
     },
     {
       type: "number",
-      label: "重试次数",
+      label: "设定重试次数",
       fieldName: "retryCount",
     },
     {

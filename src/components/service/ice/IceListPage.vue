@@ -29,11 +29,14 @@
       </template>
       <template #operation="{ row }">
         <div style="display: flex">
-          <el-button :icon="MoreFilled" @click="onLoadDetail(row)"></el-button>
+          <el-button
+            :icon="MoreFilled"
+            @click="onLoadJobDetail(row)"
+          ></el-button>
           <el-button
             :icon="TopRight"
             color="#E92D46"
-            @click="onRePush(row)"
+            @click="onRePushJob(row)"
             :disabled="!row.rePush"
           ></el-button>
         </div>
@@ -50,7 +53,7 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
 import { Plus, Search, MoreFilled, TopRight } from "@element-plus/icons-vue";
-import { DialogConfig, Model } from "@/components/views/data-dialog";
+import { Model } from "@/components/views/data-dialog";
 import { SearchParams } from "@/components/views/list-page";
 import ListPage from "@/components/views/ListPage.vue";
 import { iceListPage } from "./config/ice-list-page";
@@ -96,9 +99,22 @@ function onPushDialogClose(finish: boolean) {
   }
 }
 
-function onLoadDetail(row: JobInspectInfo) {}
+function onLoadJobDetail(row: JobInspectInfo) {
+  iceStore.fetchJobDetail(row.id, row.topic).then((respData) => {
+    pushDialogConfig.value.type = "readonly";
+    pushDialogConfig.value.title = "Job推送详细";
+    pushDialogConfig.value.desc = "当前数据仅能查看，不能编辑！";
+    const jobDetail = respData.data!;
+    // json -> string
+    if (typeof jobDetail.body === "object") {
+      jobDetail.body = JSON.stringify(jobDetail.body);
+    }
+    pushDialogConfig.value.model = respData.data!;
+    showPushDialog.value = true;
+  });
+}
 
-function onRePush(row: JobInspectInfo) {
+function onRePushJob(row: JobInspectInfo) {
   ElMessageBox.confirm("确定要重推Job吗？", "警告").then(() => {});
 }
 </script>

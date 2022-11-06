@@ -21,11 +21,14 @@ interface Board {
   numberMin?: number;
   // select可选值列表（type='select'）
   selectValues?: SelectOptions[];
+  // 数据输出格式化
   format?: (value?: any) => any;
 }
 
 export interface DialogConfig<T extends Model> {
+  type?: "normal" | "readonly";
   title: string;
+  desc?: string;
   rules?: Record<string, any>;
   model: T;
   board: Board[];

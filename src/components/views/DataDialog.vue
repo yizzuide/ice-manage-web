@@ -2,11 +2,11 @@
   <el-dialog
     v-model="showDialog"
     :close-on-click-modal="false"
-    :show-close="false"
     :before-close="onClose"
   >
     <template #header>
-      <span class="dialog-title">{{ config.title }}</span>
+      <div class="dialog-title">{{ config.title }}</div>
+      <div class="dialog-desc" v-if="config.desc">{{ config.desc }}</div>
     </template>
     <el-form :model="model" :rules="config.rules" ref="formRef">
       <div v-for="item in config.board" :key="item.fieldName">
@@ -19,7 +19,7 @@
             :type="item.multiple ? 'textarea' : 'text'"
             v-model="model[item.fieldName]"
             :show-password="item.isPassword"
-            :disabled="item.isDisable"
+            :disabled="item.isDisable || config.type == 'readonly'"
             autocomplete="off"
             v-if="!item.type || item.type == 'text'"
           />
@@ -27,12 +27,14 @@
             v-model="model[item.fieldName]"
             :controls-position="item.numberUsedMill ? 'right' : ''"
             :min="item.numberMin ?? 0"
+            :disabled="item.isDisable || config.type == 'readonly'"
             v-else-if="item.type == 'number'"
           />
           <el-select
             :multiple="item.multiple"
             v-model="model[item.fieldName]"
             placeholder="请选择"
+            :disabled="item.isDisable || config.type == 'readonly'"
             v-else-if="item.type == 'select'"
           >
             <el-option
@@ -48,7 +50,12 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="onClose">取消</el-button>
-        <el-button type="primary" @click="doConform"> 确定 </el-button>
+        <el-button
+          type="primary"
+          @click="doConform"
+          v-if="config.type !== 'readonly'"
+          >确定</el-button
+        >
       </span>
     </template>
   </el-dialog>
@@ -126,10 +133,15 @@ function doConform() {
 
 <style scoped lang="scss">
 .dialog-title {
-  display: block;
   text-align: center;
   font-weight: bold;
   color: $primaryColor;
+}
+.dialog-desc {
+  margin-top: 15px;
+  text-align: center;
+  font-size: small;
+  color: #ccc;
 }
 .el-button--text {
   margin-right: 15px;

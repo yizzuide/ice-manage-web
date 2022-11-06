@@ -16,7 +16,7 @@ export const iceListPage: Page<JobInspectInfo> = {
         },
         {
           prop: "topic",
-          label: "Topic",
+          label: "主题[Topic]",
           width: 120,
         },
         {

@@ -21,7 +21,7 @@ import { useRouter } from "vue-router";
 import LoginAccount from "./LoginAccount.vue";
 import useUserStore from "../store/userStore";
 
-// InstanceType：获取组件实例类型，从而可以调用组件导出的方法
+// InstanceType：获取组件构造函数实例类型，从而可以调用组件导出的方法
 const accountRef = ref<InstanceType<typeof LoginAccount>>();
 const isKeepPassword = ref(true);
 const router = useRouter();

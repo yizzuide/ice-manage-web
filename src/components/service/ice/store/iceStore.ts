@@ -1,7 +1,8 @@
-import { Model } from "@/components/views/data-dialog";
-import { PageData } from "@/http/HttpDefine";
-import request from "@/http/uniformRequest";
 import { defineStore } from "pinia";
+import { Model } from "@/components/views/data-dialog";
+import { HttpResult, PageData } from "@/http/HttpDefine";
+import request from "@/http/uniformRequest";
+import { Job } from "../config/ice-data-dialog";
 
 export interface JobInspectInfo extends Model {
   id: string;
@@ -35,6 +36,16 @@ export const useIceStore = defineStore("ice", {
         this.pageCount = pageCount;
         this.totalSize = totalSize;
         this.jobInfoList = list;
+      });
+    },
+    async fetchJobDetail(jobId: string, topic: string) {
+      return request<Job>({
+        url: "/api/job/jobDetail",
+        params: {
+          jobId,
+          topic,
+        },
+        showLoading: true,
       });
     },
   },
