@@ -6,20 +6,22 @@ interface SelectOptions {
 }
 
 interface Board {
-  // text is default
-  type?: "text" | "number" | "select";
-  isPassword?: boolean;
-  isDisable?: boolean;
-  // 多行输入框
-  multiple?: boolean;
-  // 数字用于毫秒
-  numberUsedMill?: boolean;
-  // 最小数字
-  numberMin?: number;
   label: string;
   fieldName: string;
+  // text is default
+  type?: "text" | "number" | "select";
+  isDisable?: boolean;
+  // 是否为密码框（type='text'）
+  isPassword?: boolean;
+  // 支持多行输入框（type='text'）/多选选择框（type='select'）
+  multiple?: boolean;
+  // 数字用于毫秒（type='number'）
+  numberUsedMill?: boolean;
+  // 最小数字（type='number'）
+  numberMin?: number;
+  // select可选值列表（type='select'）
   selectValues?: SelectOptions[];
-  format?: (value?: string | number) => any;
+  format?: (value?: any) => any;
 }
 
 export interface DialogConfig<T extends Model> {

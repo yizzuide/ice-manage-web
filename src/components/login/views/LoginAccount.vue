@@ -32,7 +32,6 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 import { ElForm, ElMessage, FormInstance } from "element-plus";
 import { ref } from "vue";
 import { rules } from "../config/login-account-rules";
-import { ILogin } from "../types/login";
 import useUserStore from "../store/userStore";
 
 const localStorage = useLocalStorage();
@@ -52,41 +51,33 @@ const refreshCode = () => {
 const formRef = ref<FormInstance>();
 const userStore = useUserStore();
 
-const loginCommit: ILogin = {
-  loginAction: async function (isKeepPassword): Promise<boolean> {
-    if (!formRef.value) return false;
+async function loginAction(isKeepPassword: boolean) {
+  // 校验方法为异步
+  const valid = await formRef.value?.validate();
+  if (!valid) {
+    ElMessage.error("输入格式不正确！");
+    return Promise.resolve(false);
+  }
 
-    const valid = await formRef.value.validate((valid, fields) => {
-      if (!valid) {
-        return valid;
-      }
-    });
-
-    if (!valid) {
-      ElMessage.error("输入格式不正确！");
-      return false;
-    }
-
-    // 记住密码
-    if (isKeepPassword) {
-      localStorage.set("username", account.value.username);
-      localStorage.set("password", account.value.password);
-    } else {
-      localStorage.remove("username");
-      localStorage.remove("password");
-    }
-    const data = await userStore.accountLogin(
-      account.value.username,
-      account.value.password,
-      account.value.code
-    );
-    if (!data.isSuccess && data.message) {
-      ElMessage.error(data.message);
-    }
-    return data.isSuccess;
-  },
-};
-defineExpose(loginCommit);
+  // 记住密码
+  if (isKeepPassword) {
+    localStorage.set("username", account.value.username);
+    localStorage.set("password", account.value.password);
+  } else {
+    localStorage.remove("username");
+    localStorage.remove("password");
+  }
+  const data = await userStore.accountLogin(
+    account.value.username,
+    account.value.password,
+    account.value.code
+  );
+  if (!data.isSuccess && data.message) {
+    ElMessage.error(data.message);
+  }
+  return Promise.resolve(data.isSuccess);
+}
+defineExpose({ loginAction });
 </script>
 
 <style scoped lang="scss">
