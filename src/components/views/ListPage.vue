@@ -30,20 +30,16 @@
           <el-button :icon="Search" @click="search">搜索</el-button>
         </div>
       </div>
-      <div
-        class="interact-row"
-        v-if="isNormalPageType || page.struct.command?.add"
-      >
+      <div class="interact-row">
         <el-button
           :icon="Plus"
           color="#52C37D"
           style="color: white"
           @click="addRow"
+          v-if="isNormalPageType || page.struct.command?.add"
           >{{ page.struct.command?.add?.label ?? "新增" }}</el-button
         >
-      </div>
-      <div class="interact-row" v-else>
-        <slot name="command" :row="selectedRow"></slot>
+        <slot name="command" :row="selectedRow" v-else></slot>
       </div>
       <el-table
         :data="tableData"
@@ -133,7 +129,7 @@ const emit = defineEmits<{
 
 const searchName = ref("");
 const searchDate = ref<Date[]>();
-const tableData = ref(<Model[]>[]);
+const tableData = ref<Model[]>([]);
 const selectedRow = ref<Model>();
 
 const isNormalPageType = !props.page.type || props.page.type == "normal";

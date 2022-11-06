@@ -8,7 +8,7 @@
     <template #header>
       <span class="dialog-title">{{ config.title }}</span>
     </template>
-    <el-form :model="config.model" :rules="config.rules" ref="formRef">
+    <el-form :model="model" :rules="config.rules" ref="formRef">
       <div v-for="item in config.board" :key="item.fieldName">
         <el-form-item
           :label="item.label"
@@ -16,20 +16,21 @@
           label-width="140px"
         >
           <el-input
-            v-model="config.model![item.fieldName]"
+            :type="item.multiLine ? 'textarea' : 'text'"
+            v-model="model[item.fieldName]"
             :show-password="item.isPassword"
             :disabled="item.isDisable"
             autocomplete="off"
             v-if="!item.type || item.type == 'text'"
           />
           <el-input-number
-            v-model="config.model![item.fieldName]"
-            :min="0"
-            :max="10"
+            v-model="model[item.fieldName]"
+            :controls-position="item.numberUsedMill ? 'right' : ''"
+            :min="item.numberMin ?? 0"
             v-else-if="item.type == 'number'"
           />
           <el-select
-            v-model="config.model![item.fieldName]"
+            v-model="model[item.fieldName]"
             placeholder="请选择"
             v-else-if="item.type == 'select'"
           >
@@ -70,12 +71,17 @@ const emit = defineEmits<{
 
 // 组件在哪里修改，就在哪里定义Ref
 const showDialog = ref(props.visible);
+const model = ref<Model>(props.config.model);
 const formRef = ref<FormInstance>();
 
 // 监听父组件的修改来双向修改
 watch(
   () => props.visible,
   (isVisible) => (showDialog.value = isVisible)
+);
+watch(
+  () => props.config.model,
+  (newModel) => (model.value = newModel)
 );
 
 function onClose(command: () => void) {
@@ -92,24 +98,37 @@ function doConform() {
       return false;
     }
 
+    // 参数格式化
+    props.config.board.forEach(
+      (item) =>
+        item.format &&
+        (model.value[item.fieldName] = item.format(model.value[item.fieldName]))
+    );
+
     request({
       url: props.config.request.url,
       method: props.config.request.method,
-      params: props.config.model,
+      params: model.value,
       showLoading: true,
-    }).then((_) => {
-      showDialog.value = false;
-      emit("close", true);
+    }).then((respData) => {
+      if (respData.isSuccess) {
+        showDialog.value = false;
+        emit("close", true);
+      } else {
+        ElMessage.error(respData.message);
+        emit("close", false);
+      }
     });
   });
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .dialog-title {
   display: block;
   text-align: center;
   font-weight: bold;
+  color: $primaryColor;
 }
 .el-button--text {
   margin-right: 15px;

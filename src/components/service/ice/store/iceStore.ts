@@ -3,7 +3,7 @@ import { PageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
 import { defineStore } from "pinia";
 
-export interface JobInfo extends Model {
+export interface JobInspectInfo extends Model {
   id: string;
   topic: string;
   applicationName: string;
@@ -19,14 +19,14 @@ export interface JobInfo extends Model {
 export const useIceStore = defineStore("ice", {
   state: () => {
     return {
-      jobInfoList: <JobInfo[]>[],
+      jobInfoList: <JobInspectInfo[]>[],
       pageCount: 0,
       totalSize: 0,
     };
   },
   actions: {
     async fetchPage(params: any) {
-      return request<PageData<JobInfo>>({
+      return request<PageData<JobInspectInfo>>({
         url: "/api/job/jobInfoList",
         params,
         showLoading: true,

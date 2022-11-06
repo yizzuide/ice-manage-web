@@ -1,17 +1,12 @@
 import { Page } from "@/components/views/list-page";
-import { JobInfo } from "../store/iceStore";
+import { JobInspectInfo } from "../store/iceStore";
 import { formatTimestamp } from "@/directives/formatTime";
 
-export const iceListPage: Page<JobInfo> = {
+export const iceListPage: Page<JobInspectInfo> = {
   type: "readonly",
   struct: {
     search: {
       custom: true,
-    },
-    command: {
-      add: {
-        label: "推送",
-      },
     },
     table: {
       items: [
@@ -21,7 +16,7 @@ export const iceListPage: Page<JobInfo> = {
         },
         {
           prop: "topic",
-          label: "主题",
+          label: "Topic",
           width: 120,
         },
         {
@@ -38,14 +33,14 @@ export const iceListPage: Page<JobInfo> = {
           prop: "bucketIndex",
           label: "延迟桶位置",
           width: 120,
-          format: (row: JobInfo) =>
+          format: (row: JobInspectInfo) =>
             row.bucketIndex == -1 ? "无" : `${row.bucketIndex}`,
         },
         {
           prop: "executionTime",
           label: "下次执行时间",
           width: 150,
-          format: (row: JobInfo) =>
+          format: (row: JobInspectInfo) =>
             row.executionTime == -1 ? "无" : formatTimestamp(row.executionTime),
         },
         {
@@ -62,13 +57,13 @@ export const iceListPage: Page<JobInfo> = {
           prop: "pushTime",
           label: "推送时间",
           width: 150,
-          format: (row: JobInfo) => formatTimestamp(row.pushTime),
+          format: (row: JobInspectInfo) => formatTimestamp(row.pushTime),
         },
         {
           prop: "updateTime",
           label: "更新时间",
           width: 150,
-          format: (row: JobInfo) => formatTimestamp(row.updateTime),
+          format: (row: JobInspectInfo) => formatTimestamp(row.updateTime),
         },
       ],
     },

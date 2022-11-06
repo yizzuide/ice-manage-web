@@ -85,7 +85,6 @@ export function addDynamicRoute() {
       };
     }
   );
-  console.log("routes: ", routes);
   routes.forEach((r) => router.addRoute(r));
   return true;
 }
