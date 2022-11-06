@@ -82,9 +82,10 @@ export const icePushDataDialog: DialogConfig<Job> = {
       fieldName: "retryCount",
     },
     {
-      multiLine: true,
+      multiple: true,
       label: "业务数据（json）",
       fieldName: "body",
+      // string -> json
       format: (value) => {
         value &&= (value as string).trim();
         if (value) {

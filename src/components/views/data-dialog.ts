@@ -11,7 +11,7 @@ interface Board {
   isPassword?: boolean;
   isDisable?: boolean;
   // 多行输入框
-  multiLine?: boolean;
+  multiple?: boolean;
   // 数字用于毫秒
   numberUsedMill?: boolean;
   // 最小数字

@@ -90,10 +90,9 @@ function onPush() {
 }
 
 function onPushDialogClose(finish: boolean) {
+  showPushDialog.value = false;
   if (finish) {
     onSearch(reqParams, tableDataRef);
-  } else {
-    showPushDialog.value = !showPushDialog.value;
   }
 }
 

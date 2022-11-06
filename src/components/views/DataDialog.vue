@@ -16,7 +16,7 @@
           label-width="140px"
         >
           <el-input
-            :type="item.multiLine ? 'textarea' : 'text'"
+            :type="item.multiple ? 'textarea' : 'text'"
             v-model="model[item.fieldName]"
             :show-password="item.isPassword"
             :disabled="item.isDisable"
@@ -30,6 +30,7 @@
             v-else-if="item.type == 'number'"
           />
           <el-select
+            :multiple="item.multiple"
             v-model="model[item.fieldName]"
             placeholder="请选择"
             v-else-if="item.type == 'select'"
@@ -111,8 +112,8 @@ function doConform() {
       params: model.value,
       showLoading: true,
     }).then((respData) => {
+      showDialog.value = false;
       if (respData.isSuccess) {
-        showDialog.value = false;
         emit("close", true);
       } else {
         ElMessage.error(respData.message);
