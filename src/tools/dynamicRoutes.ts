@@ -1,4 +1,4 @@
-import { Router, RouteRecordRaw } from "vue-router";
+import { Router, RouteRecordRaw, RouteComponent } from "vue-router";
 import { createProxyList, ObjectProxy } from "./interfaceProxy";
 
 // 定义路由菜单代理对象类型
@@ -18,10 +18,10 @@ export interface DynamicMenu {
 
 export interface DynamicMenuConfig<T> {
   router: Router;
-  // 主页模板组件路由名（用于挂载匿名顶级路由）
+  // 主页组件路由名（用于挂载动态路由）
   indexRouteName: string;
-  // 主页模板组件（用于给顶级父路由的component）
-  indexComponent: () => Promise<unknown>;
+  // 主页组件（内部可自动根据`indexRouteName`获取，用于父路由的component）
+  indexComponent?: (() => Promise<unknown>) | RouteComponent;
   // 解析子组件
   resolveComponent: (dynamicMenu: DynamicMenu) => () => Promise<unknown>;
 }
@@ -31,6 +31,13 @@ export function genDynamicMenu<T extends DynamicMenu>(
   menuList: T[],
   methods: (target: T) => DynamicMenu
 ) {
+  // 如果外面没有设置，自动查找主页模板组件
+  if (!config.indexComponent) {
+    const indexRoute = config.router
+      .getRoutes()
+      .find((r) => r.name === config.indexRouteName);
+    config.indexComponent = indexRoute?.components?.default;
+  }
   const dynamicMenuProxyList = createProxyList(menuList, methods);
   const routes: RouteRecordRaw[] = [];
   for (const menu of dynamicMenuProxyList) {
@@ -57,7 +64,7 @@ export function genDynamicMenu<T extends DynamicMenu>(
         menu,
         methods,
         true,
-        config.indexComponent
+        config.indexComponent!
       );
       // 递归添加子路由
       rootRoute.children?.push(
@@ -73,7 +80,7 @@ function createRoute<T>(
   menu: DynamicMenuProxy<T>,
   methods: (target: T) => DynamicMenu,
   isRoot: boolean,
-  component: () => Promise<unknown>
+  component: (() => Promise<unknown>) | RouteComponent
 ) {
   let route: RouteRecordRaw = {
     name: menu.getRouteName(),

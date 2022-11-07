@@ -69,7 +69,6 @@ export function addDynamicRoute() {
     {
       router: router,
       indexRouteName: "index",
-      indexComponent: () => import("@/components/home/HomePage.vue"),
       resolveComponent: (dynamicMenu: DynamicMenu) =>
         viteComponents[`/src/components${dynamicMenu.getComponentPath()}.vue`],
     },

@@ -86,7 +86,7 @@ watch(
     margin-right: 15px;
   }
   .el-tag:hover {
-    border: 1px solid sandybrown;
+    border: 1px solid $textHighBrightColor;
   }
 }
 </style>
