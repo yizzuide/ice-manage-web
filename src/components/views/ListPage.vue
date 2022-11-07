@@ -33,7 +33,7 @@
       <div class="interact-row">
         <el-button
           :icon="Plus"
-          color="#52C37D"
+          :color="varColor.successColor"
           style="color: white"
           @click="addRow"
           v-if="isNormalPageType || page.struct.command?.add"
@@ -68,12 +68,12 @@
             <div style="display: flex" v-if="isNormalPageType">
               <el-button
                 :icon="Edit"
-                color="#FBEC45"
+                :color="varColor.warningColor"
                 @click="handleEdit(scope.$index, scope.row)"
               ></el-button>
               <el-button
                 :icon="Delete"
-                color="#E92D46"
+                :color="varColor.dangerColor"
                 @click="handleDelete(scope.$index, scope.row)"
               ></el-button>
             </div>
@@ -103,6 +103,7 @@
 
 <script setup lang="ts">
 import { Ref, ref } from "vue";
+import varColor from "@/styles/define.module.scss";
 import { Search, Plus, Edit, Delete } from "@element-plus/icons-vue";
 import DataDialog from "./DataDialog.vue";
 import { ElMessageBox } from "element-plus";

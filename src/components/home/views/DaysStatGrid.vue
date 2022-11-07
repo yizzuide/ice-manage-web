@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 import * as echarts from "echarts";
+import varColor from "@/styles/define.module.scss";
 import { useDashboardStore, KVItem } from "../store/dashboardStore";
 
 import { onMounted } from "vue";
@@ -67,14 +68,14 @@ function load() {
         name: "处理成功",
         type: "line",
         stack: "Total",
-        color: "#8CDD66",
+        color: varColor.successColor,
         data: successData,
       },
       {
         name: "处理失败",
         type: "line",
         stack: "Total",
-        color: "#DE776C",
+        color: varColor.dangerColor,
         data: failData,
       },
     ],

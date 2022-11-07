@@ -5,8 +5,8 @@
         <MenuLogo :collapse="isMenuCollapse"></MenuLogo>
         <el-scrollbar>
           <el-menu
-            active-text-color="#ffd04b"
-            background-color="#A35524"
+            :active-text-color="varColor.textHighBrightColor"
+            :background-color="varColor.darknessColor"
             text-color="#fff"
             class="el-menu"
             :default-active="selectedMenuIndex"
@@ -50,6 +50,7 @@
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
+import varColor from "@/styles/define.module.scss";
 import useUserStore from "../login/store/userStore";
 import { useHomeStore } from "./store/homeStore";
 import MenuItem from "./views/MenuItem.vue";
@@ -99,43 +100,46 @@ function menuSelect(index: string) {
       overflow-y: hidden;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      transition: width 0.5s linear;
+      transition: width 0.25s ease-in;
+      -webkit-transition: width 0.25s ease-in;
+      -moz-transition: width 0.25s ease-in;
+      -o-transition: width 0.25s ease-in;
     }
-    // el-menu[width="auto"] + 下面设置未收起的配置实现菜单向左收缩的效果
+    // el-aside[width="auto"] + 下面设置未收起的配置实现菜单向左收缩的效果
     .el-menu:not(.el-menu--collapse) {
-      width: 200px;
+      width: 100%;
     }
     .el-scrollbar {
-      background-color: #a35524;
+      background-color: $darknessColor;
       overflow-y: scroll;
     }
     // 展开子菜单列表背景色
     :deep(.is-opened .el-menu-item) {
-      background-color: #ab7a24;
+      background-color: $drawerBgColor;
     }
     // 展开子菜单列表鼠标hover背景色
     :deep(.is-opened .el-menu-item:hover) {
-      background-color: #ca9740;
+      background-color: $highBrightColor;
     }
   }
 
   .body {
     > .el-header {
       height: 50px;
-      border-bottom: 1px solid #e5e5e5;
+      border-bottom: 1px solid $separatorLineColor;
     }
 
     nav {
       min-height: 32px;
-      border-bottom: 1px solid #e5e5e5;
+      border-bottom: 1px solid $separatorLineColor;
     }
 
     .el-scrollbar {
-      background-color: #eee;
+      background-color: $panelBgColor;
     }
 
     .el-main {
-      background-color: #eee;
+      background-color: $panelBgColor;
 
       .fade-transform-enter-from,
       .fade-transform-leave-to {

@@ -21,7 +21,7 @@
       <template #command>
         <el-button
           :icon="Plus"
-          color="#52C37D"
+          :color="varColor.successColor"
           style="color: white"
           @click="onPush"
           >推送</el-button
@@ -35,7 +35,7 @@
           ></el-button>
           <el-button
             :icon="TopRight"
-            color="#E92D46"
+            :color="varColor.dangerColor"
             @click="onRePushJob(row)"
             :disabled="!row.rePush"
           ></el-button>
@@ -52,6 +52,7 @@
 
 <script setup lang="ts">
 import { ref, Ref } from "vue";
+import varColor from "@/styles/define.module.scss";
 import { Plus, Search, MoreFilled, TopRight } from "@element-plus/icons-vue";
 import { Model } from "@/components/views/data-dialog";
 import { SearchParams } from "@/components/views/list-page";

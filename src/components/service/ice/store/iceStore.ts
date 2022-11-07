@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { Model } from "@/components/views/data-dialog";
-import { HttpResult, PageData } from "@/http/HttpDefine";
+import { PageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
 import { Job } from "../config/ice-data-dialog";
 import { ContentType } from "@/plugins/request";
@@ -29,7 +29,7 @@ export const useIceStore = defineStore("ice", {
   actions: {
     async fetchPage(params: any) {
       return request<PageData<JobInspectInfo>>({
-        url: "/api/job/jobInfoList",
+        url: "/api/job/jobInspectInfos",
         params,
         showLoading: true,
       }).then((respData) => {

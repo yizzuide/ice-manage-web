@@ -3,4 +3,10 @@
 // 导出给js使用
 :export {
   primaryColor: $primaryColor;
+  darknessColor: $darknessColor;
+  textHighBrightColor: $textHighBrightColor;
+  infoColor: $infoColor;
+  successColor: $successColor;
+  warningColor: $warningColor;
+  dangerColor: $dangerColor;
 }
