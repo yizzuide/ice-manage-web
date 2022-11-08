@@ -87,6 +87,7 @@ watch(
   () => props.visible,
   (isVisible) => (showDialog.value = isVisible)
 );
+// 监听父组件提供的初始化数据
 watch(
   () => props.config.model,
   (newModel) => (model.value = newModel)

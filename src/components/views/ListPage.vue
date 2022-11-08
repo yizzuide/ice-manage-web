@@ -135,7 +135,7 @@ const props = defineProps<{
   total: number;
 }>();
 const emit = defineEmits<{
-  (e: "search", params: SearchParams, tableData: Ref<Model[]>): void;
+  (e: "search", searchParams: SearchParams, tableData: Ref<Model[]>): void;
   (
     e: "operation",
     name: OperationNamed,
