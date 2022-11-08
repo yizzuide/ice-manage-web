@@ -66,12 +66,12 @@ import DataDialog from "@/components/views/DataDialog.vue";
 const iceStore = useIceStore();
 const searchName = ref("");
 let tableDataRef: Ref<Model[]>;
-let reqParams: SearchParams;
+let reqParams: SearchParams<Model>;
 
 const showPushDialog = ref(false);
 const pushDialogConfig = ref(icePushDataDialog);
 
-function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
+function onSearch(params: SearchParams<Model>, tableData: Ref<Model[]>) {
   reqParams = params;
   tableDataRef = tableData;
   iceStore
