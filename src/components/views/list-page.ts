@@ -7,19 +7,18 @@ export enum SearchParamsProp {
   searchDate = "searchDate",
 }
 
-export type SearchParams<T extends Model> = {
+export interface SearchParams extends Model {
   searchIndex: number;
   searchKeyName?: string;
   searchDate?: Date[];
-  entity?: T;
-};
+}
 
 export interface SearchItem {
   type: "text" | "select" | "date";
-  placeholder: string;
-  prop: string;
-  inputSettings: Record<string, any>;
-  selectOptions: SelectOptions[];
+  placeholder?: string;
+  prop?: string;
+  inputSettings?: Record<string, any>;
+  selectOptions?: SelectOptions[];
 }
 
 export interface TableItem<T> {
@@ -36,11 +35,7 @@ export interface Page<T extends Model> {
     search: {
       // 是否需要自定义（添加slot="search"），默认为false
       custom?: boolean;
-      // 第一个搜索条件（custom=false时，不为空）
-      firstInput?: {
-        placeholder: string;
-      };
-      items: SearchItem[];
+      items?: SearchItem[];
     };
     command?: {
       add?: {

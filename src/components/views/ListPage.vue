@@ -2,24 +2,41 @@
   <div>
     <el-card>
       <div class="interact-row">
-        <div class="interact-row" v-if="!page.struct.search.custom">
-          <div class="search-item">
+        <div
+          class="interact-row"
+          v-if="!page.struct.search.custom && page.struct.search.items"
+        >
+          <div
+            class="search-item"
+            v-for="item in page.struct.search.items"
+            :key="item.prop"
+          >
             <el-input
-              :placeholder="page.struct.search.firstInput!.placeholder"
-              :prefix-icon="Search"
-              v-model="searchKeyName"
+              :placeholder="item.placeholder"
+              v-model="searchParams[item.prop as keyof typeof searchParams]"
               :formatter="(value: string) => value.replace(/\s/g, '')"
               clearable
+              v-if="item.type == 'text'"
             ></el-input>
-          </div>
-          <div class="search-item">
+            <el-select
+              :placeholder="item.placeholder"
+              v-model="searchParams[item.prop as keyof typeof searchParams]"
+              v-else-if="item.type == 'select'"
+            >
+              <el-option
+                v-for="opt in item.selectOptions"
+                :key="opt.value"
+                :label="opt.label"
+                :value="opt.value"
+              />
+            </el-select>
             <el-date-picker
-              v-model="searchDate"
+              v-model="searchParams[item.prop as keyof typeof searchParams]"
               type="daterange"
               value-format="YYYY-MM-DD HH:mm:ss"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
               :default-value="[dayjs().subtract(1, 'month'), dayjs()]"
+              v-bind="item.inputSettings"
+              v-else-if="item.type == 'date'"
             />
           </div>
         </div>
@@ -88,7 +105,7 @@
         :total="total"
         :page-size="pageSize"
         :page-count="pageCount"
-        :current-page="pageIndex"
+        :current-page="searchParams.searchIndex"
         @current-change="changePageIndex"
       />
     </el-card>
@@ -118,7 +135,7 @@ const props = defineProps<{
   total: number;
 }>();
 const emit = defineEmits<{
-  (e: "search", params: SearchParams<Model>, tableData: Ref<Model[]>): void;
+  (e: "search", params: SearchParams, tableData: Ref<Model[]>): void;
   (
     e: "operation",
     name: OperationNamed,
@@ -128,32 +145,25 @@ const emit = defineEmits<{
   ): void;
 }>();
 
-const searchKeyName = ref("");
-const searchDate = ref<Date[]>();
 const tableData = ref<Model[]>([]);
 const selectedRow = ref<Model>();
+const searchParams = ref<SearchParams>({
+  searchIndex: 1,
+  searchKeyName: "",
+});
 
 const isNormalPageType = !props.page.type || props.page.type == "normal";
 const dialogConfig = ref(props.page.struct.dialogConfig);
 const showDialog = ref(false);
-const pageIndex = ref<number>(1);
 
 search();
 
 function search() {
-  emit(
-    "search",
-    {
-      searchIndex: pageIndex.value,
-      searchKeyName: searchKeyName.value,
-      searchDate: searchDate.value,
-    },
-    tableData
-  );
+  emit("search", searchParams.value, tableData);
 }
 
 function changePageIndex(index: number) {
-  pageIndex.value = index;
+  searchParams.value.searchIndex = index;
   search();
 }
 

@@ -6,7 +6,26 @@ export const iceListPage: Page<JobInspectInfo> = {
   type: "readonly",
   struct: {
     search: {
-      custom: true,
+      items: [
+        {
+          type: "text",
+          placeholder: "输入Job的id",
+        },
+        {
+          type: "select",
+          placeholder: "请选择主题",
+          selectOptions: [
+            {
+              label: "check_order",
+              value: 0,
+            },
+            {
+              label: "audit_order",
+              value: 1,
+            },
+          ],
+        },
+      ],
     },
     table: {
       items: [

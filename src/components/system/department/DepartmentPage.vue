@@ -22,9 +22,9 @@ import { ElMessage } from "element-plus";
 
 const departmentStore = useDepartmentStore();
 let tableDataRef: Ref<Model[]>;
-let reqParams: SearchParams<Model>;
+let reqParams: SearchParams;
 
-function search(params: SearchParams<Model>, tableData: Ref<Model[]>) {
+function search(params: SearchParams, tableData: Ref<Model[]>) {
   reqParams = params;
   tableDataRef = tableData;
   departmentStore

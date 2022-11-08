@@ -7,17 +7,6 @@
       :total="iceStore.totalSize"
       @search="onSearch"
     >
-      <template #search>
-        <div class="search-item">
-          <el-input
-            placeholder="输入job的id"
-            :prefix-icon="Search"
-            v-model="searchName"
-            :formatter="(value: string) => value.replace(/\s/g, '')"
-            clearable
-          ></el-input>
-        </div>
-      </template>
       <template #command>
         <el-button
           :icon="Plus"
@@ -64,14 +53,13 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import DataDialog from "@/components/views/DataDialog.vue";
 
 const iceStore = useIceStore();
-const searchName = ref("");
 let tableDataRef: Ref<Model[]>;
-let reqParams: SearchParams<Model>;
+let reqParams: SearchParams;
 
 const showPushDialog = ref(false);
 const pushDialogConfig = ref(icePushDataDialog);
 
-function onSearch(params: SearchParams<Model>, tableData: Ref<Model[]>) {
+function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
   reqParams = params;
   tableDataRef = tableData;
   iceStore

@@ -21,9 +21,9 @@ import { ElMessage } from "element-plus";
 
 const menuStore = useMenuStore();
 let tableDataRef: Ref<Model[]>;
-let reqParams: SearchParams<Model>;
+let reqParams: SearchParams;
 
-function onSearch(params: SearchParams<Model>, tableData: Ref<Model[]>) {
+function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
   reqParams = params;
   tableDataRef = tableData;
   menuStore

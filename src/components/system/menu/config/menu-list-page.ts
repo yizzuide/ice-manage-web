@@ -1,4 +1,4 @@
-import { Page } from "@/components/views/list-page";
+import { Page, SearchParamsProp } from "@/components/views/list-page";
 import { menuDialogConfig, ModifierMenu } from "./menu-data-dialog";
 
 enum MenuType {
@@ -10,9 +10,21 @@ enum MenuType {
 export const menuListPage: Page<ModifierMenu> = {
   struct: {
     search: {
-      firstInput: {
-        placeholder: "请输入菜单名",
-      },
+      items: [
+        {
+          type: "text",
+          placeholder: "请输入菜单名",
+          prop: SearchParamsProp.searchKeyName,
+        },
+        {
+          type: "date",
+          prop: SearchParamsProp.searchDate,
+          inputSettings: {
+            "start-placeholder": "开始时间",
+            "end-placeholder": "结束时间",
+          },
+        },
+      ],
     },
     table: {
       items: [
