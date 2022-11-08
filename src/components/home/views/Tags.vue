@@ -1,5 +1,5 @@
 <template>
-  <el-row>
+  <div class="tag-container">
     <el-tag
       v-for="tag in tagList"
       :key="tag.path"
@@ -9,7 +9,7 @@
       @click="selectTag(tag.path)"
       >{{ tag.title }}</el-tag
     >
-  </el-row>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -72,7 +72,7 @@ watch(
 </script>
 
 <style scoped lang="scss">
-.el-row {
+.tag-container {
   height: 100%;
   display: flex;
   flex-shrink: 0;
