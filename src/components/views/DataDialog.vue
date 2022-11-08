@@ -38,7 +38,7 @@
             v-else-if="item.type == 'select'"
           >
             <el-option
-              v-for="opt in item.selectValues"
+              v-for="opt in item.selectOptions"
               :key="opt.value"
               :label="opt.label"
               :value="opt.value"

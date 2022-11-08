@@ -21,9 +21,9 @@ import { ElMessage } from "element-plus";
 
 const menuStore = useMenuStore();
 let tableDataRef: Ref<Model[]>;
-let reqParams: SearchParams;
+let reqParams: SearchParams<Model>;
 
-function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
+function onSearch(params: SearchParams<Model>, tableData: Ref<Model[]>) {
   reqParams = params;
   tableDataRef = tableData;
   menuStore
@@ -33,7 +33,7 @@ function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
       startDate: params.searchDate?.[0],
       endDate: params.searchDate?.[1],
       entity: {
-        label: params.searchName,
+        label: params.searchKeyName,
       },
     })
     .then(() => (tableData.value = menuStore.menuList));

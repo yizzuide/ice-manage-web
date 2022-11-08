@@ -74,7 +74,7 @@ export const menuDialogConfig: DialogConfig<ModifierMenu> = {
       type: "select",
       label: "类型",
       fieldName: "type",
-      selectValues: [
+      selectOptions: [
         {
           label: "菜单目录",
           value: 0,

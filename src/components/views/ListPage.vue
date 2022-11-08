@@ -7,7 +7,7 @@
             <el-input
               :placeholder="page.struct.search.firstInput!.placeholder"
               :prefix-icon="Search"
-              v-model="searchName"
+              v-model="searchKeyName"
               :formatter="(value: string) => value.replace(/\s/g, '')"
               clearable
             ></el-input>
@@ -118,7 +118,7 @@ const props = defineProps<{
   total: number;
 }>();
 const emit = defineEmits<{
-  (e: "search", params: SearchParams, tableData: Ref<Model[]>): void;
+  (e: "search", params: SearchParams<Model>, tableData: Ref<Model[]>): void;
   (
     e: "operation",
     name: OperationNamed,
@@ -128,7 +128,7 @@ const emit = defineEmits<{
   ): void;
 }>();
 
-const searchName = ref("");
+const searchKeyName = ref("");
 const searchDate = ref<Date[]>();
 const tableData = ref<Model[]>([]);
 const selectedRow = ref<Model>();
@@ -145,7 +145,7 @@ function search() {
     "search",
     {
       searchIndex: pageIndex.value,
-      searchName: searchName.value,
+      searchKeyName: searchKeyName.value,
       searchDate: searchDate.value,
     },
     tableData

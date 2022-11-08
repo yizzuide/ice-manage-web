@@ -1,6 +1,6 @@
 export type Model = Record<string, any>;
 
-interface SelectOptions {
+export interface SelectOptions {
   label: string;
   value: number;
 }
@@ -20,7 +20,7 @@ interface Board {
   // 最小数字（type='number'）
   numberMin?: number;
   // select可选值列表（type='select'）
-  selectValues?: SelectOptions[];
+  selectOptions?: SelectOptions[];
   // 数据输出格式化
   format?: (value?: any) => any;
 }

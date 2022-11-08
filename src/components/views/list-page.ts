@@ -1,12 +1,26 @@
-import { DialogConfig, Model } from "./data-dialog";
+import { DialogConfig, Model, SelectOptions } from "./data-dialog";
 
 export type OperationNamed = "add" | "edit" | "remove";
 
-export type SearchParams = {
+export enum SearchParamsProp {
+  searchKeyName = "searchKeyName",
+  searchDate = "searchDate",
+}
+
+export type SearchParams<T extends Model> = {
   searchIndex: number;
-  searchName?: string;
+  searchKeyName?: string;
   searchDate?: Date[];
+  entity?: T;
 };
+
+export interface SearchItem {
+  type: "text" | "select" | "date";
+  placeholder: string;
+  prop: string;
+  inputSettings: Record<string, any>;
+  selectOptions: SelectOptions[];
+}
 
 export interface TableItem<T> {
   prop: string;
@@ -26,6 +40,7 @@ export interface Page<T extends Model> {
       firstInput?: {
         placeholder: string;
       };
+      items: SearchItem[];
     };
     command?: {
       add?: {

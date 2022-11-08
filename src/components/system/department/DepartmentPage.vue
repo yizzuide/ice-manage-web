@@ -22,9 +22,9 @@ import { ElMessage } from "element-plus";
 
 const departmentStore = useDepartmentStore();
 let tableDataRef: Ref<Model[]>;
-let reqParams: SearchParams;
+let reqParams: SearchParams<Model>;
 
-function search(params: SearchParams, tableData: Ref<Model[]>) {
+function search(params: SearchParams<Model>, tableData: Ref<Model[]>) {
   reqParams = params;
   tableDataRef = tableData;
   departmentStore
@@ -34,7 +34,7 @@ function search(params: SearchParams, tableData: Ref<Model[]>) {
       startDate: params.searchDate?.[0],
       endDate: params.searchDate?.[1],
       entity: {
-        departmentName: params.searchName,
+        departmentName: params.searchKeyName,
       },
     })
     .then(() => (tableData.value = departmentStore.departmentList));
