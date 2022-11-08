@@ -62,11 +62,16 @@ const pushDialogConfig = ref(icePushDataDialog);
 function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
   reqParams = params;
   tableDataRef = tableData;
+  const modelParams = params as SearchParams & JobInspectInfo;
   iceStore
     .fetchPage({
       pageStart: params.searchIndex,
       pageSize: 10,
       order: -1,
+      entity: {
+        jobId: modelParams.id,
+        topic: modelParams.topic,
+      },
     })
     .then(() => (tableData.value = iceStore.jobInfoList));
 }

@@ -10,10 +10,12 @@ export const iceListPage: Page<JobInspectInfo> = {
         {
           type: "text",
           placeholder: "输入Job的id",
+          prop: "id",
         },
         {
           type: "select",
           placeholder: "请选择主题",
+          prop: "topic",
           selectOptions: [
             {
               label: "check_order",
