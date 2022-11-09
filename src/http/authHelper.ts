@@ -18,9 +18,11 @@ export function checkAuthFail(code: number) {
   if (code == 401) {
     const valid = validToken()[1];
     if (!valid) {
-      router.replace({ name: "login" });
+      router.replace({ name: "login" }).then(() => {});
+      return false;
     }
   }
+  return true;
 }
 
 export function validToken(): [string | undefined, boolean] {

@@ -67,6 +67,8 @@ const icePageConfig = ref(iceListPage);
 
 const iceStore = useIceStore();
 const dashboardStore = useDashboardStore();
+
+// 加载主题
 if (dashboardStore.jobStatInfo.topics) {
   const topicKeys = Object.keys(dashboardStore.jobStatInfo.topics);
   initPageData(icePageConfig, topicKeys);

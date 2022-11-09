@@ -54,9 +54,10 @@ export default function request<T>(
     useRequest()
       .request<HttpResult<T>>(requestConfig)
       .then((data) => {
-        checkAuthFail(data.code);
-        data.isSuccess = data.code == 0;
-        resolve(data);
+        if (checkAuthFail(data.code)) {
+          data.isSuccess = data.code == 0;
+          resolve(data);
+        }
       })
       .catch((error) => {
         console.log("request error: ", error);
