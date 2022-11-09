@@ -1,6 +1,13 @@
 import { Directive, DirectiveBinding, VueElement } from "vue";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { DirectiveTuple } from "./tuple";
+
+// dayjs支持utc格式
+dayjs.extend(utc);
+
+const DEFAULT_PATTERN = "YYYY-MM-DD HH:mm:ss";
+const UTC_REG = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$/;
 
 export default function (): DirectiveTuple<string> {
   // 定义指令名
@@ -12,10 +19,16 @@ export default function (): DirectiveTuple<string> {
       if (content == null) return "";
       // 是否有自定义pattern值
       const pattern = bindings.value ?? undefined;
-      el.textContent = formatTimestamp(content, pattern);
+      el.textContent = UTC_REG.test(content)
+        ? formatUtc(content, pattern)
+        : formatTimestamp(content, pattern);
     },
   };
   return [name, vFormatTime];
+}
+
+export function formatUtc(time: string, pattern?: string) {
+  return dayjs.utc(time).format(pattern);
 }
 
 export function formatTimestamp(time: string | number, pattern?: string) {
@@ -28,6 +41,6 @@ export function formatTimestamp(time: string | number, pattern?: string) {
   if (`${time}`.length === 10) {
     timestamp = timestamp * 1000;
   }
-  pattern = pattern ?? "YYYY-MM-DD HH:mm:ss";
+  pattern = pattern ?? DEFAULT_PATTERN;
   return dayjs(timestamp).format(pattern);
 }

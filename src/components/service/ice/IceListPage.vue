@@ -17,12 +17,9 @@
         >
       </template>
       <template #needRePushColumn="{ row }">
-        <el-tag
-          style="color: #fff"
-          :effect="'light'"
-          :color="row.needRePush ? varColor.successColor : varColor.dangerColor"
-          >{{ row.needRePush ? "可用" : "否" }}</el-tag
-        >
+        <el-tag effect="light" :type="row.needRePush ? 'success' : 'danger'">{{
+          row.needRePush ? "可用" : "不可用"
+        }}</el-tag>
       </template>
       <template #operation="{ row }">
         <div style="display: flex">
@@ -92,6 +89,7 @@ function onSearch(searchParams: SearchParams, tableData: Ref<Model[]>) {
       order: searchParams.order ?? -1,
       entity: {
         id: modelReqParams.id,
+        // 使用redis存储方法，必须提供：id + topic
         topic:
           modelReqParams.topic ??
           iceStore.jobInfoList
@@ -131,7 +129,7 @@ function onLoadJobDetail(row: JobInspectInfo) {
   iceStore.fetchJobDetail(row.id, row.topic).then((respData) => {
     pushDialogConfig.value.type = "readonly";
     pushDialogConfig.value.title = "Job推送详细";
-    pushDialogConfig.value.desc = "当前数据仅能查看，不能编辑！";
+    pushDialogConfig.value.desc = "当前为只读数据，不能编辑！";
     const jobDetail = respData.data!;
     // json -> string
     if (typeof jobDetail.body === "object") {

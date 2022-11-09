@@ -48,6 +48,7 @@ export interface Page<T extends Model> {
     table: {
       // 是否隐藏操作列表
       hiddenOperationColumn?: boolean;
+      operationColumnWidth?: number;
       items: TableItem<T>[];
     };
     dialogConfig?: DialogConfig<T>;

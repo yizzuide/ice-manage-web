@@ -73,7 +73,9 @@
             :label="item.label"
             :width="item.width ?? 120"
             :formatter="item.format"
+            align="center"
           >
+            <!-- 自定义动态列Slot -->
             <template #default="scope" v-if="item.slotName">
               <slot :name="item.slotName" :row="scope.row"></slot>
             </template>
@@ -82,12 +84,14 @@
         <el-table-column
           fixed="right"
           label="操作"
-          width="120"
+          :width="page.struct.table.operationColumnWidth ?? 120"
+          align="center"
           v-if="!page.struct.table.hiddenOperationColumn"
         >
           <template #default="scope">
             <div style="display: flex">
               <slot name="operation" :row="scope.row">
+                <!-- 如果外面没有使用这个slot，使用下面默认的 -->
                 <el-button
                   :icon="Edit"
                   :color="varColor.warningColor"

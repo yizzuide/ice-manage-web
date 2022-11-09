@@ -80,7 +80,7 @@ export const iceListPage: Page<JobInspectInfo> = {
         {
           prop: "executionTime",
           label: "下次执行时间",
-          width: 150,
+          width: 180,
           format: (row: JobInspectInfo) =>
             row.executionTime == -1 ? "无" : formatTimestamp(row.executionTime),
         },
@@ -98,13 +98,13 @@ export const iceListPage: Page<JobInspectInfo> = {
         {
           prop: "pushTime",
           label: "推送时间",
-          width: 150,
+          width: 180,
           format: (row: JobInspectInfo) => formatTimestamp(row.pushTime),
         },
         {
           prop: "updateTime",
           label: "更新时间",
-          width: 150,
+          width: 180,
           format: (row: JobInspectInfo) => formatTimestamp(row.updateTime),
         },
       ],

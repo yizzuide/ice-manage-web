@@ -18,6 +18,7 @@ import { changeTheme, EleTheme } from "./tools/eleTheme";
 
 const app = createApp(App);
 
+// 注册自定义指令
 registerDirectives(app);
 
 app.use(router);
