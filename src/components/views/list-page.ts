@@ -17,7 +17,9 @@ export interface SearchItem {
   type: "text" | "select" | "date";
   placeholder?: string;
   prop?: string;
+  // 输入框绑定属性参数
   inputSettings?: Record<string, any>;
+  // select选择框
   selectOptions?: SelectOptions[];
 }
 

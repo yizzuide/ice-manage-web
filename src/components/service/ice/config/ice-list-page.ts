@@ -1,6 +1,20 @@
 import { Page } from "@/components/views/list-page";
 import { JobInspectInfo } from "../store/iceStore";
 import { formatTimestamp } from "@/directives/formatTime";
+import { Ref } from "vue";
+
+export function initPageData(
+  iceListPage: Ref<Page<JobInspectInfo>>,
+  topics: string[]
+) {
+  const searchItem = iceListPage.value.struct.search.items?.find(
+    (item) => item.prop === "topic"
+  );
+  searchItem!.selectOptions = topics.map((tKey) => ({
+    label: tKey,
+    value: tKey,
+  }));
+}
 
 export const iceListPage: Page<JobInspectInfo> = {
   type: "readonly",
@@ -14,16 +28,22 @@ export const iceListPage: Page<JobInspectInfo> = {
         },
         {
           type: "select",
-          placeholder: "请选择主题",
+          placeholder: "选择主题",
           prop: "topic",
+          selectOptions: [],
+        },
+        {
+          type: "select",
+          placeholder: "选择时间排序",
+          prop: "order",
           selectOptions: [
             {
-              label: "check_order",
-              value: 0,
+              label: "升序",
+              value: 1,
             },
             {
-              label: "audit_order",
-              value: 1,
+              label: "降序",
+              value: -1,
             },
           ],
         },

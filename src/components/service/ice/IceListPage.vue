@@ -1,7 +1,7 @@
 <template>
   <div>
     <ListPage
-      :page="iceListPage"
+      :page="icePageConfig"
       :page-size="10"
       :page-count="iceStore.pageCount"
       :total="iceStore.totalSize"
@@ -42,38 +42,61 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
 import varColor from "@/styles/define.module.scss";
-import { Plus, Search, MoreFilled, TopRight } from "@element-plus/icons-vue";
+import { Plus, MoreFilled, TopRight } from "@element-plus/icons-vue";
 import { Model } from "@/components/views/data-dialog";
 import { SearchParams } from "@/components/views/list-page";
 import ListPage from "@/components/views/ListPage.vue";
-import { iceListPage } from "./config/ice-list-page";
+import { iceListPage, initPageData } from "./config/ice-list-page";
 import { icePushDataDialog, Job } from "./config/ice-data-dialog";
 import { JobInspectInfo, useIceStore } from "./store/iceStore";
+import { useDashboardStore } from "@/components/home/store/dashboardStore";
 import { ElMessage, ElMessageBox } from "element-plus";
 import DataDialog from "@/components/views/DataDialog.vue";
 
-const iceStore = useIceStore();
 let tableDataRef: Ref<Model[]>;
 let reqParams: SearchParams;
 
 const showPushDialog = ref(false);
 const pushDialogConfig = ref(icePushDataDialog);
+const icePageConfig = ref(iceListPage);
+
+const iceStore = useIceStore();
+const dashboardStore = useDashboardStore();
+if (dashboardStore.jobStatInfo.topics) {
+  const topicKeys = Object.keys(dashboardStore.jobStatInfo.topics);
+  initPageData(icePageConfig, topicKeys);
+} else {
+  dashboardStore.fetchJobStatInfo().then(() => {
+    const topicKeys = Object.keys(dashboardStore.jobStatInfo.topics);
+    initPageData(icePageConfig, topicKeys);
+  });
+}
 
 function onSearch(searchParams: SearchParams, tableData: Ref<Model[]>) {
   reqParams = searchParams;
   tableDataRef = tableData;
+
   const modelReqParams = searchParams as SearchParams & JobInspectInfo;
   iceStore
     .fetchPage({
       pageStart: searchParams.searchIndex,
       pageSize: 10,
-      order: -1,
+      order: searchParams.order ?? -1,
       entity: {
-        jobId: modelReqParams.id,
-        topic: modelReqParams.topic,
+        id: modelReqParams.id,
+        topic:
+          modelReqParams.topic ??
+          iceStore.jobInfoList
+            .filter((job) => job.id === modelReqParams.id)
+            .at(0)?.topic,
       },
     })
-    .then(() => (tableData.value = iceStore.jobInfoList));
+    .then((respData) => {
+      if (!respData.isSuccess) {
+        ElMessage.error(respData.message);
+      }
+      tableData.value = iceStore.jobInfoList;
+    });
 }
 
 function onPush() {

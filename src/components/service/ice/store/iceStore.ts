@@ -37,6 +37,8 @@ export const useIceStore = defineStore("ice", {
         this.pageCount = pageCount;
         this.totalSize = totalSize;
         this.jobInfoList = list;
+        // 返回响应数据给调用方
+        return respData;
       });
     },
     fetchJobDetail(jobId: string, topic: string) {

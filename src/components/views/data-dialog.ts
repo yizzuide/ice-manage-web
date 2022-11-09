@@ -2,7 +2,7 @@ export type Model = Record<string, any>;
 
 export interface SelectOptions {
   label: string;
-  value: number;
+  value: number | string;
 }
 
 interface Board {
