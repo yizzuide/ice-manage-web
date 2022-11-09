@@ -93,6 +93,7 @@ export const iceListPage: Page<JobInspectInfo> = {
           prop: "needRePush",
           label: "可否重推",
           width: 80,
+          slotName: "needRePushColumn",
         },
         {
           prop: "pushTime",

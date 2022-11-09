@@ -27,6 +27,7 @@ export interface TableItem<T> {
   prop: string;
   label: string;
   width?: number;
+  slotName?: string;
   format?: (row: T) => string;
 }
 

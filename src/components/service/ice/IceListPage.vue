@@ -16,6 +16,14 @@
           >推送</el-button
         >
       </template>
+      <template #needRePushColumn="{ row }">
+        <el-tag
+          style="color: #fff"
+          :effect="'light'"
+          :color="row.needRePush ? varColor.successColor : varColor.dangerColor"
+          >{{ row.needRePush ? "可用" : "否" }}</el-tag
+        >
+      </template>
       <template #operation="{ row }">
         <div style="display: flex">
           <el-button

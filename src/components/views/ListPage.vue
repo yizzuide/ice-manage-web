@@ -73,7 +73,11 @@
             :label="item.label"
             :width="item.width ?? 120"
             :formatter="item.format"
-          />
+          >
+            <template #default="scope" v-if="item.slotName">
+              <slot :name="item.slotName" :row="scope.row"></slot>
+            </template>
+          </el-table-column>
         </template>
         <el-table-column
           fixed="right"
@@ -82,20 +86,20 @@
           v-if="!page.struct.table.hiddenOperationColumn"
         >
           <template #default="scope">
-            <div style="display: flex" v-if="isNormalPageType">
-              <el-button
-                :icon="Edit"
-                :color="varColor.warningColor"
-                @click="handleEdit(scope.$index, scope.row)"
-              ></el-button>
-              <el-button
-                :icon="Delete"
-                :color="varColor.dangerColor"
-                @click="handleDelete(scope.$index, scope.row)"
-              ></el-button>
+            <div style="display: flex">
+              <slot name="operation" :row="scope.row">
+                <el-button
+                  :icon="Edit"
+                  :color="varColor.warningColor"
+                  @click="handleEdit(scope.$index, scope.row)"
+                ></el-button>
+                <el-button
+                  :icon="Delete"
+                  :color="varColor.dangerColor"
+                  @click="handleDelete(scope.$index, scope.row)"
+                ></el-button>
+              </slot>
             </div>
-            <!-- type="readonly" -->
-            <slot name="operation" :row="scope.row" v-else></slot>
           </template>
         </el-table-column>
       </el-table>
