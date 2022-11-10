@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-card>
-      <div class="interact-row">
+      <div :class="$style.interactRow">
         <div
-          class="interact-row"
+          :class="$style.interactRow"
           v-if="!page.struct.search.custom && page.struct.search.items"
         >
           <div
-            class="search-item"
+            :class="$style.searchItem"
             v-for="item in page.struct.search.items"
             :key="item.prop"
           >
@@ -40,17 +40,17 @@
             />
           </div>
         </div>
-        <div class="interact-row" v-else>
+        <div :class="$style.interactRow" v-else>
           <slot name="search"></slot>
         </div>
-        <div class="search-item">
+        <div :class="$style.searchItem">
           <el-button :icon="Search" @click="search">搜索</el-button>
         </div>
-        <div class="search-item">
+        <div :class="$style.searchItem">
           <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
         </div>
       </div>
-      <div class="interact-row">
+      <div :class="$style.interactRow">
         <el-button
           :icon="Plus"
           :color="varColor.successColor"
@@ -218,16 +218,20 @@ function onDialogClose(conform: boolean) {
 }
 </script>
 
-<style scoped lang="scss">
-.interact-row {
+<!-- css module: class名添加hash后缀，在模板里通过$style.xxx引用，如果有命名，通过：名称.xxx -->
+<style lang="scss" module>
+.interactRow {
   display: flex;
   flex-wrap: wrap;
 
-  .search-item {
+  .searchItem {
     margin-right: 15px;
     margin-bottom: 15px;
   }
 }
+</style>
+
+<style scoped lang="scss">
 .el-pagination {
   display: flex;
   margin-top: 15px;

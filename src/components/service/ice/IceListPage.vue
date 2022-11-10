@@ -155,9 +155,4 @@ function onRePushJob(row: JobInspectInfo) {
 }
 </script>
 
-<style scoped>
-.search-item {
-  margin-right: 15px;
-  margin-bottom: 15px;
-}
-</style>
+<style scoped></style>

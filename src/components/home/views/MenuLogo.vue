@@ -17,6 +17,7 @@ function enterAnimate(el: any, done: any) {
   // 定义从哪里来的动画
   gsap.from(el, {
     scale: 0,
+    opacity: 0,
     rotation: 360,
     translateX: -100,
     onComplete: done,
@@ -26,6 +27,7 @@ function leaveAnimate(el: any, done: any) {
   // 定义去哪里的动画
   gsap.to(el, {
     scale: 0,
+    opacity: 0,
     rotation: 360,
     translateX: -100,
     onComplete: done,
