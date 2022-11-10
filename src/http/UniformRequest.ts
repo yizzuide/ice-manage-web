@@ -57,6 +57,8 @@ export default function request<T>(
         if (checkAuthFail(data.code)) {
           data.isSuccess = data.code == 0;
           resolve(data);
+        } else {
+          reject();
         }
       })
       .catch((error) => {

@@ -46,6 +46,9 @@
         <div class="search-item">
           <el-button :icon="Search" @click="search">搜索</el-button>
         </div>
+        <div class="search-item">
+          <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
+        </div>
       </div>
       <div class="interact-row">
         <el-button
@@ -129,7 +132,7 @@
 <script setup lang="ts">
 import { Ref, ref } from "vue";
 import varColor from "@/styles/define.module.scss";
-import { Search, Plus, Edit, Delete } from "@element-plus/icons-vue";
+import { Search, Refresh, Plus, Edit, Delete } from "@element-plus/icons-vue";
 import DataDialog from "./DataDialog.vue";
 import { ElMessageBox } from "element-plus";
 import { OperationNamed, Page, SearchParams } from "./list-page";
@@ -168,6 +171,15 @@ search();
 
 function search() {
   emit("search", searchParams.value, tableData);
+}
+
+function resetSearch() {
+  searchParams.value.searchIndex = 1;
+  searchParams.value.searchDate = [];
+  Object.keys(searchParams.value)
+    .filter((k) => !["searchIndex", "searchDate"].includes(k))
+    .forEach((k) => (searchParams.value[k] = ""));
+  search();
 }
 
 function changePageIndex(index: number) {
