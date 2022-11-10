@@ -1,17 +1,36 @@
 <template>
   <div class="logo">
     <img src="@/assets/menu_logo.png" />
-    <span
-      class="title"
-      :style="[{ display: collapse ? 'none' : 'inline-block' }]"
-      >Ice任务管理平台</span
-    >
+    <transition @enter="enterAnimate" @leave="leaveAnimate" :css="false">
+      <span class="title" v-if="!collapse">Ice任务管理平台</span>
+    </transition>
   </div>
   <div class="divider"></div>
 </template>
 
 <script setup lang="ts">
+import gsap from "gsap";
+
 defineProps<{ collapse: boolean }>();
+
+function enterAnimate(el: any, done: any) {
+  // 定义从哪里来的动画
+  gsap.from(el, {
+    scale: 0,
+    rotation: 360,
+    translateX: -100,
+    onComplete: done,
+  });
+}
+function leaveAnimate(el: any, done: any) {
+  // 定义去哪里的动画
+  gsap.to(el, {
+    scale: 0,
+    rotation: 360,
+    translateX: -100,
+    onComplete: done,
+  });
+}
 </script>
 
 <style scoped lang="scss">
@@ -35,19 +54,6 @@ defineProps<{ collapse: boolean }>();
     font-size: 16px;
     font-family: "Courier New", Courier, monospace, Arial, Helvetica, sans-serif;
     vertical-align: middle;
-    animation: logoTextAnimation 1s ease-out;
-  }
-}
-
-@keyframes logoTextAnimation {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1);
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-container>
-      <el-aside :width="isMenuCollapse ? 'auto' : '200px'">
+      <el-aside :width="isMenuCollapse ? '64px' : '200px'">
         <MenuLogo :collapse="isMenuCollapse"></MenuLogo>
         <el-scrollbar>
           <el-menu
@@ -100,15 +100,17 @@ function menuSelect(index: string) {
       overflow-y: hidden;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      transition: width 0.25s ease-in;
-      -webkit-transition: width 0.25s ease-in;
-      -moz-transition: width 0.25s ease-in;
-      -o-transition: width 0.25s ease-in;
+      // 宽度修改动画
+      transition: width 0.25s ease-out;
+      -webkit-transition: width 0.25s ease-out;
+      -moz-transition: width 0.25s ease-out;
+      -o-transition: width 0.25s ease-out;
     }
-    // el-aside[width="auto"] + 下面设置未收起的配置实现菜单向左收缩的效果
+
     .el-menu:not(.el-menu--collapse) {
       width: 100%;
     }
+
     .el-scrollbar {
       background-color: $darknessColor;
       overflow-y: scroll;
