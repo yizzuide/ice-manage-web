@@ -2,7 +2,6 @@
   <div>
     <ListPage
       :page="icePageConfig"
-      :page-size="10"
       :page-count="iceStore.pageCount"
       :total="iceStore.totalSize"
       @search="onSearch"
@@ -87,7 +86,7 @@ function onSearch(searchParams: SearchParams, tableData: Ref<Model[]>) {
   iceStore
     .fetchPage({
       pageStart: searchParams.searchIndex,
-      pageSize: 10,
+      pageSize: searchParams.searchPageSize,
       order: searchParams.order ?? -1,
       entity: {
         id: modelReqParams.id,

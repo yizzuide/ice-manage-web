@@ -9,6 +9,7 @@ export enum SearchParamsProp {
 
 export interface SearchParams extends Model {
   searchIndex: number;
+  searchPageSize: number;
   searchKeyName?: string;
   searchDate?: Date[];
 }
@@ -16,7 +17,7 @@ export interface SearchParams extends Model {
 export interface SearchItem {
   type: "text" | "select" | "date";
   placeholder?: string;
-  prop?: string;
+  prop: string;
   // 输入框绑定属性参数
   inputSettings?: Record<string, any>;
   // select选择框

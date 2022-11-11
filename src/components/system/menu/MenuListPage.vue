@@ -2,7 +2,6 @@
   <ListPage
     :page="menuListPage"
     :total="menuStore.totalSize"
-    :page-size="10"
     :page-count="menuStore.pageCount"
     @search="onSearch"
     @operation="onOperation"
@@ -23,17 +22,17 @@ const menuStore = useMenuStore();
 let tableDataRef: Ref<Model[]>;
 let reqParams: SearchParams;
 
-function onSearch(params: SearchParams, tableData: Ref<Model[]>) {
-  reqParams = params;
+function onSearch(searchParams: SearchParams, tableData: Ref<Model[]>) {
+  reqParams = searchParams;
   tableDataRef = tableData;
   menuStore
     .fetchPage({
-      pageStart: params.searchIndex,
-      pageSize: 10,
-      startDate: params.searchDate?.[0],
-      endDate: params.searchDate?.[1],
+      pageStart: searchParams.searchIndex,
+      pageSize: searchParams.searchPageSize,
+      startDate: searchParams.searchDate?.[0],
+      endDate: searchParams.searchDate?.[1],
       entity: {
-        label: params.searchKeyName,
+        label: searchParams.searchKeyName,
       },
     })
     .then(() => (tableData.value = menuStore.menuList));

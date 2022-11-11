@@ -13,14 +13,14 @@
           >
             <el-input
               :placeholder="item.placeholder"
-              v-model="searchParams[item.prop as keyof typeof searchParams]"
+              v-model="searchParams[item.prop]"
               :formatter="(value: string) => value.replace(/\s/g, '')"
               clearable
               v-if="item.type == 'text'"
             ></el-input>
             <el-select
               :placeholder="item.placeholder"
-              v-model="searchParams[item.prop as keyof typeof searchParams]"
+              v-model="searchParams[item.prop]"
               v-else-if="item.type == 'select'"
             >
               <el-option
@@ -31,7 +31,7 @@
               />
             </el-select>
             <el-date-picker
-              v-model="searchParams[item.prop as keyof typeof searchParams]"
+              v-model="searchParams[item.prop]"
               type="daterange"
               value-format="YYYY-MM-DD HH:mm:ss"
               :default-value="[dayjs().subtract(1, 'month'), dayjs()]"
@@ -112,11 +112,12 @@
       </el-table>
       <el-pagination
         background
-        layout="total, prev, pager, next"
-        :total="total"
-        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next"
+        v-model:page-size="searchParams.searchPageSize"
+        :page-sizes="[10, 20, 30]"
         :page-count="pageCount"
         :current-page="searchParams.searchIndex"
+        :total="total"
         @current-change="changePageIndex"
       />
     </el-card>
@@ -141,7 +142,6 @@ import { DialogConfig, Model } from "./data-dialog";
 
 const props = defineProps<{
   page: Page<any>;
-  pageSize: number;
   pageCount: number;
   total: number;
 }>();
@@ -160,6 +160,7 @@ const tableData = ref<Model[]>([]);
 const selectedRow = ref<Model>();
 const searchParams = ref<SearchParams>({
   searchIndex: 1,
+  searchPageSize: 10,
   searchKeyName: "",
 });
 

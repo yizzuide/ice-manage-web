@@ -1,7 +1,6 @@
 <template>
   <ListPage
     :page="departListPage"
-    :page-size="10"
     :page-count="departmentStore.pageCount"
     :total="departmentStore.totalSize"
     @search="search"
@@ -24,17 +23,17 @@ const departmentStore = useDepartmentStore();
 let tableDataRef: Ref<Model[]>;
 let reqParams: SearchParams;
 
-function search(params: SearchParams, tableData: Ref<Model[]>) {
-  reqParams = params;
+function search(searchParams: SearchParams, tableData: Ref<Model[]>) {
+  reqParams = searchParams;
   tableDataRef = tableData;
   departmentStore
     .fetchPage({
-      pageStart: 1,
-      pageSize: 10,
-      startDate: params.searchDate?.[0],
-      endDate: params.searchDate?.[1],
+      pageStart: searchParams.searchIndex,
+      pageSize: searchParams.searchPageSize,
+      startDate: searchParams.searchDate?.[0],
+      endDate: searchParams.searchDate?.[1],
       entity: {
-        departmentName: params.searchKeyName,
+        departmentName: searchParams.searchKeyName,
       },
     })
     .then(() => (tableData.value = departmentStore.departmentList));
