@@ -56,7 +56,10 @@
           :color="varColor.successColor"
           style="color: white"
           @click="addRow"
-          v-if="isNormalPageType || page.struct.command?.add"
+          v-if="
+            (isNormalPageType || page.struct.command?.add) &&
+            usePermission().test(page.perms.add)
+          "
           >{{ page.struct.command?.add?.label ?? "新增" }}</el-button
         >
         <slot name="command" :row="selectedRow" v-else></slot>
@@ -77,6 +80,7 @@
             :width="item.width ?? 120"
             :formatter="item.format"
             align="center"
+            :show-overflow-tooltip="true"
           >
             <!-- 自定义动态列Slot -->
             <template #default="scope" v-if="item.slotName">
@@ -99,11 +103,13 @@
                   :icon="Edit"
                   :color="varColor.warningColor"
                   @click="handleEdit(scope.$index, scope.row)"
+                  v-if="usePermission().test(page.perms.update)"
                 ></el-button>
                 <el-button
                   :icon="Delete"
                   :color="varColor.dangerColor"
                   @click="handleDelete(scope.$index, scope.row)"
+                  v-if="usePermission().test(page.perms.delete)"
                 ></el-button>
               </slot>
             </div>
@@ -139,6 +145,7 @@ import { ElMessageBox } from "element-plus";
 import { OperationNamed, Page, SearchParams } from "./list-page";
 import dayjs from "dayjs";
 import { DialogConfig, Model } from "./data-dialog";
+import usePermission from "../login/hooks/usePermission";
 
 const props = defineProps<{
   page: Page<any>;
@@ -176,10 +183,11 @@ function search() {
 
 function resetSearch() {
   searchParams.value.searchIndex = 1;
+  searchParams.value.searchPageSize = 10;
   searchParams.value.searchDate = [];
   Object.keys(searchParams.value)
-    .filter((k) => !["searchIndex", "searchDate"].includes(k))
-    .forEach((k) => (searchParams.value[k] = ""));
+    .filter((k) => !["searchIndex", "searchDate", "searchPageSize"].includes(k))
+    .forEach((k) => (searchParams.value[k] = undefined));
   search();
 }
 

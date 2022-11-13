@@ -12,6 +12,7 @@
           :color="varColor.successColor"
           style="color: white"
           @click="onPush"
+          v-if="usePermission().test(icePageConfig.perms.add)"
           >推送</el-button
         >
       </template>
@@ -25,12 +26,14 @@
           <el-button
             :icon="MoreFilled"
             @click="onLoadJobDetail(row)"
+            v-if="usePermission().test(icePageConfig.perms.detail)"
           ></el-button>
           <el-button
             :icon="TopRight"
             :color="varColor.dangerColor"
             @click="onRePushJob(row)"
             :disabled="!row.rePush"
+            v-if="usePermission().test(icePageConfig.perms.update)"
           ></el-button>
         </div>
       </template>
@@ -56,6 +59,7 @@ import { JobInspectInfo, useIceStore } from "./store/iceStore";
 import { useDashboardStore } from "@/components/home/store/dashboardStore";
 import { ElMessage, ElMessageBox } from "element-plus";
 import DataDialog from "@/components/views/DataDialog.vue";
+import usePermission from "@/components/login/hooks/usePermission";
 
 let tableDataRef: Ref<Model[]>;
 let reqParams: SearchParams;

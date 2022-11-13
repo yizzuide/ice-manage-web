@@ -18,6 +18,7 @@ export function initPageData(
 
 export const iceListPage: Page<JobInspectInfo> = {
   type: "readonly",
+  perms: {},
   struct: {
     search: {
       items: [
@@ -92,7 +93,7 @@ export const iceListPage: Page<JobInspectInfo> = {
         {
           prop: "needRePush",
           label: "可否重推",
-          width: 80,
+          width: 100,
           slotName: "needRePushColumn",
         },
         {

@@ -35,6 +35,14 @@ export interface TableItem<T> {
 export interface Page<T extends Model> {
   // 默认为normal（支持add/edit/remove），readonly方式为自定义（slot=command/operation）
   type?: "normal" | "readonly";
+  // 动作权限
+  perms: {
+    add?: string;
+    update?: string;
+    delete?: string;
+    detail?: string;
+  };
+  // 页面结构
   struct: {
     search: {
       // 是否需要自定义（添加slot="search"），默认为false

@@ -8,6 +8,11 @@ enum MenuType {
 }
 
 export const menuListPage: Page<ModifierMenu> = {
+  perms: {
+    add: "sys:menu:add",
+    update: "sys:menu:edit",
+    delete: "sys:menu:delete",
+  },
   struct: {
     search: {
       items: [

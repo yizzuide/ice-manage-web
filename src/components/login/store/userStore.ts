@@ -12,7 +12,7 @@ export interface UserInfo {
   email: string;
   department: string;
   isAdmin: boolean;
-  perms: [];
+  perms: string[];
 }
 
 export interface Menu extends DynamicMenu {

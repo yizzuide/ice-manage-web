@@ -2,6 +2,11 @@ import { Page, SearchParamsProp } from "@/components/views/list-page";
 import { departDialogConfig, ModifierDepartment } from "./depart-data-dialog";
 
 export const departListPage: Page<ModifierDepartment> = {
+  perms: {
+    add: "sys:department:add",
+    update: "sys:department:edit",
+    delete: "sys:department:delete",
+  },
   struct: {
     search: {
       items: [
