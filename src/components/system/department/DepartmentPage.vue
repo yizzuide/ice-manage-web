@@ -47,7 +47,7 @@ function operation(
   const config = (dialogConfig as Ref<DialogConfig<ModifierDepartment>>).value;
   if (name === "add") {
     config.title = "添加部门";
-    config.request.url = "/api/department/add";
+    config.request.url = "/api/manage/department/add";
     config.model = <ModifierDepartment>{
       orderNum: 0,
     };
@@ -60,7 +60,7 @@ function operation(
 
   if (name == "edit") {
     config.title = "修改部门";
-    config.request.url = "/api/department/update";
+    config.request.url = "/api/manage/department/update";
     config.request.method = "put";
     // 复制对象属性过滤之：使用箭头函数解构对象（当前为selectedRow），立即执行返回新对象(适用于属性不超过5个)
     config.model = (({ id, departmentName, phone, address, orderNum }) => ({

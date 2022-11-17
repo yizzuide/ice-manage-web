@@ -46,7 +46,7 @@ function onOperation(
   const config = (dialogConfig as Ref<DialogConfig<ModifierMenu>>).value;
   if (name === "add") {
     config.title = "添加菜单";
-    config.request.url = "/api/menu/add";
+    config.request.url = "/api/manage/menu/add";
     config.model = <Menu>{};
     config.model.order = 0;
     (config.model.parentId = 0), (config.model.parentName = "");
@@ -58,7 +58,7 @@ function onOperation(
   }
   if (name == "edit") {
     config.title = "修改菜单";
-    config.request.url = "/api/menu/update";
+    config.request.url = "/api/manage/menu/update";
     config.request.method = "put";
     // 复制对象属性过滤之：解构剩余参数（适用于排除的参数小于5个）
     const { parentId, parentName, createTime, children, ...updateParams } =

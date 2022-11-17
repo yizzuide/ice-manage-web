@@ -29,6 +29,7 @@
 
 <script setup lang="ts">
 import useLocalStorage from "@/hooks/useLocalStorage";
+import { HttpResult } from "@/http/HttpDefine";
 import { ElForm, ElMessage, FormInstance } from "element-plus";
 import { ref } from "vue";
 import { rules } from "../config/login-account-rules";
@@ -41,7 +42,7 @@ const account = ref({
   code: "",
 });
 
-const verifyCodeUrl = ref("/api/verifyCode/render");
+const verifyCodeUrl = ref("/api/code/render");
 const refreshCode = () => {
   verifyCodeUrl.value = verifyCodeUrl.value + "#1";
 };
@@ -67,15 +68,21 @@ async function loginAction(isKeepPassword: boolean) {
     localStorage.remove("username");
     localStorage.remove("password");
   }
-  const data = await userStore.accountLogin(
-    account.value.username,
-    account.value.password,
-    account.value.code
-  );
-  if (!data.isSuccess && data.message) {
-    ElMessage.error(data.message);
+  // 登录会有401 reject，这里要捕捉异常
+  try {
+    const data = await userStore.accountLogin(
+      account.value.username,
+      account.value.password,
+      account.value.code
+    );
+    if (!data.isSuccess && data.message) {
+      ElMessage.error(data.message);
+    }
+    return Promise.resolve(data.isSuccess);
+  } catch (error) {
+    ElMessage.error((error as HttpResult<any>).message);
+    return Promise.resolve(false);
   }
-  return Promise.resolve(data.isSuccess);
 }
 defineExpose({ loginAction });
 </script>

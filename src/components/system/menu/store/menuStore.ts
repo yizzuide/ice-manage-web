@@ -31,7 +31,7 @@ export const useMenuStore = defineStore("menu", {
   actions: {
     async fetchPage(pageData: QueryPageData<Menu>) {
       return request<PageData<Menu>>({
-        url: "/api/menu/list",
+        url: "/api/manage/menu/list",
         method: "get",
         params: pageData,
         showLoading: true,
@@ -60,7 +60,7 @@ export const useMenuStore = defineStore("menu", {
     },
     removeRecord(id: number) {
       return request({
-        url: "/api/menu/del",
+        url: "/api/manage/menu/del",
         method: "delete",
         params: {
           id,

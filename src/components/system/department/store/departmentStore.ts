@@ -26,7 +26,7 @@ export const useDepartmentStore = defineStore("department", {
   actions: {
     async fetchPage(pageData: QueryPageData<Department>) {
       return request<PageData<Department>>({
-        url: "/api/department/list",
+        url: "/api/manage/department/list",
         method: "get",
         params: pageData,
         showLoading: true,
@@ -58,7 +58,7 @@ export const useDepartmentStore = defineStore("department", {
     },
     removeRecord(id: number) {
       return request({
-        url: "/api/department/del",
+        url: "/api/manage/department/del",
         method: "delete",
         params: {
           id,
