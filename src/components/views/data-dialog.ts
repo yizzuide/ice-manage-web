@@ -3,17 +3,18 @@ export type Model = Record<string, any>;
 export interface SelectOptions {
   label: string;
   value: number | string;
+  children?: SelectOptions[];
 }
 
 interface Board {
   label: string;
   fieldName: string;
   // text is default
-  type?: "text" | "number" | "select";
+  type?: "text" | "number" | "select" | "cascaded";
   isDisable?: boolean;
   // 是否为密码框（type='text'）
   isPassword?: boolean;
-  // 支持多行输入框（type='text'）/多选选择框（type='select'）
+  // 支持多行输入框（type='text'）| 多选选择框（type='select'）| 级联选择框（type='cascaded'）
   multiple?: boolean;
   // 数字用于毫秒（type='number'）
   numberUsedMill?: boolean;
@@ -21,6 +22,8 @@ interface Board {
   numberMin?: number;
   // select可选值列表（type='select'）
   selectOptions?: SelectOptions[];
+  // 自定义属性配置
+  customProps?: any;
   // 数据输出格式化
   format?: (value?: any) => any;
 }

@@ -40,6 +40,7 @@ export interface Page<T extends Model> {
     add?: string;
     update?: string;
     delete?: string;
+    assign?: string;
     detail?: string;
   };
   // 页面结构

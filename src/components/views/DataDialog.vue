@@ -44,6 +44,14 @@
               :value="opt.value"
             />
           </el-select>
+          <el-cascader
+            :options="item.selectOptions"
+            v-model="model[item.fieldName]"
+            v-bind="item.customProps"
+            :props="{ checkStrictly: true, multiply: item.multiple }"
+            clearable
+            v-else-if="item.type == 'cascaded'"
+          ></el-cascader>
         </el-form-item>
       </div>
     </el-form>

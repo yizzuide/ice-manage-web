@@ -36,8 +36,13 @@ router.beforeEach(async (to, from) => {
   if (isAuthenticated) {
     const isValid = result[1];
     // token is expire
-    if (!isValid && to.name !== "login") {
-      return { name: "login" };
+    if (!isValid) {
+      if (to.name !== "login") {
+        return { name: "login" };
+      }
+      if (to.name === "login") {
+        return;
+      }
     }
 
     // redirect auth user to index/dashboard
