@@ -21,7 +21,17 @@
             :show-password="item.isPassword"
             :disabled="item.isDisable || config.type == 'readonly'"
             autocomplete="off"
-            v-if="!item.type || item.type == 'text'"
+            v-if="
+              (!item.type || item.type == 'text') &&
+              (item.displayTest
+                ? item.displayTest(
+                    model.id === undefined
+                      ? OperationType.ADD
+                      : OperationType.UPDATE,
+                    model
+                  )
+                : true)
+            "
           />
           <el-input-number
             v-model="model[item.fieldName]"
@@ -73,7 +83,7 @@
 import { ref, watch } from "vue";
 import { isFunction } from "@vueuse/shared";
 import { ElMessage, FormInstance } from "element-plus";
-import { DialogConfig, Model } from "./data-dialog";
+import { DialogConfig, Model, OperationType } from "./data-dialog";
 import request from "@/http/uniformRequest";
 
 const props = defineProps<{
@@ -119,7 +129,13 @@ function doConform() {
     props.config.board.forEach(
       (item) =>
         item.format &&
-        (model.value[item.fieldName] = item.format(model.value[item.fieldName]))
+        (model.value[item.fieldName] = item.format(
+          model.value[item.fieldName],
+          model.value.id === undefined
+            ? OperationType.ADD
+            : OperationType.UPDATE,
+          model
+        ))
     );
 
     request({

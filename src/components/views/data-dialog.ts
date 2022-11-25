@@ -1,5 +1,11 @@
 export type Model = Record<string, any>;
 
+// dialog operation type
+export enum OperationType {
+  ADD,
+  UPDATE,
+}
+
 export interface SelectOptions {
   label: string;
   value: number | string;
@@ -24,8 +30,10 @@ interface Board {
   selectOptions?: SelectOptions[];
   // 自定义属性配置
   customProps?: any;
+  // 显示判断（type='text'）
+  displayTest?: (operationType: OperationType, row: any) => boolean;
   // 数据输出格式化
-  format?: (value?: any) => any;
+  format?: (value: any, operationType: OperationType, row: any) => any;
 }
 
 export interface DialogConfig<T extends Model> {

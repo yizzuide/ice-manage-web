@@ -5,6 +5,7 @@ import { defineStore } from "pinia";
 export interface User {
   id: number;
   username: string;
+  password: string;
   realName: string;
   nickName: string;
   gender: number;
@@ -38,6 +39,19 @@ export const useUsersStore = defineStore("users", {
         this.totalSize = totalSize;
         this.userList = list;
       });
+    },
+    removeRecord(id: number) {
+      return request({
+        url: "/api/manage/user/del",
+        method: "delete",
+        params: {
+          id,
+        },
+        showLoading: true,
+      });
+    },
+    findUserById(id: number) {
+      return this.userList.find((user) => user.id === id);
     },
   },
 });

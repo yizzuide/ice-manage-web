@@ -48,6 +48,7 @@ function operation(
   if (name === "add") {
     config.title = "添加部门";
     config.request.url = "/api/manage/department/add";
+    config.request.method = "post";
     config.model = <ModifierDepartment>{
       orderNum: 0,
     };

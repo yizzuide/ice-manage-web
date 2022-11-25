@@ -42,14 +42,14 @@ watch(
       return;
     }
     // array -> number
-    if ((departId as unknown as []).length) {
+    if ((departId as any) instanceof Array) {
       const ids = departId as unknown as [];
       userPageConfig.value.struct.dialogConfig!.model.departmentId =
         ids[ids.length - 1];
       return;
     }
     userPageConfig.value.struct.dialogConfig!.model.departmentName =
-      departmentStore.findDepartmentNameById(departId!)!;
+      departmentStore.findDepartmentNameById(departId)!;
   }
 );
 
@@ -78,6 +78,7 @@ function onOperation(
   if (name === "add") {
     config.title = "添加用户";
     config.request.url = "/api/manage/user/add";
+    config.request.method = "post";
     config.model = <ModifierUser>{
       gender: 0,
       departmentId: 1,
@@ -87,6 +88,20 @@ function onOperation(
       config.model.departmentId = selectedUser.departmentId;
     }
     return;
+  }
+  if (name == "edit") {
+    config.title = "修改用户";
+    config.request.url = "/api/manage/user/update";
+    config.request.method = "put";
+    const { departmentName, ...updateParams } = selectedRow as ModifierUser;
+    const autoSetDepartName = config.model.departmentName;
+    config.model = { departmentName: autoSetDepartName, ...updateParams };
+    return;
+  }
+  if (name == "remove") {
+    usersStore.removeRecord(selectedRow!.id).then((_) => {
+      onSearch(reqParams, tableDataRef);
+    });
   }
 }
 </script>

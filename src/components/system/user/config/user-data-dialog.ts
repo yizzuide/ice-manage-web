@@ -1,20 +1,24 @@
+import { useUserInfo } from "@/components/login/hooks/useUserInfo";
 import {
   DialogConfig,
   Model,
+  OperationType,
   SelectOptions,
 } from "@/components/views/data-dialog";
 import { Page } from "@/components/views/list-page";
 import { Ref } from "vue";
 import { Department } from "../../department/store/departmentStore";
+import { User, useUsersStore } from "../store/usersStore";
 
 export interface ModifierUser extends Model {
   id?: number;
   username: string;
+  password?: string;
   realName: string;
   nickName: string;
   gender: number;
   departmentId: number;
-  departmentName: string;
+  departmentName?: string;
   phone: string;
   email?: string;
 }
@@ -58,6 +62,18 @@ export const userDialogConfig: DialogConfig<ModifierUser> = {
         trigger: "blur",
       },
     ],
+    password: [
+      {
+        required: true,
+        message: "密码不能为空！",
+        trigger: "blur",
+      },
+      {
+        min: 6,
+        message: "密码长度为6位以上！",
+        trigger: "blur",
+      },
+    ],
     nickName: [
       {
         required: true,
@@ -77,6 +93,33 @@ export const userDialogConfig: DialogConfig<ModifierUser> = {
     {
       label: "用户名",
       fieldName: "username",
+    },
+    {
+      label: "密码",
+      fieldName: "password",
+      isPassword: true,
+      displayTest: (operationType, row) => {
+        if (operationType == OperationType.ADD) {
+          return true;
+        }
+        const userInfo = useUserInfo();
+        const currUserId = userInfo.uid;
+        const isAdmin = userInfo.isAdmin;
+        if (isAdmin || currUserId === row.id) {
+          return true;
+        }
+        return false;
+      },
+      format: (value, operationType, model) => {
+        if (operationType == OperationType.ADD) {
+          return;
+        }
+        const usersStore = useUsersStore();
+        // password not update?
+        if (value === usersStore.findUserById(model.id)?.password) {
+          model.password = undefined;
+        }
+      },
     },
     {
       label: "真实名称",
