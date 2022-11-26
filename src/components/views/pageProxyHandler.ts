@@ -22,7 +22,7 @@ export interface PageHandlerParams<D extends Model, R> {
    * @param dialogConfig dialog配置对象
    * @param selectedRow 记录行数据
    */
-  onOperation(
+  onOperation?(
     name: OperationNamed,
     dialogConfig: Ref<DialogConfig<D>>,
     selectedRow?: R
@@ -57,7 +57,7 @@ export const usePageProxyHandler = function <D extends Model, R>(
       dialogConfig: Ref<DialogConfig<D>>,
       selectedRow?: R
     ) {
-      params.onOperation(name, dialogConfig, selectedRow);
+      params.onOperation && params.onOperation(name, dialogConfig, selectedRow);
     },
   };
 };

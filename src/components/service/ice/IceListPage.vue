@@ -4,7 +4,7 @@
       :page="icePageConfig"
       :page-count="iceStore.pageCount"
       :total="iceStore.totalSize"
-      @search="onSearch"
+      @search="pageProxyHandler.onSearch"
     >
       <template #command>
         <el-button
@@ -47,22 +47,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from "vue";
+import { ref } from "vue";
 import varColor from "@/styles/define.module.scss";
 import { Plus, MoreFilled, TopRight } from "@element-plus/icons-vue";
-import { Model } from "@/components/views/data-dialog";
-import { SearchParams } from "@/components/views/list-page";
+import { ElMessage, ElMessageBox } from "element-plus";
 import ListPage from "@/components/views/ListPage.vue";
+import DataDialog from "@/components/views/DataDialog.vue";
 import { iceListPage, initPageData } from "./config/ice-list-page";
 import { icePushDataDialog, Job } from "./config/ice-data-dialog";
 import { JobInspectInfo, useIceStore } from "./store/iceStore";
 import { useDashboardStore } from "@/components/home/store/dashboardStore";
-import { ElMessage, ElMessageBox } from "element-plus";
-import DataDialog from "@/components/views/DataDialog.vue";
 import usePermission from "@/components/login/hooks/usePermission";
-
-let tableDataRef: Ref<Model[]>;
-let reqParams: SearchParams;
+import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
 
 const showPushDialog = ref(false);
 const pushDialogConfig = ref(icePushDataDialog);
@@ -71,44 +67,43 @@ const icePageConfig = ref(iceListPage);
 const iceStore = useIceStore();
 const dashboardStore = useDashboardStore();
 
-// 加载主题
-if (dashboardStore.jobStatInfo.topics) {
-  const topicKeys = Object.keys(dashboardStore.jobStatInfo.topics);
-  initPageData(icePageConfig, topicKeys);
-} else {
-  dashboardStore.fetchJobStatInfo().then(() => {
-    const topicKeys = Object.keys(dashboardStore.jobStatInfo.topics);
-    initPageData(icePageConfig, topicKeys);
-  });
-}
-
-function onSearch(searchParams: SearchParams, tableData: Ref<Model[]>) {
-  reqParams = searchParams;
-  tableDataRef = tableData;
-
-  const modelReqParams = searchParams as SearchParams & JobInspectInfo;
-  iceStore
-    .fetchPage({
-      pageStart: searchParams.searchIndex,
-      pageSize: searchParams.searchPageSize,
-      order: searchParams.order ?? -1,
-      entity: {
-        id: modelReqParams.id,
-        // 使用redis存储方法，必须提供：id + topic
-        topic:
-          modelReqParams.topic ??
-          iceStore.jobInfoList
-            .filter((job) => job.id === modelReqParams.id)
-            .at(0)?.topic,
-      },
-    })
-    .then((respData) => {
-      if (!respData.isSuccess) {
-        ElMessage.error(respData.message);
-      }
-      tableData.value = iceStore.jobInfoList;
-    });
-}
+const pageProxyHandler = usePageProxyHandler<Job, JobInspectInfo>({
+  init() {
+    // 加载主题
+    if (dashboardStore.jobStatInfo.topics) {
+      const topicKeys = Object.keys(dashboardStore.jobStatInfo.topics);
+      initPageData(icePageConfig, topicKeys);
+    } else {
+      dashboardStore.fetchJobStatInfo().then(() => {
+        const topicKeys = Object.keys(dashboardStore.jobStatInfo.topics);
+        initPageData(icePageConfig, topicKeys);
+      });
+    }
+  },
+  onSearch(searchParams, tableData) {
+    iceStore
+      .fetchPage({
+        pageStart: searchParams.searchIndex,
+        pageSize: searchParams.searchPageSize,
+        order: searchParams.order ?? -1,
+        entity: {
+          id: searchParams.id,
+          // 使用redis存储方法，必须提供：id + topic
+          topic:
+            searchParams.topic ??
+            iceStore.jobInfoList
+              .filter((job) => job.id === searchParams.id)
+              .at(0)?.topic,
+        },
+      })
+      .then((respData) => {
+        if (!respData.isSuccess) {
+          ElMessage.error(respData.message);
+        }
+        tableData.value = iceStore.jobInfoList;
+      });
+  },
+});
 
 function onPush() {
   pushDialogConfig.value.type = "normal";
@@ -126,7 +121,7 @@ function onPush() {
 function onPushDialogClose(finish: boolean) {
   showPushDialog.value = false;
   if (finish) {
-    onSearch(reqParams, tableDataRef);
+    pageProxyHandler.refresh();
   }
 }
 
