@@ -14,7 +14,7 @@ export interface SelectOptions {
   children?: SelectOptions[];
 }
 
-interface Board {
+export interface Board {
   label: string;
   fieldName: string;
   // text is default

@@ -180,16 +180,19 @@ const showDialog = ref(false);
 search();
 
 function search() {
+  Object.keys(searchParams.value)
+    .filter((k) => searchParams.value[k] === "")
+    .forEach((k) => (searchParams.value[k] = undefined));
   emit("search", searchParams.value, tableData);
 }
 
 function resetSearch() {
+  Object.keys(searchParams.value).forEach(
+    (k) => (searchParams.value[k] = undefined)
+  );
   searchParams.value.searchIndex = 1;
   searchParams.value.searchPageSize = 10;
   searchParams.value.searchDate = [];
-  Object.keys(searchParams.value)
-    .filter((k) => !["searchIndex", "searchDate", "searchPageSize"].includes(k))
-    .forEach((k) => (searchParams.value[k] = undefined));
   search();
 }
 

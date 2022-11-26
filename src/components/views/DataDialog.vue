@@ -58,10 +58,10 @@
             :options="item.selectOptions"
             v-model="model[item.fieldName]"
             v-bind="item.customProps"
-            :props="{ checkStrictly: true, multiply: item.multiple }"
+            :props="getCascaderProps(item)"
             clearable
             v-else-if="item.type == 'cascaded'"
-          ></el-cascader>
+          />
         </el-form-item>
       </div>
     </el-form>
@@ -83,7 +83,7 @@
 import { ref, watch } from "vue";
 import { isFunction } from "@vueuse/shared";
 import { ElMessage, FormInstance } from "element-plus";
-import { DialogConfig, Model, OperationType } from "./data-dialog";
+import { Board, DialogConfig, Model, OperationType } from "./data-dialog";
 import request from "@/http/uniformRequest";
 import { ContentType } from "@/plugins/request";
 
@@ -111,6 +111,13 @@ watch(
   () => props.config.model,
   (newModel) => (model.value = newModel)
 );
+
+function getCascaderProps(item: Board) {
+  return {
+    checkStrictly: true,
+    multiple: item.multiple ?? false,
+  };
+}
 
 function onClose(command: () => void) {
   hide(false);

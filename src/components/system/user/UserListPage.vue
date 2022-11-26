@@ -48,7 +48,6 @@ import { useRoleStore } from "@/components/system/role/store/roleStore";
 import DataDialog from "@/components/views/DataDialog.vue";
 import usePermission from "@/components/login/hooks/usePermission";
 import { ElMessage } from "element-plus";
-import { useUserInfo } from "@/components/login/hooks/useUserInfo";
 
 const userPageConfig = ref(userListPage);
 const showAssignDialog = ref(false);

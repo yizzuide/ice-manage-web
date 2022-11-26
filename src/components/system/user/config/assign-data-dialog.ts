@@ -23,7 +23,6 @@ export function initDialogData(
 
 export const assignDialogConfig: DialogConfig<UserRole> = {
   title: "分配角色",
-  desc: "单一角色方式，有利于权限的集中管理",
   request: {
     url: "/api/manage/user/assign",
     method: "post",
@@ -50,6 +49,7 @@ export const assignDialogConfig: DialogConfig<UserRole> = {
       label: "选择角色",
       fieldName: "roleIds",
       selectOptions: [],
+      multiple: true,
     },
   ],
 };
