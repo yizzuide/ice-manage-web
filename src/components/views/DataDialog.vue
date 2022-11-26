@@ -85,6 +85,7 @@ import { isFunction } from "@vueuse/shared";
 import { ElMessage, FormInstance } from "element-plus";
 import { DialogConfig, Model, OperationType } from "./data-dialog";
 import request from "@/http/uniformRequest";
+import { ContentType } from "@/plugins/request";
 
 const props = defineProps<{
   visible: boolean;
@@ -142,6 +143,7 @@ function doConform() {
       url: props.config.request.url,
       method: props.config.request.method,
       params: model.value,
+      contentType: props.config.request.type ?? ContentType.JSON,
       showLoading: true,
     }).then((respData) => {
       let hasFinish = false;

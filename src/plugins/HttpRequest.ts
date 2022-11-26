@@ -68,7 +68,10 @@ export default class HttpRequest implements IHttpRequest {
       };
       // post json data -> form string format
       if (config.data) {
-        config.data = qs.stringify(config.data);
+        config.data = qs.stringify(config.data, {
+          // array params -> comma(xx,xx...)
+          arrayFormat: "comma",
+        });
       }
     }
 

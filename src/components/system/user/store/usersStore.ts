@@ -1,5 +1,6 @@
 import { PageData, QueryPageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
+import { ContentType } from "@/plugins/request";
 import { defineStore } from "pinia";
 
 export interface User {

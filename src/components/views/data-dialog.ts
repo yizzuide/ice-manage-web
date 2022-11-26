@@ -1,3 +1,5 @@
+import { ContentType } from "@/plugins/request";
+
 export type Model = Record<string, any>;
 
 // dialog operation type
@@ -46,5 +48,6 @@ export interface DialogConfig<T extends Model> {
   request: {
     url: string;
     method: "get" | "post" | "put";
+    type?: ContentType;
   };
 }

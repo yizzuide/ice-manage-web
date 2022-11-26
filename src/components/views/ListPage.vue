@@ -62,7 +62,8 @@
           "
           >{{ page.struct.command?.add?.label ?? "新增" }}</el-button
         >
-        <slot name="command" :row="selectedRow" v-else></slot>
+        <slot name="command" v-else></slot>
+        <slot name="additionCommand"></slot>
       </div>
       <el-table
         :data="tableData"
@@ -161,6 +162,7 @@ const emit = defineEmits<{
     // 除了name="add"时为空，其它都有值
     selectedRow?: Model
   ): void;
+  (e: "selectRow", selectedRow: Model): void;
 }>();
 
 const tableData = ref<Model[]>([]);
@@ -208,6 +210,7 @@ const addRow = () => {
 
 const changeSelectedRow = (row: Model) => {
   selectedRow.value = row;
+  emit("selectRow", row);
 };
 
 const handleEdit = (index: number, row: Model) => {
