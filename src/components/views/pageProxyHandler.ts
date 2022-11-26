@@ -15,7 +15,7 @@ export interface PageHandlerParams<D extends Model, R> {
    * @param searchParams 搜索参数
    * @param tableData 表数据引用
    */
-  onSearch(searchParams: SearchParams, tableData: Ref<Model[]>): void;
+  onSearch(searchParams: SearchParams & R, tableData: Ref<Model[]>): void;
   /**
    * 执行操作
    * @param name 当前操作名
@@ -50,7 +50,7 @@ export const usePageProxyHandler = function <D extends Model, R>(
     onSearch(searchParams: SearchParams, tableData: Ref<Model[]>) {
       reqParams = searchParams;
       tableDataRef = tableData;
-      params.onSearch(searchParams, tableData);
+      params.onSearch(searchParams as SearchParams & R, tableData);
     },
     onOperation(
       name: OperationNamed,
