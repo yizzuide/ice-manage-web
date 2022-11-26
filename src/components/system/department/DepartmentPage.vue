@@ -3,86 +3,77 @@
     :page="departListPage"
     :page-count="departmentStore.pageCount"
     :total="departmentStore.totalSize"
-    @search="search"
-    @operation="operation"
+    @search="pageProxyHandler.onSearch"
+    @operation="pageProxyHandler.onOperation"
   >
   </ListPage>
 </template>
 
 <script setup lang="ts">
-import { Ref } from "vue";
+import { ElMessage } from "element-plus";
 import { departListPage } from "./config/depart-list-page";
-import { OperationNamed, SearchParams } from "@/components/views/list-page";
-import { DialogConfig, Model } from "@/components/views/data-dialog";
 import { ModifierDepartment } from "./config/depart-data-dialog";
 import ListPage from "@/components/views/ListPage.vue";
-import { useDepartmentStore } from "./store/departmentStore";
-import { ElMessage } from "element-plus";
+import { Department, useDepartmentStore } from "./store/departmentStore";
+import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
 
 const departmentStore = useDepartmentStore();
-let tableDataRef: Ref<Model[]>;
-let reqParams: SearchParams;
 
-function search(searchParams: SearchParams, tableData: Ref<Model[]>) {
-  reqParams = searchParams;
-  tableDataRef = tableData;
-  departmentStore
-    .fetchPage({
-      pageStart: searchParams.searchIndex,
-      pageSize: searchParams.searchPageSize,
-      startDate: searchParams.searchDate?.[0],
-      endDate: searchParams.searchDate?.[1],
-      entity: {
-        departmentName: searchParams.searchKeyName,
-      },
-    })
-    .then(() => (tableData.value = departmentStore.departmentList));
-}
-
-function operation(
-  name: OperationNamed,
-  dialogConfig: Ref<DialogConfig<Model>>,
-  selectedRow?: Model
-) {
-  const config = (dialogConfig as Ref<DialogConfig<ModifierDepartment>>).value;
-  if (name === "add") {
-    config.title = "添加部门";
-    config.request.url = "/api/manage/department/add";
-    config.request.method = "post";
-    config.model = <ModifierDepartment>{
-      orderNum: 0,
-    };
-    if (selectedRow) {
-      config.model.parentName = selectedRow.departmentName;
-      config.model.pid = selectedRow.id;
-    }
-    return;
-  }
-
-  if (name == "edit") {
-    config.title = "修改部门";
-    config.request.url = "/api/manage/department/update";
-    config.request.method = "put";
-    // 复制对象属性过滤之：使用箭头函数解构对象（当前为selectedRow），立即执行返回新对象(适用于属性不超过5个)
-    config.model = (({ id, departmentName, phone, address, orderNum }) => ({
-      id,
-      departmentName,
-      phone,
-      address,
-      orderNum,
-    }))(selectedRow as ModifierDepartment);
-    return;
-  }
-  if (name == "remove") {
-    departmentStore.removeRecord(selectedRow!.id).then((data) => {
-      if (!data.isSuccess) {
-        ElMessage.error(data.message);
-        return;
+const pageProxyHandler = usePageProxyHandler<ModifierDepartment, Department>({
+  onSearch(searchParams, tableData) {
+    departmentStore
+      .fetchPage({
+        pageStart: searchParams.searchIndex,
+        pageSize: searchParams.searchPageSize,
+        startDate: searchParams.searchDate?.[0],
+        endDate: searchParams.searchDate?.[1],
+        entity: {
+          departmentName: searchParams.searchKeyName,
+        },
+      })
+      .then(() => (tableData.value = departmentStore.departmentList));
+  },
+  onOperation(name, dialogConfig, selectedRow?) {
+    const config = dialogConfig.value;
+    if (name === "add") {
+      config.title = "添加部门";
+      config.request.url = "/api/manage/department/add";
+      config.request.method = "post";
+      config.model = <ModifierDepartment>{
+        orderNum: 0,
+      };
+      if (selectedRow) {
+        config.model.parentName = selectedRow.departmentName;
+        config.model.pid = selectedRow.id;
       }
-      search(reqParams, tableDataRef);
-    });
-  }
-}
+      return;
+    }
+
+    if (name == "edit") {
+      config.title = "修改部门";
+      config.request.url = "/api/manage/department/update";
+      config.request.method = "put";
+      // 复制对象属性过滤之：使用箭头函数解构对象（当前为selectedRow），立即执行返回新对象(适用于属性不超过5个)
+      config.model = (({ id, departmentName, phone, address, orderNum }) => ({
+        id,
+        departmentName,
+        phone,
+        address,
+        orderNum,
+      }))(selectedRow as ModifierDepartment);
+      return;
+    }
+    if (name == "remove") {
+      departmentStore.removeRecord(selectedRow!.id).then((data) => {
+        if (!data.isSuccess) {
+          ElMessage.error(data.message);
+          return;
+        }
+        pageProxyHandler.refresh();
+      });
+    }
+  },
+});
 </script>
 
 <style scoped lang="scss"></style>
