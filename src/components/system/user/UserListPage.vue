@@ -21,13 +21,13 @@
     <DataDialog
       :visible="showAssignDialog"
       :config="assignConfig"
-      @close="onAssignDialogClose"
+      @close="showAssignDialog = false"
     ></DataDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch } from "vue";
+import { ref, watch } from "vue";
 import varColor from "@/styles/define.module.scss";
 import ListPage from "@/components/views/ListPage.vue";
 import DataDialog from "@/components/views/DataDialog.vue";
@@ -148,19 +148,12 @@ async function onAssign() {
     ElMessage.warning("请选择用户！");
     return;
   }
-  const roleIds = await roleStore.findRoleIds(currentSelectedUser.id);
+  const roleIds = await usersStore.findRoleIds(currentSelectedUser.id);
   assignConfig.value.model = <UserRole>{
     uid: currentSelectedUser.id,
     roleIds,
   };
   showAssignDialog.value = true;
-}
-
-function onAssignDialogClose(finish: boolean) {
-  showAssignDialog.value = false;
-  if (finish) {
-    pageProxyHandler.refresh();
-  }
 }
 </script>
 
