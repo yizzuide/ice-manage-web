@@ -23,12 +23,18 @@ export interface Menu extends Node {
 export const useMenuStore = defineStore("menu", {
   state: () => {
     return {
-      menuList: <Menu[]>[],
       pageCount: 0,
       totalSize: 0,
+      menuList: <Menu[]>[],
+      menusAllSource: <Menu[]>[],
     };
   },
   actions: {
+    async fetchAll() {
+      return request<Menu[]>({
+        url: "/api/manage/menu/all",
+      }).then((respData) => (this.menusAllSource = respData.data!));
+    },
     async fetchPage(pageData: QueryPageData<Menu>) {
       return request<PageData<Menu>>({
         url: "/api/manage/menu/list",
