@@ -116,8 +116,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
         departmentId: 1,
       };
       if (selectedRow) {
-        const selectedUser = selectedRow as User;
-        config.model.departmentId = selectedUser.departmentId;
+        config.model.departmentId = selectedRow.departmentId;
       }
       return;
     }
@@ -125,7 +124,13 @@ const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
       config.title = "修改用户";
       config.request.url = "/api/manage/user/update";
       config.request.method = "put";
-      const { departmentName, ...updateParams } = selectedRow as ModifierUser;
+      const {
+        departmentName,
+        isAdmin,
+        isEnabled,
+        createTime,
+        ...updateParams
+      } = selectedRow!;
       const autoSetDepartName = config.model.departmentName;
       config.model = { departmentName: autoSetDepartName, ...updateParams };
       return;

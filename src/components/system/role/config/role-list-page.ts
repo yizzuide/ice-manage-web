@@ -1,5 +1,7 @@
 import { Model } from "@/components/views/data-dialog";
 import { Page, SearchParamsProp } from "@/components/views/list-page";
+import { useUsersStore } from "../../user/store/usersStore";
+import { roleDialogConfig } from "./role-data-dialog";
 
 export const roleListPageConfig: Page<Model> = {
   perms: {
@@ -35,15 +37,25 @@ export const roleListPageConfig: Page<Model> = {
           width: 120,
         },
         {
+          prop: "createUser",
+          label: "创建人",
+          width: 120,
+          format: (row) => {
+            const usersStore = useUsersStore();
+            if (!usersStore.usersAllSource?.length) {
+              return "";
+            }
+            return (
+              usersStore.usersAllSource.find(
+                (user) => user.id == row.createUser
+              )?.nickName ?? ""
+            );
+          },
+        },
+        {
           prop: "remark",
           label: "角色描述",
           width: 120,
-        },
-        {
-          prop: "createUser",
-          label: "创建人",
-          width: 80,
-          format: (row) => "",
         },
         {
           prop: "createTime",
@@ -52,5 +64,6 @@ export const roleListPageConfig: Page<Model> = {
         },
       ],
     },
+    dialogConfig: roleDialogConfig,
   },
 };

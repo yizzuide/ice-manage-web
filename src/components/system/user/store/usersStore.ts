@@ -21,12 +21,18 @@ export interface User {
 export const useUsersStore = defineStore("users", {
   state: () => {
     return {
-      userList: <User[]>[],
       pageCount: 0,
       totalSize: 0,
+      userList: <User[]>[],
+      usersAllSource: <User[]>[],
     };
   },
   actions: {
+    async fetchAll() {
+      return request<User[]>({
+        url: "/api/manage/user/all",
+      }).then((respData) => (this.usersAllSource = respData.data!));
+    },
     async fetchPage(pageData: QueryPageData<User>) {
       return request<PageData<User>>({
         url: "/api/manage/user/list",
