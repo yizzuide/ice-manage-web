@@ -45,6 +45,9 @@ export const assignDialogConfig: DialogConfig<RolePerm> = {
       fieldName: "permIds",
       selectOptions: [],
       multiple: true,
+      format(value) {
+        return [...new Set((value as []).flat())];
+      },
     },
   ],
 };

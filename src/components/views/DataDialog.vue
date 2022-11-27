@@ -113,9 +113,12 @@ watch(
 );
 
 function getCascaderProps(item: Board) {
+  if (item.multiple) {
+    return { multiple: true };
+  }
+  // 单选时，不关联父节点
   return {
     checkStrictly: true,
-    multiple: item.multiple ?? false,
   };
 }
 

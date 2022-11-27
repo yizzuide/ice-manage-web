@@ -53,7 +53,7 @@ export const userListPage: Page<ModifierUser> = {
           prop: "gender",
           label: "姓别",
           width: 80,
-          format: (row) => (row.gender ? "男" : "女"),
+          format: (row) => (row.gender ? "女" : "男"),
         },
         {
           prop: "departmentName",

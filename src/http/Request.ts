@@ -41,7 +41,6 @@ export function Request(_?: App) {
     interceptor: {
       onRequest(config) {
         const { url, method } = config;
-        console.log("request url: ", url, "showLoading: ", config.showLoading);
 
         // 添加token
         if (url !== "/api/login") {

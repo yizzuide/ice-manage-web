@@ -44,10 +44,12 @@ import { ArrowDown } from "@element-plus/icons-vue";
 import useUserStore from "@/components/login/store/userStore";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import router from "@/router";
+import { useHomeStore } from "../store/homeStore";
 
 const emit = defineEmits<{ (e: "change", isExpand: boolean): void }>();
 const userStore = useUserStore();
 const userInfo = useUserInfo();
+const homeStore = useHomeStore();
 
 const isExpand = ref(true);
 
@@ -61,6 +63,7 @@ function onLogout() {
     if (respData.isSuccess) {
       router.replace("/login");
       useLocalStorage().clear();
+      homeStore.resetMenuIndex();
     }
   });
 }

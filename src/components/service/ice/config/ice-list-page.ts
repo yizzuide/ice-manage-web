@@ -18,7 +18,11 @@ export function initPageData(
 
 export const iceListPage: Page<JobInspectInfo> = {
   type: "readonly",
-  perms: {},
+  perms: {
+    add: "service:task:ice:push",
+    detail: "service:task:ice:detail",
+    update: "service:task:ice:rePush",
+  },
   struct: {
     search: {
       items: [

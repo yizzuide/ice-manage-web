@@ -28,6 +28,19 @@ export const useHomeStore = defineStore("home", {
       localStorage.set("menuIndex", this.selectedMenuIndex);
     },
 
+    // 重置选择的菜单
+    resetMenuIndex() {
+      this.selectedMenuIndex = "/index/dashboard";
+      this.tagList = [
+        {
+          title: "首页",
+          path: "/index/dashboard",
+          active: true,
+          closable: false,
+        },
+      ];
+    },
+
     // 添加或更新TagInfo
     addOrUpdateTagInfo(preRoutePath: string, tagInfo: RouteTagInfo) {
       const activePath = tagInfo.path;

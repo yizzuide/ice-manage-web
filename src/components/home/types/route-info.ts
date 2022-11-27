@@ -1,5 +1,3 @@
-import { RouteLocationNormalizedLoaded } from "vue-router";
-
 export interface RouteInfo {
   title: string;
   path: string;
