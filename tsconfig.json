@@ -2,7 +2,8 @@
   // https://www.typescriptlang.org/tsconfig
   "compilerOptions": {
     "target": "ESNext",
-    "useDefineForClassFields": true,
+    // 是否支持类字段定义（默认为true，safari不支持类字段'='赋值）
+    "useDefineForClassFields": false,
     "module": "ESNext",
     "moduleResolution": "Node",
     "strict": true,

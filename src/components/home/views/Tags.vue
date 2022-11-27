@@ -73,7 +73,7 @@ watch(
 
 <style scoped lang="scss">
 .tag-container {
-  height: 100%;
+  height: 32px;
   display: flex;
   flex-shrink: 0;
   align-items: center;
