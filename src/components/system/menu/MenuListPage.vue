@@ -52,7 +52,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierMenu, Menu>({
       config.request.method = "put";
       // 复制对象属性过滤之：解构剩余参数（适用于排除的参数小于5个）
       const { parentId, parentName, createTime, children, ...updateParams } =
-        selectedRow as Menu;
+        selectedRow!;
       config.model = updateParams;
       return;
     }

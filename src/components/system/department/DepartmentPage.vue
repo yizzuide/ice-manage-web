@@ -60,7 +60,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierDepartment, Department>({
         phone,
         address,
         orderNum,
-      }))(selectedRow as ModifierDepartment);
+      }))(selectedRow!);
       return;
     }
     if (name == "remove") {
