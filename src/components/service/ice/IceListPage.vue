@@ -126,6 +126,10 @@ function onPushDialogClose(finish: boolean) {
 }
 
 function onLoadJobDetail(row: JobInspectInfo) {
+  if (row.queueType == "NoneQueue") {
+    ElMessage.warning("当前Job已完成，在JobPool中不存在！");
+    return;
+  }
   iceStore.fetchJobDetail(row.id, row.topic).then((respData) => {
     pushDialogConfig.value.type = "readonly";
     pushDialogConfig.value.title = "Job推送详细";
