@@ -45,13 +45,13 @@ router.beforeEach(async (to, from) => {
       }
     }
 
-    // redirect auth user to index/dashboard
+    // add Routes
+    const added = addDynamicRoute();
+
+    // redirect auth user from login to index/dashboard
     if (to.name == "login") {
       return { name: "dashboard" };
     }
-
-    // add Routes
-    const added = addDynamicRoute();
 
     // index -> dashboard
     if (to.name == "index") {

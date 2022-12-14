@@ -26,14 +26,15 @@ export function checkAuthFail(code: number) {
 }
 
 export function validToken(): [string | undefined, boolean] {
-  const token = getToken();
+  let token: string | undefined = getToken();
   if (!token) {
-    return [undefined, false];
+    return [token, false];
   }
   const expire = toNumber(localStorage.get("tokenExpire"));
   const isValid = expire > Date.now();
   // auth user need check token is expire
   if (!isValid) {
+    token = undefined;
     localStorage.clear();
     ElMessage.error("登录时间过期，请重新登录！");
   }
