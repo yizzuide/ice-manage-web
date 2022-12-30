@@ -1,12 +1,16 @@
 <template>
-  <div id="pie-topics" style="width: 100%; height: 280px"></div>
+  <div
+    id="pie-topics"
+    ref="pieTopicsRef"
+    style="width: 100%; height: 280px"
+  ></div>
 </template>
 
 <script setup lang="ts">
 import * as echarts from "echarts";
 import { useDashboardStore, KVItem } from "../store/dashboardStore";
 
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 
 const dashboardStore = useDashboardStore();
@@ -24,9 +28,13 @@ onMounted(() => {
   load();
 });
 
+const pieTopicsRef = ref<HTMLElement>();
 function load() {
   const topicsPie = echarts.init(
-    document.getElementById("pie-topics") as HTMLElement
+    //document.getElementById("pie-topics") as HTMLElement
+    pieTopicsRef.value!,
+    /* "light" */ undefined, // 主题
+    { renderer: "svg" } // 渲染引擎，小数据svg性能更高（特别是在移动端）
   );
 
   const option = {

@@ -28,7 +28,10 @@ function load() {
       left: "center",
     },
     tooltip: {
-      show: true,
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow", // line, cross
+      },
     },
     xAxis: {
       type: "category",
@@ -39,13 +42,14 @@ function load() {
     },
     series: [
       {
+        name: "数量",
+        type: "bar",
+        colorBy: "data",
         data: [
           jobStatInfo.value.jobPoolCount,
           jobStatInfo.value.readyQueueCount,
           jobStatInfo.value.deadQueueCount,
         ],
-        type: "bar",
-        colorBy: "data",
       },
     ],
   };

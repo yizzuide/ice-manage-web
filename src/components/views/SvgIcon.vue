@@ -3,7 +3,11 @@
     :style="urlIconStyle"
     class="svg-external-icon svg-icon"
     :class="className"
+    v-if="isExternal"
   ></span>
+  <svg class="svg-icon" aria-hidden="true" v-bind="$attrs" v-else>
+    <use :xlink-href="'#icon-' + icon"></use>
+  </svg>
 </template>
 
 <script setup lang="ts">
@@ -11,6 +15,10 @@ import { computed } from "vue";
 
 // 定义图标，类名
 const props = defineProps<{ icon: string; className?: string }>();
+
+// 是否为外部资源
+const isExternal = computed(() => props.icon.startsWith("http"));
+
 // 外部资源样式
 const urlIconStyle = computed(() => ({
   mask: `url(${props.icon}) no-repeat 50% 50%`,

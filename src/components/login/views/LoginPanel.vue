@@ -9,8 +9,8 @@
       <el-checkbox v-model="isKeepPassword">记住密码</el-checkbox>
       <el-link>忘记密码？</el-link>
     </div>
-    <el-button type="primary" class="login-button" @click="submit"
-      >登录
+    <el-button type="primary" class="login-button" @click="submit">
+      登录
     </el-button>
   </div>
 </template>
@@ -34,9 +34,9 @@ async function submit() {
     Promise.all([
       userStore.fetchUserInfo(false),
       userStore.fetchMenuList(true),
-    ]).then((_) => {
+    ]).then(() => {
       // 跳转路由路径到主页
-      router.push("/");
+      router.push({ name: "index" });
     });
   }
 }
