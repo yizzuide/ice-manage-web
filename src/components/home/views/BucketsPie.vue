@@ -1,13 +1,12 @@
 <template>
-  <div id="pie-buckets" style="width: 100%; height: 280px"></div>
+  <Echarts :options="options"></Echarts>
 </template>
 
 <script setup lang="ts">
-import * as echarts from "echarts";
-import { useDashboardStore, KVItem } from "../store/dashboardStore";
-
-import { onMounted } from "vue";
+import { EChartsOption } from "echarts";
+import Echarts from "@/components/views/Echarts.vue";
 import { storeToRefs } from "pinia";
+import { useDashboardStore, KVItem } from "../store/dashboardStore";
 
 const dashboardStore = useDashboardStore();
 const { jobStatInfo } = storeToRefs(dashboardStore);
@@ -20,54 +19,43 @@ keys.forEach((key) => {
   });
 });
 
-onMounted(() => {
-  load();
-});
-
-function load() {
-  const bucketsPie = echarts.init(
-    document.getElementById("pie-buckets") as HTMLElement
-  );
-
-  const option = {
-    title: {
-      text: "延迟分桶任务统计",
-      subtext: "Ice的JobStat分析",
-      left: "center",
+const options: EChartsOption = {
+  title: {
+    text: "延迟分桶任务统计",
+    subtext: "Ice的JobStat分析",
+    left: "center",
+  },
+  tooltip: {
+    trigger: "item",
+  },
+  legend: {
+    orient: "vertical",
+    top: "50",
+    right: "0",
+  },
+  toolbox: {
+    show: true,
+    feature: {
+      mark: { show: true },
+      //dataView: { show: true, readOnly: false },
+      //restore: { show: true },
+      //saveAsImage: { show: true },
     },
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      orient: "vertical",
-      top: "50",
-      right: "0",
-    },
-    toolbox: {
-      show: true,
-      feature: {
-        mark: { show: true },
-        //dataView: { show: true, readOnly: false },
-        //restore: { show: true },
-        //saveAsImage: { show: true },
+  },
+  series: [
+    {
+      name: "Index of Buckets",
+      type: "pie",
+      radius: [25, 110],
+      center: ["50%", "50%"],
+      roseType: "area",
+      itemStyle: {
+        borderRadius: 0,
       },
+      data: pieData,
     },
-    series: [
-      {
-        name: "Index of Buckets",
-        type: "pie",
-        radius: [25, 110],
-        center: ["50%", "50%"],
-        roseType: "area",
-        itemStyle: {
-          borderRadius: 0,
-        },
-        data: pieData,
-      },
-    ],
-  };
-  bucketsPie.setOption(option);
-}
+  ],
+};
 </script>
 
 <style scoped></style>

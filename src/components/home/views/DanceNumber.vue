@@ -1,35 +1,36 @@
 <template>
-  <el-row :gutter="24">
-    <el-col :span="6">
+  <Responsive :col-count="4">
+    <template v-slot:col-1>
       <el-card shadow="hover" class="dance-number-content">
         <div class="dance-number">{{ counter.total }}</div>
         <div class="number-label">总job添加数量</div>
       </el-card>
-    </el-col>
-    <el-col :span="6">
+    </template>
+    <template v-slot:col-2>
       <el-card shadow="hover" class="dance-number-content">
         <div class="dance-number">{{ counter.finishTotal }}</div>
         <div class="number-label">总job处理成功数量</div>
       </el-card>
-    </el-col>
-    <el-col :span="6">
+    </template>
+    <template v-slot:col-3>
       <el-card shadow="hover" class="dance-number-content">
         <div class="dance-number">{{ counter.todayCount }}</div>
         <div class="number-label">今天job添加数量</div>
       </el-card>
-    </el-col>
-    <el-col :span="6">
+    </template>
+    <template v-slot:col-4>
       <el-card shadow="hover" class="dance-number-content">
         <div class="dance-number">{{ counter.finishTodayCount }}</div>
         <div class="number-label">今天job处理成功数量</div>
       </el-card>
-    </el-col>
-  </el-row>
+    </template>
+  </Responsive>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { reactive } from "vue";
+import Responsive from "@/components/views/Responsive.vue";
 import { useDashboardStore } from "../store/dashboardStore";
 import useDanceNumber from "@/hooks/useDanceNumber";
 

@@ -1,5 +1,5 @@
-import {getCurrentInstance} from "vue";
-import {EventBus} from "./event-bus";
+import { getCurrentInstance } from "vue";
+import { EventBus } from "../plugins/event-bus";
 
 export default function (): EventBus {
   let result =
