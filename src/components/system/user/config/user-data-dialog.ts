@@ -112,13 +112,14 @@ export const userDialogConfig: DialogConfig<ModifierUser> = {
       },
       format: (value, operationType, model) => {
         if (operationType == OperationType.ADD) {
-          return;
+          return value;
         }
         const usersStore = useUsersStore();
         // password not update?
         if (value === usersStore.findUserById(model.id)?.password) {
-          model.password = undefined;
+          return undefined;
         }
+        return value;
       },
     },
     {
