@@ -45,7 +45,7 @@
 
 # 服务地址
 
-1. host url
+1. Host URL
    http://152.136.185.210:5000/
 2. 接口文档
    https://documenter.getpostman.com/view/12387168/TzsfmQvw
