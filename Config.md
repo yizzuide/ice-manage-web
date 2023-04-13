@@ -42,10 +42,3 @@
 1. 在非 vue 文件中使用时自动导入样式 npm i vite-plugin-style-import consola -D
 2. 安装样式扩展： sass npm i sass -D
 3. 安装初始化样式 npm i normalize.css --save
-
-# 服务地址
-
-1. Host URL
-   http://152.136.185.210:5000/
-2. 接口文档
-   https://documenter.getpostman.com/view/12387168/TzsfmQvw
