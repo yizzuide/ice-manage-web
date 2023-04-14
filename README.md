@@ -6,15 +6,11 @@
 
 ## 后端
 
-由于使用前后端分离的开发方式，后端项目可前往 [ice-manage-server](https://github.com/yizzuide/ice-manage-server) 获取。
+采用前后端分离的开发方式，后端项目可前往 [ice-manage-server](https://github.com/yizzuide/ice-manage-server) 获取。
 
 - SpringBoot 2.7.6
 - Milkomeda 3.15.0
 - Mybatis-plus 3.5.2
-
-**后端项目的布署：**
-
-> 导入项目下的 doc/ice.sql 到 mysql 里执行，创建项目依赖的表和基本数据，在启动后使用超级管理员账号：admin，密码：123456
 
 ## 前端
 
