@@ -8,7 +8,7 @@
 
 由于使用前后端分离的开发方式，后端项目可前往 [ice-manage-server](https://github.com/yizzuide/ice-manage-server) 获取。
 
-- Springboot 2.7.6
+- SpringBoot 2.7.6
 - Milkomeda 3.15.0
 - Mybatis-plus 3.5.2
 
