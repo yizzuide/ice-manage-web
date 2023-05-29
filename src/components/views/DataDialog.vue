@@ -71,9 +71,9 @@
         <el-button
           type="primary"
           @click="doConform"
-          v-if="config.type !== 'readonly'"
-          >确定</el-button
-        >
+          v-if="config.type !== 'readonly'">
+          确定
+        </el-button>
       </span>
     </template>
   </el-dialog>
@@ -81,11 +81,11 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { isFunction } from "@vueuse/shared";
 import { ElMessage, FormInstance } from "element-plus";
 import { Board, DialogConfig, Model, OperationType } from "./data-dialog";
 import request from "@/http/uniformRequest";
 import { ContentType } from "@/plugins/request";
+import { isFunction } from "lodash";
 
 const props = defineProps<{
   visible: boolean;
