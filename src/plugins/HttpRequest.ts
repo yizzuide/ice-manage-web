@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosInstance } from "axios";
+import axios, { AxiosResponse, AxiosInstance, AxiosRequestHeaders } from "axios";
 import {
   RequestConfig,
   IHttpRequest,
@@ -63,14 +63,15 @@ export default class HttpRequest implements IHttpRequest {
     }
 
     if (requestConfig.contentType == ContentType.FORM) {
-      config.headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
+      config.headers = <AxiosRequestHeaders>{
+        "Content-Type": "application/x-www-form-urlencoded"
       };
       // post json data -> form string format
       if (config.data) {
         config.data = qs.stringify(config.data, {
           // array params -> comma(xx,xx...)
           arrayFormat: "comma",
+          allowDots: true
         });
       }
     }

@@ -1,5 +1,6 @@
 import { PageData, QueryPageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
+import { ContentType } from "@/plugins/request";
 import { defineStore } from "pinia";
 
 export interface User {
@@ -36,7 +37,8 @@ export const useUsersStore = defineStore("users", {
     async fetchPage(pageData: QueryPageData<User>) {
       return request<PageData<User>>({
         url: "/api/manage/user/list",
-        method: "get",
+        method: "post",
+        contentType: ContentType.JSON,
         params: pageData,
         showLoading: true,
       }).then((respData) => {
