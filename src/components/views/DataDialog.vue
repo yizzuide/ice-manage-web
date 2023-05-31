@@ -96,6 +96,8 @@ const emit = defineEmits<{
   (e: "close", conform: boolean): void;
 }>();
 
+let origModel = {...props.config.model};
+
 // 组件在哪里修改，就在哪里定义Ref
 const showDialog = ref(props.visible);
 const model = ref<Model>(props.config.model);
@@ -109,8 +111,10 @@ watch(
 // 监听父组件提供的初始化数据
 watch(
   () => props.config.model,
-  (newModel) => (model.value = newModel)
-);
+  (newModel) => {
+    model.value = newModel;
+    origModel = {...newModel};
+  });
 
 function getCascaderProps(item: Board) {
   if (item.multiple) {
@@ -137,17 +141,16 @@ function doConform() {
     }
 
     // 参数格式化
-    props.config.board.forEach(
-      (item) =>
-        item.format &&
-        (model.value[item.fieldName] = item.format(
-          model.value[item.fieldName],
-          model.value.id === undefined
-            ? OperationType.ADD
-            : OperationType.UPDATE,
-          model
-        ))
-    );
+    props.config.board.forEach((item) => {
+      if (model.value[item.fieldName] === origModel[item.fieldName]) {
+        model.value[item.fieldName] = undefined;
+      }
+      item.format && (model.value[item.fieldName] = item.format(
+        model.value[item.fieldName],
+        model.value.id === undefined ? OperationType.ADD : OperationType.UPDATE,
+        model
+      ));
+    });
 
     request({
       url: props.config.request.url,
