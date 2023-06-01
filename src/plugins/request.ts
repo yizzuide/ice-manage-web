@@ -5,7 +5,7 @@ export interface IHttpRequest {
 }
 
 export interface RequestInterceptor<T = any, R = AxiosResponse<T, any>> {
-  onRequest?(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig;
+  onRequest?(config: RequestConfig): RequestConfig;
 
   onRequestCatch?(error: any): any;
 

@@ -3,6 +3,7 @@ import HttpRequest from "../plugins/HttpRequest";
 import { ElLoading } from "element-plus";
 import { LoadingInstance } from "element-plus/es/components/loading/src/loading";
 import { getToken, setToken } from "./authHelper";
+import { AxiosHeaders } from "axios";
 
 let instance: HttpRequest;
 
@@ -38,19 +39,15 @@ export function Request(_?: App) {
   instance = new HttpRequest({
     baseURL: import.meta.env.__HOST_URL,
     timeout: import.meta.env.__REQUEST_TIME_OUT,
+    headers: <AxiosHeaders>{},
     interceptor: {
       onRequest(config) {
         const { url, method } = config;
-
         // 添加token
         if (url !== "/api/login") {
           const token = getToken();
           if (token) {
-            if (config.headers) {
-              config.headers.token = `Bearer ${token}`;
-            } else {
-              config.headers = { token: `Bearer ${token}` };
-            }
+            config.headers.token = `Bearer ${token}`;
           }
         }
         return config;
