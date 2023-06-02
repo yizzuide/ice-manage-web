@@ -7,5 +7,5 @@ export default function (): EventBus {
   if (!result) {
     result = getCurrentInstance()?.proxy?.$eventBus;
   }
-  return result;
+  return result!;
 }

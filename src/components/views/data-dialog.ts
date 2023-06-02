@@ -1,4 +1,5 @@
 import { ContentType } from "@/plugins/request";
+import { UploadFile, UploadRawFile } from "element-plus";
 
 export type Model = Record<string, any>;
 
@@ -14,11 +15,18 @@ export interface SelectOptions {
   children?: SelectOptions[];
 }
 
+export interface UploadSettings {
+  uploadURL: string;
+  imageURL?: string;
+  handleSuccess: (response: any, file: UploadFile) => void;
+  beforeUpload?: (rawFile: UploadRawFile) => boolean;
+}
+
 export interface Board {
   label: string;
   fieldName: string;
   // text is default
-  type?: "text" | "number" | "select" | "cascaded";
+  type?: "text" | "number" | "select" | "cascaded" | "imageUpload";
   isDisable?: boolean;
   // 是否为密码框（type='text'）
   isPassword?: boolean;
@@ -30,6 +38,8 @@ export interface Board {
   numberMin?: number;
   // select可选值列表（type='select'）
   selectOptions?: SelectOptions[];
+  // 上传配置
+  uploadSettings?: UploadSettings;
   // 自定义属性配置
   customProps?: any;
   // 显示判断（type='text'）

@@ -62,6 +62,19 @@
             clearable
             v-else-if="item.type == 'cascaded'"
           />
+          <el-upload
+            class="image-uploader"
+            :action="item.uploadSettings!.uploadURL"
+            :show-file-list="false"
+            :on-success="item.uploadSettings!.handleSuccess.bind({item, model: ref(model)})"
+            :before-upload="item.uploadSettings!.beforeUpload"
+            v-else-if="item.type == 'imageUpload'">
+            <img v-if="item.uploadSettings!.imageURL" :src="item.uploadSettings!.imageURL" class="placeholder" />
+            <img v-else-if="model.avatar" :src="'/api/file/image/load?url=' + model.avatar" class="placeholder" />
+            <div v-else class="uploader-icon">
+              <el-icon><Plus /></el-icon>
+            </div>
+          </el-upload>
         </el-form-item>
       </div>
     </el-form>
@@ -81,6 +94,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { Plus } from "@element-plus/icons-vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Board, DialogConfig, Model, OperationType } from "./data-dialog";
 import request from "@/http/uniformRequest";
@@ -201,5 +215,31 @@ function hide(finish: boolean) {
 }
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+
+.image-uploader {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  .uploader-icon {
+    font-size: 32px;
+    color: #8c939d;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+  }
+  .placeholder {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    display: block;
+  }
+}
+.image-uploader:hover {
+  border-color: #409eff;
 }
 </style>
