@@ -4,8 +4,8 @@
     :total="menuStore.totalSize"
     :page-count="menuStore.pageCount"
     @search="pageProxyHandler.onSearch"
-    @operation="pageProxyHandler.onOperation"
-  ></ListPage>
+    @operation="pageProxyHandler.onOperation">
+    </ListPage>
 </template>
 
 <script setup lang="ts">
@@ -23,7 +23,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierMenu, Menu>({
     menuStore
       .fetchPage({
         pageStart: searchParams.searchIndex,
-        pageSize: searchParams.searchPageSize,
+        pageSize: -1,
         startDate: searchParams.searchDate?.[0],
         endDate: searchParams.searchDate?.[1],
         entity: {

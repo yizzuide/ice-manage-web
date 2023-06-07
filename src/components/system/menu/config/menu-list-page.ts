@@ -32,6 +32,8 @@ export const menuListPage: Page<ModifierMenu> = {
       ],
     },
     table: {
+      disableExpandAll: true,
+      hiddenPagination: true,
       items: [
         {
           prop: "id",

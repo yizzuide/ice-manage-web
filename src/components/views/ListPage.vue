@@ -34,7 +34,7 @@
               v-model="searchParams[item.prop]"
               type="daterange"
               value-format="YYYY-MM-DD HH:mm:ss"
-              :default-value="[dayjs().subtract(1, 'month'), dayjs()]"
+              :default-value="[dayjs().subtract(1, 'month').toDate(), dayjs().toDate()]"
               v-bind="item.inputSettings"
               v-else-if="item.type == 'date'"
             />
@@ -70,7 +70,7 @@
         style="width: 100%; margin-top: 10px"
         max-height="250"
         row-key="id"
-        default-expand-all
+        :default-expand-all="!page.struct.table.disableExpandAll"
         highlight-current-row
         @current-change="changeSelectedRow"
       >
@@ -126,7 +126,7 @@
         :current-page="searchParams.searchIndex"
         :total="total"
         @current-change="changePageIndex"
-      />
+        v-if="!page.struct.table.hiddenPagination" />
     </el-card>
     <DataDialog
       :visible="showDialog"

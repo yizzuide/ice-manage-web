@@ -56,6 +56,10 @@ export interface Page<T extends Model> {
       };
     };
     table: {
+      // 是否展开子项
+      disableExpandAll?: boolean;
+      // 是否隐藏分页
+      hiddenPagination?: boolean;
       // 是否隐藏操作列表
       hiddenOperationColumn?: boolean;
       operationColumnWidth?: number;
