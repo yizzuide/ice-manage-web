@@ -17,6 +17,7 @@ export interface SelectOptions {
 
 export interface UploadSettings {
   uploadURL: string;
+  loadURL: string;
   imageURL?: string;
   handleSuccess: (response: any, file: UploadFile) => void;
   beforeUpload?: (rawFile: UploadRawFile) => boolean;

@@ -13,14 +13,14 @@
         <el-form-item
           :label="item.label"
           :prop="item.fieldName"
-          label-width="140px"
-        >
+          label-width="140px">
           <el-input
             :type="item.multiple ? 'textarea' : 'text'"
             v-model="model[item.fieldName]"
             :show-password="item.isPassword"
             :disabled="item.isDisable || config.type == 'readonly'"
             autocomplete="off"
+            clearable
             v-if="
               (!item.type || item.type == 'text') &&
               (item.displayTest
@@ -30,8 +30,8 @@
                       : OperationType.UPDATE,
                     model
                   )
-                : true)
-            "
+                : true)"
+            style="width: 79%"
           />
           <el-input-number
             v-model="model[item.fieldName]"
@@ -44,6 +44,7 @@
             :multiple="item.multiple"
             v-model="model[item.fieldName]"
             placeholder="请选择"
+            filterable
             :disabled="item.isDisable || config.type == 'readonly'"
             v-else-if="item.type == 'select'"
           >
@@ -70,7 +71,7 @@
             :before-upload="item.uploadSettings!.beforeUpload"
             v-else-if="item.type == 'imageUpload'">
             <img v-if="item.uploadSettings!.imageURL" :src="item.uploadSettings!.imageURL" class="placeholder" />
-            <img v-else-if="model.avatar" :src="'/api/file/image/load?url=' + model.avatar" class="placeholder" />
+            <img v-else-if="model[item.fieldName]" :src="item.uploadSettings!.loadURL + model[item.fieldName]" class="placeholder" />
             <div v-else class="uploader-icon">
               <el-icon><Plus /></el-icon>
             </div>
@@ -155,13 +156,16 @@ function doConform() {
     }
 
     // 参数格式化
+    const opsType = model.value.id === undefined ? OperationType.ADD : OperationType.UPDATE;
     props.config.board.forEach((item) => {
-      if (model.value[item.fieldName] === origModel[item.fieldName]) {
-        model.value[item.fieldName] = undefined;
+      if (opsType === OperationType.UPDATE) {
+        if (model.value[item.fieldName] === origModel[item.fieldName]) {
+          model.value[item.fieldName] = undefined;
+        }
       }
       item.format && (model.value[item.fieldName] = item.format(
         model.value[item.fieldName],
-        model.value.id === undefined ? OperationType.ADD : OperationType.UPDATE,
+        opsType,
         model
       ));
     });
