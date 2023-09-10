@@ -8,7 +8,7 @@ import {
 import { Page } from "@/components/views/list-page";
 import { Ref } from "vue";
 import { Department } from "../../department/store/departmentStore";
-import { User, useUsersStore } from "../store/usersStore";
+import { useUsersStore } from "../store/usersStore";
 
 export interface ModifierUser extends Model {
   id?: number;
@@ -115,8 +115,11 @@ export const userDialogConfig: DialogConfig<ModifierUser> = {
           return value;
         }
         const usersStore = useUsersStore();
+        if (value === "********") {
+          return undefined;
+        }
         // password not update?
-        if (value === usersStore.findUserById(model.id)?.password) {
+        if (value === usersStore.findUserById(model.value.id!)?.password) {
           return undefined;
         }
         return value;

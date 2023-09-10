@@ -2,7 +2,7 @@
   <div class="logo">
     <img src="@/assets/menu_logo.png" />
     <transition @enter="enterAnimate" @leave="leaveAnimate" :css="false">
-      <span class="title" v-if="!collapse">Ice任务管理平台</span>
+      <span class="title" v-if="!collapse">FuturePi管理平台</span>
     </transition>
   </div>
   <div class="divider"></div>
@@ -37,7 +37,7 @@ function leaveAnimate(el: any, done: any) {
 
 <style scoped lang="scss">
 .logo {
-  background-color: saddlebrown;
+  background-color: $darknessColor;
   height: 50px;
   line-height: 50px;
   display: flex;
@@ -58,4 +58,9 @@ function leaveAnimate(el: any, done: any) {
     vertical-align: middle;
   }
 }
+.divider{
+    width: 100%;
+    height: .5px;
+    background-color: $separatorLineColor;
+  }
 </style>

@@ -1,4 +1,7 @@
 node_modules
 build
+public
+assets
 
 *.d.ts
+*.config.js

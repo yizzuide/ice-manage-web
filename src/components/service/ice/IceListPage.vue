@@ -2,7 +2,7 @@
   <div>
     <ListPage
       :page="icePageConfig"
-      :page-count="iceStore.pageCount"
+      :pageCount="iceStore.pageCount"
       :total="iceStore.totalSize"
       @search="pageProxyHandler.onSearch"
     >
@@ -47,18 +47,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import varColor from "@/styles/define.module.scss";
-import { Plus, MoreFilled, TopRight } from "@element-plus/icons-vue";
-import { ElMessage, ElMessageBox } from "element-plus";
-import ListPage from "@/components/views/ListPage.vue";
-import DataDialog from "@/components/views/DataDialog.vue";
-import { iceListPage, initPageData } from "./config/ice-list-page";
-import { icePushDataDialog, Job } from "./config/ice-data-dialog";
-import { JobInspectInfo, useIceStore } from "./store/iceStore";
 import { useDashboardStore } from "@/components/home/store/dashboardStore";
 import usePermission from "@/components/login/hooks/usePermission";
+import DataDialog from "@/components/views/DataDialog.vue";
+import ListPage from "@/components/views/ListPage.vue";
 import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
+import varColor from "@/styles/define.module.scss";
+import { MoreFilled, Plus, TopRight } from "@element-plus/icons-vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { ref } from "vue";
+import { Job, icePushDataDialog } from "./config/ice-data-dialog";
+import { iceListPage, initPageData } from "./config/ice-list-page";
+import { JobInspectInfo, useIceStore } from "./store/iceStore";
 
 const showPushDialog = ref(false);
 const pushDialogConfig = ref(icePushDataDialog);

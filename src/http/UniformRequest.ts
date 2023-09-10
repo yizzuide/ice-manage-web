@@ -54,6 +54,9 @@ export default function request<T>(
     useRequest()
       .request<HttpResult<T>>(requestConfig)
       .then((data) => {
+        if(data == undefined) {
+          reject({ code: -1, isSuccess: false, message: "响应数据错误！" });
+        }
         data.isSuccess = data.code == 0;
         if (checkAuthFail(data.code)) {
           resolve(data);

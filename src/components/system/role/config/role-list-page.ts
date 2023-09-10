@@ -1,9 +1,9 @@
-import { Model } from "@/components/views/data-dialog";
 import { Page, SearchParamsProp } from "@/components/views/list-page";
 import { useUsersStore } from "../../user/store/usersStore";
 import { roleDialogConfig } from "./role-data-dialog";
+import { Role } from "../store/roleStore";
 
-export const roleListPageConfig: Page<Model> = {
+export const roleListPageConfig: Page<Role> = {
   perms: {
     add: "sys:role:add",
     update: "sys:role:edit",
@@ -45,11 +45,7 @@ export const roleListPageConfig: Page<Model> = {
             if (!usersStore.usersAllSource?.length) {
               return "";
             }
-            return (
-              usersStore.usersAllSource.find(
-                (user) => user.id == row.createUser
-              )?.nickName ?? ""
-            );
+            return (usersStore.usersAllSource.find((user) => user.id == row.createUser)?.nickName ?? "");
           },
         },
         {

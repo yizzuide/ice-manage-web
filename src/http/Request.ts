@@ -44,17 +44,18 @@ export function Request(_?: App) {
       onRequest(config) {
         const { url, method } = config;
         // 添加token
-        if (url !== "/api/login") {
+        if (url !== import.meta.env.__API_LOGIN_URL) {
           const token = getToken();
           if (token) {
-            config.headers.token = `Bearer ${token}`;
+            const token_format: string = import.meta.env.__TOKEN_FORMAT;
+            config.headers.token = token_format.replace("%s", token);
           }
         }
         return config;
       },
       onResponse(response) {
         // 检测响应头是否有自动刷新的token
-        const token = response.headers["token"];
+        const token = response.headers[import.meta.env.__TOKEN_NAME];
         if (token) {
           setToken(token);
         }

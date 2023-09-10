@@ -1,5 +1,6 @@
 import { PageData, QueryPageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
+import { ContentType } from "@/plugins/request";
 import { buildProxyNodeTree, Node } from "@/tools/nodeTree";
 import { defineStore } from "pinia";
 
@@ -38,7 +39,8 @@ export const useMenuStore = defineStore("menu", {
     async fetchPage(pageData: QueryPageData<Menu>) {
       return request<PageData<Menu>>({
         url: "/api/manage/menu/list",
-        method: "get",
+        method: "post",
+        contentType: ContentType.JSON,
         params: pageData,
         showLoading: true,
       }).then((respData) => {

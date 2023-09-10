@@ -1,5 +1,5 @@
 import {App} from "vue";
-import {EventBus, CallBack} from "./event-bus";
+import type {EventBus, CallBack} from "./event-bus";
 
 class Emitter implements EventBus {
   // <eventName, callback[]>

@@ -1,7 +1,7 @@
 <template>
   <ListPage
     :page="departListPage"
-    :page-count="departmentStore.pageCount"
+    :pageCount="departmentStore.pageCount"
     :total="departmentStore.totalSize"
     @search="pageProxyHandler.onSearch"
     @operation="pageProxyHandler.onOperation"
@@ -10,12 +10,12 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from "element-plus";
-import { departListPage } from "./config/depart-list-page";
-import { ModifierDepartment } from "./config/depart-data-dialog";
 import ListPage from "@/components/views/ListPage.vue";
-import { Department, useDepartmentStore } from "./store/departmentStore";
 import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
+import { ElMessage } from "element-plus";
+import { ModifierDepartment } from "./config/depart-data-dialog";
+import { departListPage } from "./config/depart-list-page";
+import { Department, useDepartmentStore } from "./store/departmentStore";
 
 const departmentStore = useDepartmentStore();
 
@@ -33,13 +33,16 @@ const pageProxyHandler = usePageProxyHandler<ModifierDepartment, Department>({
       })
       .then(() => (tableData.value = departmentStore.departmentList));
   },
-  onOperation(name, dialogConfig, selectedRow?) {
+  async onOperation(name, dialogConfig, selectedRow?) {
     const config = dialogConfig.value;
     if (name === "add") {
       config.title = "添加部门";
+      config.desc = "添加子级部门前，需要先选中一个部门！";
       config.request.url = "/api/manage/department/add";
       config.request.method = "post";
       config.model = <ModifierDepartment>{
+        pid: 0,
+        parentName: "",
         orderNum: 0,
       };
       if (selectedRow) {
@@ -51,6 +54,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierDepartment, Department>({
 
     if (name == "edit") {
       config.title = "修改部门";
+      config.desc = "";
       config.request.url = "/api/manage/department/update";
       config.request.method = "put";
       // 复制对象属性过滤之：使用箭头函数解构对象（当前为selectedRow），立即执行返回新对象(适用于属性不超过5个)
@@ -64,13 +68,13 @@ const pageProxyHandler = usePageProxyHandler<ModifierDepartment, Department>({
       return;
     }
     if (name == "remove") {
-      departmentStore.removeRecord(selectedRow!.id).then((data) => {
-        if (!data.isSuccess) {
-          ElMessage.error(data.message);
-          return;
-        }
-        pageProxyHandler.refresh();
-      });
+      const data = await departmentStore.removeRecord(selectedRow!.id);
+      if (!data.isSuccess) {
+        ElMessage.error(data.message);
+        return;
+      }
+      pageProxyHandler.refresh();
+      return true;
     }
   },
 });

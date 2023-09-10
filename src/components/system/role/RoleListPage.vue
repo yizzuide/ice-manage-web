@@ -2,20 +2,19 @@
   <div>
     <ListPage
       :page="rolePageConfig"
-      :page-count="roleStore.pageCount"
+      :pageCount="roleStore.pageCount"
       :total="roleStore.totalSize"
       @search="pageProxyHandler.onSearch"
       @operation="pageProxyHandler.onOperation"
-      @select-row="pageProxyHandler.onSelectRow"
-    >
+      @select-row="pageProxyHandler.onSelectRow">
       <template #additionCommand>
         <el-button
           :color="varColor.infoColor"
           style="color: white"
           @click="onAssign"
-          v-if="usePermission().test(rolePageConfig.perms.assign)"
-          >分配权限</el-button
-        >
+          v-if="usePermission().test(rolePageConfig.perms.assign)">
+          分配权限
+        </el-button>
       </template>
     </ListPage>
     <DataDialog
@@ -27,23 +26,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { ElMessage } from "element-plus";
-import varColor from "@/styles/define.module.scss";
-import ListPage from "@/components/views/ListPage.vue";
-import DataDialog from "@/components/views/DataDialog.vue";
-import { roleListPageConfig } from "./config/role-list-page";
-import {
-  assignDialogConfig,
-  RolePerm,
-  initDialogData as initAssignDialogData,
-} from "./config/assign-data-dialog";
-import { Role, useRoleStore } from "./store/roleStore";
-import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
-import { ModifierRole } from "./config/role-data-dialog";
-import { useUsersStore } from "../user/store/usersStore";
 import usePermission from "@/components/login/hooks/usePermission";
+import DataDialog from "@/components/views/DataDialog.vue";
+import ListPage from "@/components/views/ListPage.vue";
+import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
+import varColor from "@/styles/define.module.scss";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { ref } from "vue";
 import { useMenuStore } from "../menu/store/menuStore";
+import { useUsersStore } from "../user/store/usersStore";
+import {
+RolePerm,
+assignDialogConfig,
+initDialogData as initAssignDialogData,
+} from "./config/assign-data-dialog";
+import { roleListPageConfig } from "./config/role-list-page";
+import { Role, useRoleStore } from "./store/roleStore";
 
 const rolePageConfig = ref(roleListPageConfig);
 const showAssignDialog = ref(false);
@@ -53,18 +51,10 @@ const roleStore = useRoleStore();
 const usersStore = useUsersStore();
 const menuStore = useMenuStore();
 
-const pageProxyHandler = usePageProxyHandler<ModifierRole, Role>({
+const pageProxyHandler = usePageProxyHandler<Role, Role>({
   init() {
-    if (!usersStore.usersAllSource.length) {
-      usersStore.fetchAll().then(() => pageProxyHandler.refresh());
-    }
-    if (!menuStore.menusAllSource.length) {
-      menuStore
-        .fetchAll()
-        .then(() =>
-          initAssignDialogData(assignConfig, menuStore.menusAllSource)
-        );
-    }
+    usersStore.fetchAll().then(() => pageProxyHandler.refresh());
+    menuStore.fetchAll().then(() => initAssignDialogData(assignConfig, menuStore.menusAllSource));
   },
   onSearch(searchParams, tableData) {
     roleStore
@@ -77,35 +67,41 @@ const pageProxyHandler = usePageProxyHandler<ModifierRole, Role>({
       })
       .then(() => (tableData.value = roleStore.roleList));
   },
-  onOperation(name, dialogConfig, selectedRow?) {
+  async onOperation(name, dialogConfig, selectedRow?) {
     const config = dialogConfig.value;
     if (name === "add") {
       config.title = "添加角色";
       config.request.url = "/api/manage/role/add";
       config.request.method = "post";
-      config.model = <ModifierRole>{};
+      config.model = <Role>{};
       return;
     }
     if (name == "edit") {
+      if (selectedRow?.id === 1) {
+        ElMessageBox.confirm("超级管理员不能修改角色！");
+        selectedRow!.canceled = true;
+        return;
+      }
       config.title = "修改角色";
       config.request.url = "/api/manage/role/update";
       config.request.method = "put";
       const { createUser, createTime, ...updateParams } = selectedRow!;
-      config.model = updateParams as ModifierRole;
+      config.model = updateParams;
       return;
     }
     if (name == "remove") {
       if (selectedRow!.id === 1) {
-        ElMessage.warning("超级管理员角色不能删除！");
+        ElMessageBox.confirm("超级管理员角色不能删除！");
+        selectedRow!.canceled = true;
         return;
       }
-      roleStore.removeRecord(selectedRow!.id).then((data) => {
-        if (!data.isSuccess) {
-          ElMessage.error(data.message);
-          return;
-        }
-        pageProxyHandler.refresh();
-      });
+      const data = await roleStore.removeRecord(selectedRow!.id);
+      if (!data.isSuccess) {
+        ElMessage.error(data.message);
+        return;
+      }
+      pageProxyHandler.refresh();
+      return true;
     }
   },
 });
@@ -116,8 +112,11 @@ async function onAssign() {
     ElMessage.warning("请选择角色！");
     return;
   }
+  if (currentSelectedRole.id === 1) {
+    ElMessageBox.confirm("超级管理员不需要分配权限！");
+    return;
+  }
   const permIds = await roleStore.findPermIds(currentSelectedRole.id);
-  console.log("permIds", permIds);
   assignConfig.value.model = <RolePerm>{
     roleId: currentSelectedRole.id,
     permIds,

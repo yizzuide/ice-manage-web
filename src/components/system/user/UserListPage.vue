@@ -2,7 +2,7 @@
   <div>
     <ListPage
       :page="userPageConfig"
-      :page-count="usersStore.pageCount"
+      :pageCount="usersStore.pageCount"
       :total="usersStore.totalSize"
       @search="pageProxyHandler.onSearch"
       @operation="pageProxyHandler.onOperation"
@@ -27,26 +27,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import varColor from "@/styles/define.module.scss";
-import ListPage from "@/components/views/ListPage.vue";
-import DataDialog from "@/components/views/DataDialog.vue";
-import {
-  ModifierUser,
-  initDialogData as initUserDialogData,
-} from "./config/user-data-dialog";
-import {
-  assignDialogConfig,
-  UserRole,
-  initDialogData as initAssignDialogData,
-} from "./config/assign-data-dialog";
-import { userListPage } from "./config/user-list-page";
-import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
-import { ElMessage } from "element-plus";
 import usePermission from "@/components/login/hooks/usePermission";
-import { User, useUsersStore } from "./store/usersStore";
 import { useDepartmentStore } from "@/components/system/department/store/departmentStore";
 import { useRoleStore } from "@/components/system/role/store/roleStore";
+import DataDialog from "@/components/views/DataDialog.vue";
+import ListPage from "@/components/views/ListPage.vue";
+import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
+import varColor from "@/styles/define.module.scss";
+import { ElMessage } from "element-plus";
+import { ref, watch } from "vue";
+import {
+UserRole,
+assignDialogConfig,
+initDialogData as initAssignDialogData,
+} from "./config/assign-data-dialog";
+import {
+ModifierUser,
+initDialogData as initUserDialogData,
+} from "./config/user-data-dialog";
+import { userListPage } from "./config/user-list-page";
+import { User, useUsersStore } from "./store/usersStore";
 
 const userPageConfig = ref(userListPage);
 const showAssignDialog = ref(false);
@@ -105,7 +105,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
       })
       .then(() => (tableData.value = usersStore.userList));
   },
-  onOperation(name, dialogConfig, selectedRow?) {
+  async onOperation(name, dialogConfig, selectedRow?) {
     const config = dialogConfig.value;
     if (name === "add") {
       config.title = "添加用户";
@@ -125,6 +125,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
       config.request.url = "/api/manage/user/update";
       config.request.method = "put";
       const {
+        password,
         departmentName,
         isAdmin,
         isEnabled,
@@ -132,7 +133,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
         ...updateParams
       } = selectedRow!;
       const autoSetDepartName = config.model.departmentName;
-      config.model = { departmentName: autoSetDepartName, ...updateParams };
+      config.model = { departmentName: autoSetDepartName, password: "********", ...updateParams };
       return;
     }
     if (name == "remove") {
@@ -140,9 +141,13 @@ const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
         ElMessage.warning("超级管理员用户不能删除！");
         return;
       }
-      usersStore
-        .removeRecord(selectedRow!.id)
-        .then(() => pageProxyHandler.refresh());
+      const data = await usersStore.removeRecord(selectedRow!.id);
+      if (!data.isSuccess) {
+        ElMessage.error(data.message);
+        return;
+      }
+      pageProxyHandler.refresh();
+      return true;
     }
   },
 });

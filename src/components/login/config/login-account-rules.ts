@@ -21,8 +21,8 @@ export const rules = {
       trigger: "blur",
     },
     {
-      pattern: /^[a-z0-9]{6,}$/,
-      message: "密码长度在6个以上！",
+      min: 6,
+      message: "密码长度为6位以上！",
       trigger: "blur",
     },
   ],
@@ -34,8 +34,8 @@ export const rules = {
       trigger: "blur",
     },
     {
-      pattern: /^[a-z0-9]{4}$/,
-      message: "验证码长度为4！",
+      pattern: /^[a-z2-9]{4}$/,
+      message: "验证码格式不正确！",
       trigger: "blur",
     },
   ],

@@ -1,4 +1,4 @@
-import { createProxy, createProxyList, ObjectProxy } from "./interfaceProxy";
+import { createProxyList, ObjectProxy } from "./interfaceProxy";
 
 /**
  * 树节点结构

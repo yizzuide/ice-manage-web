@@ -1,13 +1,15 @@
+import { Model } from "@/components/views/data-dialog";
 import { PageData, QueryPageData } from "@/http/HttpDefine";
 import request from "@/http/uniformRequest";
+import { ContentType } from "@/plugins/request";
 import { defineStore } from "pinia";
 
-export interface Role {
+export interface Role extends Model {
   id: number;
   roleCode: string;
   roleName: string;
   remark: string;
-  createUser: string;
+  createUser: number;
   createTime: string;
 }
 
@@ -24,7 +26,8 @@ export const useRoleStore = defineStore("role", {
     async fetchPage(pageData: QueryPageData<Role>) {
       return request<PageData<Role>>({
         url: "/api/manage/role/list",
-        method: "get",
+        method: "post",
+        contentType: ContentType.JSON,
         params: pageData,
         showLoading: true,
       }).then((respData) => {

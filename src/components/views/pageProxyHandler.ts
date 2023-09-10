@@ -1,6 +1,8 @@
 import { Ref } from "vue";
-import { DialogConfig, Model } from "./data-dialog";
+import { DialogConfig, Model, OperationType, LogData } from "./data-dialog";
 import { OperationNamed, SearchParams } from "./list-page";
+import useEventBus from "@/hooks/useEventBus";
+import router from "@/router";
 
 /**
  * Page处理器参数（D: Dialog模型类型，R: 表记录行的类型）
@@ -25,8 +27,8 @@ export interface PageHandlerParams<D extends Model, R> {
   onOperation?(
     name: OperationNamed,
     dialogConfig: Ref<DialogConfig<D>>,
-    selectedRow?: R
-  ): void;
+    selectedRow?: R & {canceled: boolean}
+  ): Promise<void | boolean>;
 }
 
 export const usePageProxyHandler = function <D extends Model, R>(
@@ -35,6 +37,7 @@ export const usePageProxyHandler = function <D extends Model, R>(
   let tableDataRef: Ref<Model[]>;
   let reqParams: SearchParams;
   let currentSelectedRow: R;
+  const eventBus = useEventBus();
 
   params.init && params.init();
   return {
@@ -55,9 +58,23 @@ export const usePageProxyHandler = function <D extends Model, R>(
     onOperation(
       name: OperationNamed,
       dialogConfig: Ref<DialogConfig<D>>,
-      selectedRow?: R
+      selectedRow?: R & {canceled: boolean, id:number}
     ) {
-      params.onOperation && params.onOperation(name, dialogConfig, selectedRow);
+      if (params.onOperation) {
+        params.onOperation(name, dialogConfig, selectedRow).then(res => {
+          if(res && name == "remove") {
+            // 记录del操作日志
+            const logData = <LogData>{
+              recordId: selectedRow?.id,
+              pageName: router.currentRoute.value.meta.title,
+              type: OperationType.DELETE,
+              beforeValue: JSON.stringify(selectedRow),
+              afterValue: "",
+            };
+            eventBus.emit("operationLog", logData);
+          }
+        });
+      }
     },
   };
 };

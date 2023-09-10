@@ -2,19 +2,19 @@
   <ListPage
     :page="menuListPage"
     :total="menuStore.totalSize"
-    :page-count="menuStore.pageCount"
+    :pageCount="menuStore.pageCount"
     @search="pageProxyHandler.onSearch"
     @operation="pageProxyHandler.onOperation">
     </ListPage>
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from "element-plus";
 import ListPage from "@/components/views/ListPage.vue";
-import { menuListPage } from "./config/menu-list-page";
-import { ModifierMenu } from "./config/menu-data-dialog";
-import { Menu, useMenuStore } from "./store/menuStore";
 import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
+import { ElMessage } from "element-plus";
+import { ModifierMenu } from "./config/menu-data-dialog";
+import { menuListPage } from "./config/menu-list-page";
+import { Menu, useMenuStore } from "./store/menuStore";
 
 const menuStore = useMenuStore();
 
@@ -32,22 +32,28 @@ const pageProxyHandler = usePageProxyHandler<ModifierMenu, Menu>({
       })
       .then(() => (tableData.value = menuStore.menuList));
   },
-  onOperation(name, dialogConfig, selectedRow?) {
+  async onOperation(name, dialogConfig, selectedRow?) {
     const config = dialogConfig.value;
     if (name === "add") {
       config.title = "添加菜单";
+      config.desc = "添加子菜单前，需要先选中一个菜单！";
       config.request.url = "/api/manage/menu/add";
-      config.model = <Menu>{};
-      config.model.order = 0;
-      (config.model.parentId = 0), (config.model.parentName = "");
+      config.request.method = "post";
+      config.model = <Menu>{
+        parentId: 0,
+        parentName: "",
+        order: 0
+      };
       if (selectedRow) {
         config.model.parentName = selectedRow.label;
         config.model.parentId = selectedRow.id;
       }
+      
       return;
     }
     if (name == "edit") {
       config.title = "修改菜单";
+      config.desc = "";
       config.request.url = "/api/manage/menu/update";
       config.request.method = "put";
       // 复制对象属性过滤之：解构剩余参数（适用于排除的参数小于5个）
@@ -57,13 +63,13 @@ const pageProxyHandler = usePageProxyHandler<ModifierMenu, Menu>({
       return;
     }
     if (name == "remove") {
-      menuStore.removeRecord(selectedRow!.id).then((data) => {
-        if (!data.isSuccess) {
-          ElMessage.error(data.message);
-          return;
-        }
-        pageProxyHandler.refresh();
-      });
+      const data = await menuStore.removeRecord(selectedRow!.id);
+      if (!data.isSuccess) {
+        ElMessage.error(data.message);
+        return;
+      }
+      pageProxyHandler.refresh();
+      return true;
     }
   },
 });

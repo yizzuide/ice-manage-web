@@ -1,16 +1,9 @@
 import { DialogConfig } from "@/components/views/data-dialog";
-import { Model } from "echarts";
+import { Role } from "../store/roleStore";
 
-export interface ModifierRole extends Model {
-  id?: number;
-  roleCode: string;
-  roleName: string;
-  remark: string;
-}
-
-export const roleDialogConfig: DialogConfig<ModifierRole> = {
+export const roleDialogConfig: DialogConfig<Role> = {
   title: "",
-  model: <ModifierRole>{},
+  model: <Role>{},
   request: {
     url: "",
     method: "post",

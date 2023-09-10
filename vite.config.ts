@@ -40,10 +40,7 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
       },
     },
     plugins: [
-      vue({
-        // Applies to SFCs and js(x)/ts(x) files.
-        reactivityTransform: true,
-      }),
+      vue(),
       // jsx render
       vueJsx(),
       // svg-loader

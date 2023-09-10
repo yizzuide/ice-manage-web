@@ -61,12 +61,12 @@ export default defineStore("user", {
             icon: "Odometer",
             routeName: "dashboard",
             routePath: "/index/dashboard",
-            componentPath: "/home/DashboardPage",
+            componentPath: /* "/home/DashboardPage" */ "/home/WelcomePage",
             // API返回的菜单列表第一个从0开始
             order: -1,
           } as Menu);
+          // 更新菜单排序值
           for (const menu of this.menuList) {
-            // 更新菜单排序值
             menu.order = menu.order + 1;
           }
         },

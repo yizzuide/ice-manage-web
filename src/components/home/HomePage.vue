@@ -20,12 +20,12 @@
         </el-scrollbar>
       </el-aside>
       <el-container class="body">
-        <el-header>
+        <el-header @click="() => $eventBus.emit('unselect')">
           <HeaderContent @change="(isExpand) => (isMenuCollapse = !isExpand)">
             <Breadcrumb></Breadcrumb>
           </HeaderContent>
         </el-header>
-        <nav>
+        <nav @click="() => $eventBus.emit('unselect')">
           <Tags></Tags>
         </nav>
         <el-scrollbar>
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref,onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import varColor from "@/styles/define.module.scss";
@@ -59,6 +59,9 @@ import HeaderContent from "./views/HeaderContent.vue";
 import Breadcrumb from "./views/Breadcrumb.vue";
 import Tags from "./views/Tags.vue";
 import useAliveRouteNames from "@/hooks/useAliveRouteNames";
+import useEventBus from "@/hooks/useEventBus";
+
+
 
 const keepAliveList = useAliveRouteNames();
 const userStore = useUserStore();
@@ -67,6 +70,9 @@ const homeStore = useHomeStore();
 const isMenuCollapse = ref(false);
 //const selectedMenuIndex = ref<string>(homeStore.selectedMenuIndex);
 const { selectedMenuIndex } = storeToRefs(homeStore);
+
+// 监听取消选择行事件，取消单行选择
+const eventBus = useEventBus();
 
 // 刷新时初始化为上次浏览的路由路径
 const route = useRoute();
@@ -96,8 +102,8 @@ function menuSelect(index: string) {
       user-select: none;
     }
     .el-aside {
-      // 内容不滚动
-      overflow-y: hidden;
+      // 显示滚动类型
+      //overflow-y: hidden;
       scrollbar-width: none;
       -ms-overflow-style: none;
       // 宽度修改动画
@@ -132,6 +138,7 @@ function menuSelect(index: string) {
     }
 
     nav {
+      width: 100%;
       min-height: 32px;
       border-bottom: 1px solid $separatorLineColor;
     }

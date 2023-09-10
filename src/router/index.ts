@@ -45,7 +45,7 @@ router.beforeEach(async (to, from) => {
       }
     }
 
-    // add Routes
+    // add Routes when had login before 
     const added = addDynamicRoute();
 
     // redirect auth user from login to index/dashboard

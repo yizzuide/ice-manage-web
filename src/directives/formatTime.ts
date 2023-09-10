@@ -33,6 +33,8 @@ export function formatUtc(time: string, pattern?: string) {
 
 export function formatTimestamp(time: string | number, pattern?: string) {
   if (time == null) return "";
+  //已经格式化
+  if(time.toString().indexOf("-") != -1)  return time.toString();
   // 转为数字
   let timestamp = (
     typeof time === "string" ? parseInt(time as string) : time

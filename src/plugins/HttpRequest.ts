@@ -1,12 +1,12 @@
-import axios, { AxiosResponse, AxiosInstance, AxiosRequestHeaders } from "axios";
-import {
-  RequestConfig,
+import axios, { AxiosInstance, AxiosRequestHeaders, AxiosResponse } from "axios";
+import qs from "qs";
+import type {
   IHttpRequest,
+  RequestConfig,
   RequestInterceptor,
   SimpleRequestConfig,
-  ContentType,
 } from "./request";
-import qs from "qs";
+import {ContentType} from "./request";
 
 export default class HttpRequest implements IHttpRequest {
   static globalInterceptor?: RequestInterceptor;
@@ -71,6 +71,7 @@ export default class HttpRequest implements IHttpRequest {
         config.data = qs.stringify(config.data, {
           // array params -> comma(xx,xx...)
           arrayFormat: "comma",
+          // p[attr] -> p.attr
           allowDots: true
         });
       }

@@ -20,21 +20,24 @@ export interface SearchItem {
   prop: string;
   // 输入框绑定属性参数
   inputSettings?: Record<string, any>;
-  // select选择框
+  // select选择框是否支持过滤
+  selectFilterable?: boolean;
+  // select选择框选项列表
   selectOptions?: SelectOptions[];
 }
 
-export interface TableItem<T> {
+export interface TableItem<T extends Model> {
   prop: string;
   label: string;
   width?: number;
   slotName?: string;
-  format?: (row: T) => string;
+  type?: string,
+  format?: (row: T) => any;
 }
 
 export interface Page<T extends Model> {
-  // 默认为normal（支持add/edit/remove），readonly方式为自定义（slot=command/operation）
-  type?: "normal" | "readonly";
+  // 默认为normal（支持add/edit/remove），audit为审计类型（仅支持修改），readonly方式为自定义（slot=command/operation）
+  type?: "normal" | "audit" | "readonly";
   // 动作权限
   perms: {
     add?: string;
@@ -45,6 +48,7 @@ export interface Page<T extends Model> {
   };
   // 页面结构
   struct: {
+    // 搜索行
     search: {
       // 是否需要自定义（添加slot="search"），默认为false
       custom?: boolean;
@@ -52,8 +56,12 @@ export interface Page<T extends Model> {
     };
     command?: {
       add?: {
-        label: string;
+        label?: string;
       };
+      export?: {
+        label?: string;
+        fileName: string;
+      }
     };
     table: {
       // 是否展开子项
@@ -65,6 +73,7 @@ export interface Page<T extends Model> {
       operationColumnWidth?: number;
       items: TableItem<T>[];
     };
-    dialogConfig?: DialogConfig<T>;
+    // 提交数据对话框
+    dialogConfig?: DialogConfig<T>
   };
 }

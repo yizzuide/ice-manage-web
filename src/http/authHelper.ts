@@ -3,14 +3,15 @@ import router from "@/router";
 import { ElMessage } from "element-plus";
 import { toNumber } from "lodash";
 
+const tokenName: string = import.meta.env.__TOKEN_NAME;
 const localStorage = useLocalStorage();
 
 export function getToken(): string {
-  return localStorage.get("token");
+  return localStorage.get(tokenName);
 }
 
 export function setToken(token: string) {
-  localStorage.set("token", token);
+  localStorage.set(tokenName);
 }
 
 export function checkAuthFail(code: number) {

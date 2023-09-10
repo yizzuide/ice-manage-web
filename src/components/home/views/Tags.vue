@@ -7,9 +7,8 @@
       :closable="tag.closable"
       @close.stop="removeTag(tag.path)"
       @click="selectTag(tag.path)"
-      >{{ tag.title }}</el-tag
-    >
-  </div>
+      >{{ tag.title }}</el-tag>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -85,6 +84,7 @@ watch(
     user-select: none;
     margin-right: 15px;
   }
+
   .el-tag:hover {
     border: 1px solid $textHighBrightColor;
   }

@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { RouteTagInfo } from "../types/route-info";
+import request from "@/http/uniformRequest";
+
 
 const localStorage = useLocalStorage();
 
