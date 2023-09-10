@@ -61,7 +61,7 @@ export default defineStore("user", {
             icon: "Odometer",
             routeName: "dashboard",
             routePath: "/index/dashboard",
-            componentPath: /* "/home/DashboardPage" */ "/home/WelcomePage",
+            componentPath: "/home/DashboardPage",
             // API返回的菜单列表第一个从0开始
             order: -1,
           } as Menu);

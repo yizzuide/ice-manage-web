@@ -2,7 +2,7 @@
   <div class="logo">
     <img src="@/assets/menu_logo.png" />
     <transition @enter="enterAnimate" @leave="leaveAnimate" :css="false">
-      <span class="title" v-if="!collapse">FuturePi管理平台</span>
+      <span class="title" v-if="!collapse">Ice管理平台</span>
     </transition>
   </div>
   <div class="divider"></div>
