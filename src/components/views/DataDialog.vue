@@ -6,15 +6,23 @@
       <div class="dialog-desc" v-if="config.desc">{{ config.desc }}</div>
     </template>
     <el-form :model="model" :rules="config.rules" ref="formRef">
-      <div v-for="item in config.board" :key="item.fieldName">
-        <el-form-item :label="item.label" :prop="item.fieldName" label-width="160px">
-          <el-input :type="item.multiple ? 'textarea' : 'text'" v-model="model[item.fieldName]"
+      <div v-for="item in config.board" :key="item.fieldName"
+      :style="dialogItemStyle(item)">
+        <el-form-item :label="item.label" :prop="item.fieldName" :label-width="item.layoutInline ? (item.layoutInlineStart ? '200px' : '0px') : '200px'">
+          <div v-if="item.type === 'label'"></div>
+          <el-input
+            :type="item.multiple ? 'textarea' : 'text'"
+            v-model="model[item.fieldName]"
             :show-password="item.isPassword"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
-            :autosize="item.multiple && { minRows: 3 }" autocomplete="off" clearable style="width: 300px" v-if="(!item.type || item.type == 'text') &&
+            :autosize="item.multiple && { minRows: 3 }" autocomplete="off" clearable style="width: 300px"
+            v-else-if="(!item.type || item.type == 'text') &&
               (item.displayTest
                 ? item.displayTest(getOpsType(), model as T) : true)" />
-          <el-input-number v-model="model[item.fieldName]" :controls-position="item.numberUsedMill ? 'right' : ''"
+          <el-input-number
+            v-model="model[item.fieldName]"
+            v-bind="item.customProps"
+            :controls-position="item.numberUsedMill ? 'right' : ''"
             :min="item.numberMin ?? 0"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             v-else-if="item.type == 'number'" @change="inputChange($event, item)" />
@@ -24,11 +32,21 @@
             <el-option v-for="opt in item.selectOptions" :key="opt.value" :label="opt.label" :value="opt.value"
               :disabled="opt.displayTest ? !opt.displayTest(getOpsType(), model) : false" />
           </el-select>
-          <el-cascader :options="item.selectOptions" v-model="model[item.fieldName]" v-bind="item.customProps"
+          <el-checkbox
+            v-model="model[item.fieldName]"
+            v-bind="item.customProps"
+            :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
+            v-else-if="item.type == 'checkbox'">
+            {{ "" }}
+          </el-checkbox>
+          <el-cascader
+            :options="item.selectOptions"
+            v-model="model[item.fieldName]"
+            v-bind="item.customProps"
             :props="getCascaderProps(item)"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             clearable v-else-if="item.type == 'cascaded'" style="width: 300px"
-            :separator="item.separator ? item.separator : '/'" />
+            :separator="item.cascadedSeparator ? item.cascadedSeparator : '/'" />
           <el-color-picker v-model="model[item.fieldName]" v-else-if="item.type == 'colorPicker'" />
           <el-date-picker v-model="model[item.fieldName]" type="date" placeholder="选择日期" format="YYYY 年 MM 月 DD 日"
             :default-value="dayjs().toDate()" :value-format="item.dateValueFormat" v-else-if="item.type == 'datePicker'">
@@ -81,14 +99,6 @@
           <el-radio-group v-model="model[item.fieldName]" :disabled="item.isDisable" v-else-if="item.type == 'radio'">
             <el-radio :label="opt.value" v-for="opt in item.selectOptions" v-bind:key="opt.value">{{ opt.label }}</el-radio>
           </el-radio-group>
-          <div v-else-if="item.type == 'noBorderText'" class="no-border-text">
-            <ul>
-              <li v-for="option in item.textOptions" v-bind:key="option.value">
-                <span class="first-span">{{ option.label }}</span>
-                <span>{{ option.value }}</span>
-              </li>
-            </ul>
-          </div>
         </el-form-item>
       </div>
     </el-form>
@@ -104,17 +114,17 @@
 </template>
 
 <script setup lang="ts" generic="T extends Model">
-import { ref, watch, nextTick } from "vue";
-import { Plus } from "@element-plus/icons-vue";
-import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import JsonEditor from "vue3-ts-jsoneditor";
-import dayjs from "dayjs";
-import { Board, DialogConfig, Model, OperationType, LogData } from "./data-dialog";
+import useEventBus from "@/hooks/useEventBus";
 import request from "@/http/uniformRequest";
 import { ContentType } from "@/plugins/request";
+import { Plus } from "@element-plus/icons-vue";
+import dayjs from "dayjs";
+import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
 import { isFunction } from "lodash";
-import useEventBus from "@/hooks/useEventBus";
+import { nextTick, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import JsonEditor from "vue3-ts-jsoneditor";
+import { Board, DialogConfig, LogData, Model, OperationType } from "./data-dialog";
 
 
 const route = useRoute();
@@ -156,21 +166,35 @@ watch(
     origModel = { ...newModel };
   });
 
-function getCascaderProps(item: Board<any>) {
+
+function dialogItemStyle(item: Board<T>) {
+  let style: any = {};
+  if (item.layoutInline) {
+    style.display = "inline-block";
+    style["margin-right"] = `${item.layoutInlineMarginRight ?? 50}px`;
+  }
+  if (item.layoutHeight) {
+    style.height = `${item.layoutHeight}px`;
+  }
+  return style;
+}
+
+function getCascaderProps(item: Board<T>) {
   if (item.multiple) {
     return { multiple: true };
   }
-  //替换value值为label
-  if (item.setValue) {
+
+  // 替换Value值为Label
+  if (item.cascadedLabelAsValue) {
     return {
+       // 单选时，不关联父节点
       checkStrictly: true,
       value: "label",
     };
   }
-  // 单选时，不关联父节点
+
   return {
     checkStrictly: true,
-    value: "label"
   };
 }
 
@@ -219,12 +243,18 @@ function doConform() {
       return;
     }
 
+    let requestData = model.value;
+    if (props.config.request.requestDataFormat) {
+      requestData = props.config.request.requestDataFormat(model.value as T);
+    }
+
     request({
       url: props.config.request.url,
       method: props.config.request.method,
-      params: model.value,
+      params: requestData,
       contentType: props.config.request.type ?? ContentType.JSON,
       showLoading: true,
+      interceptor: props.config.request.interceptor
     }).then((respData) => {
       let hasError = !respData.isSuccess;
       if (hasError) {
@@ -265,10 +295,12 @@ function hide(conform: boolean, conformWithError: boolean) {
   emit("close", conform, conformWithError);
 }
 
-function inputChange(value: any, item: { fieldName: string | number; }) {
-  nextTick(() => {
-    model.value[item.fieldName] = parseInt(value);
-  });
+function inputChange(value: any, item: Board<T>) {
+  if (item.numberFormatInt) {
+    nextTick(() => {
+      model.value[item.fieldName] = parseInt(value);
+    });
+  }
 }
 
 </script>
@@ -289,43 +321,6 @@ function inputChange(value: any, item: { fieldName: string | number; }) {
 
 .dialog-footer button:first-child {
   margin-right: 10px;
-}
-
-.no-border-text {
-  width: 300px;
-
-  ul {
-    display: flex;
-    padding: 0;
-    margin: 0;
-    flex-wrap: wrap;
-
-    li {
-      list-style: none;
-      width: 145px;
-
-      .first-span {
-        padding-right: 10px;
-      }
-    }
-  }
-}
-
-.search-table {
-  .selected-num {
-    margin-bottom: 4px;
-  }
-
-  .search-box {
-    display: flex;
-    align-items: center;
-
-  }
-
-  .btns {
-    display: flex;
-    margin-left: 10px;
-  }
 }
 
 .image-uploader {

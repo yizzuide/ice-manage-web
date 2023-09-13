@@ -1,4 +1,4 @@
-import { ContentType } from "@/plugins/request";
+import { ContentType, RequestInterceptor } from "@/plugins/request";
 import { UploadFile, UploadRawFile } from "element-plus";
 import { Ref } from "vue";
 
@@ -34,19 +34,26 @@ export interface UploadSettings {
   imageURL?: string;
   handleSuccess: (response: any, file: UploadFile) => void;
   beforeUpload?: (rawFile: UploadRawFile) => boolean;
-  handleProcess?:(event:any, file:UploadFile)=> void;
+  handleProcess?:(event: any, file: UploadFile)=> void;
 }
 
 export interface Board<T> {
   label: string;
   fieldName: string;
   // text is default
-  type?: "text" | "textarea" | "number" | "select" | "cascaded" | "colorPicker" | "datePicker" | "timeSelect" | "imageUpload" | "jsonEditor" | "radio" | "videoUpload" | "audioUpload" | "noBorderText";
+  type?: "label" | "text" | "textarea" | "number" | "select" | "checkbox" | "cascaded" | "colorPicker" | "datePicker" | "timeSelect" | "imageUpload" | "jsonEditor" | "radio" | "videoUpload" | "audioUpload";
+  layoutHeight?: number;
+  // 并行显示
+  layoutInline?: boolean;
+  layoutInlineStart?: boolean;
+  layoutInlineMarginRight?: number;
   isDisable?: boolean;
   // 是否为密码框（type='text'）
   isPassword?: boolean;
   // 支持多行输入框（type='text'）| 多选选择框（type='select'）| 级联选择框（type='cascaded'）
   multiple?: boolean;
+  // 数字格式为整数
+  numberFormatInt?: boolean;
   // 数字用于毫秒（type='number'）
   numberUsedMill?: boolean;
   // 最小数字（type='number'）
@@ -57,23 +64,21 @@ export interface Board<T> {
   selectOptions?: SelectOptions[];
   // selectOptions 默认选则
   defaultValue?: boolean,
+  // cascaded label作为值
+  cascadedLabelAsValue?: boolean,
+  //cascaded 用于分隔选项的字符
+  cascadedSeparator?: string;
   // text列表（type='textOption'）
   textOptions?: SelectOptions[];
-  //table列表
-  tableList?: tableList[],
-  setValue?: boolean,
   // date值类型（type='datePicker'）
   dateValueFormat?: string;
   // time类型（type='timeSelect'）
   timeStep?: string;
   // 上传配置
   uploadSettings?: UploadSettings;
-  // inputUnit (inputUnit = '元')
-  inputUnit?: string;
   // 自定义属性配置
   customProps?: any;
-  //cascaded 用于分隔选项的字符
-  separator?: string;
+
   // 显示判断，返回true则显示（type='text'）
   displayTest?: (operationType: OperationType, row: T) => boolean;
   // 禁用判断，返回true则禁用
@@ -95,6 +100,8 @@ export interface DialogConfig<T extends Model> {
     method: "get" | "post" | "put";
     type?: ContentType;
     ignoreEmitLog?: boolean;
+    interceptor?: RequestInterceptor;
+    requestDataFormat?: (data: T) => any;
   };
 }
 

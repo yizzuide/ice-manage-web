@@ -85,6 +85,10 @@ function onLogout() {
   color: white;
 }
 
+.el-dropdown-link:focus {
+  outline: none;
+}
+
 .el-dropdown-link {
   cursor: pointer;
   color: var(--el-color-primary);
