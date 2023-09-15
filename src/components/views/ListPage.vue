@@ -157,7 +157,7 @@
 import varColor from "@/styles/define.module.scss";
 import { Delete, Edit, Plus, Refresh, Search, Download } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox, ElTable } from "element-plus";
 import { Ref, nextTick, onMounted, ref } from "vue";
 import usePermission from "../login/hooks/usePermission";
 import DataDialog from "./DataDialog.vue";
@@ -168,6 +168,7 @@ import * as XLSX from "xlsx";
 
 // 定义可取消的行类型
 type CancelableRow = T & {canceled: boolean};
+type ListTable = InstanceType<typeof ElTable>;
 
 // 声明组件选项
 defineOptions({
@@ -182,13 +183,13 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  search: [searchParams: SearchParams, tableData: Ref<T[]>],
+  search: [searchParams: SearchParams, tableData: Ref<T[]>, table: Ref<ListTable>],
   // 操作事件（selectedRow：除了name="add"时为空，其它都有值）
   operation: [name: OperationNamed, dialogConfig: Ref<DialogConfig<T>>, selectedRow?: CancelableRow],
   selectRow: [selectedRow: T]
 }>();
 
-const listTable = ref();
+const listTable = ref<ListTable>();
 const tableData = ref<T[]>([]);
 const preTableData= ref<T[]>([]);
 const selectedRow = ref<T>();
@@ -219,7 +220,7 @@ function search() {
   Object.keys(searchParams.value)
     .filter((k) => searchParams.value[k] === "")
     .forEach((k) => (searchParams.value[k] = undefined));
-  emit("search", searchParams.value, tableData);
+  emit("search", searchParams.value, tableData, listTable as any);
 }
 
 function resetSearch() {
@@ -280,7 +281,7 @@ function onDialogClose(conform: boolean, conformWithError: boolean) {
 // npm install --save xlsx file-saver
 // npm i --save-dev @types/file-saver
 function onExport() {
-  const selectList = listTable.value.getSelectionRows();
+  const selectList = listTable.value?.getSelectionRows();
   if(!selectList || !selectList.length) {
     ElMessage.warning("请先选择导出的行！");
     return;

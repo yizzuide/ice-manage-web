@@ -3,6 +3,7 @@ import { DialogConfig, Model, OperationType, LogData } from "./data-dialog";
 import { OperationNamed, SearchParams } from "./list-page";
 import useEventBus from "@/hooks/useEventBus";
 import router from "@/router";
+import { ElTable } from "element-plus";
 
 /**
  * Page处理器参数（D: Dialog模型类型，R: 表记录行的类型）
@@ -34,6 +35,7 @@ export interface PageHandlerParams<D extends Model, R> {
 export const usePageProxyHandler = function <D extends Model, R>(
   params: PageHandlerParams<D, R>
 ) {
+  let tableRef: Ref<InstanceType<typeof ElTable>>;
   let tableDataRef: Ref<Model[]>;
   let reqParams: SearchParams;
   let currentSelectedRow: R;
@@ -44,15 +46,21 @@ export const usePageProxyHandler = function <D extends Model, R>(
     getCurrentSelectedRow() {
       return currentSelectedRow;
     },
+    getTableRef() {
+      return tableRef;
+    },
     refresh() {
       this.onSearch(reqParams, tableDataRef);
     },
     onSelectRow(selectedRow: Model) {
       currentSelectedRow = selectedRow as R;
     },
-    onSearch(searchParams: SearchParams, tableData: Ref<Model[]>) {
+    onSearch(searchParams: SearchParams, tableData: Ref<Model[]>, table?: Ref<InstanceType<typeof ElTable>>) {
       reqParams = searchParams;
       tableDataRef = tableData;
+      if(table) {
+        tableRef = table;
+      }
       params.onSearch(searchParams as SearchParams & R, tableData);
     },
     onOperation(
