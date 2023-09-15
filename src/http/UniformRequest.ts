@@ -3,6 +3,7 @@ import { SimpleRequestConfig } from "@/plugins/request";
 import { checkAuthFail } from "./authHelper";
 import { HttpResult } from "./HttpDefine";
 import { useRequest } from "./Request";
+import { ElMessage } from "element-plus";
 
 interface CachedLocalConfig<T> {
   cachedName: string;
@@ -64,9 +65,13 @@ export default function request<T>(
       .then((data) => {
         if(data == undefined) {
           reject({ code: -1, isSuccess: false, message: "响应数据错误！" });
+          return;
         }
         data.isSuccess = data.code == 0;
         if (checkAuthFail(data.code)) {
+          if(!data.isSuccess) {
+            ElMessage.error(data.message);
+          }
           resolve(data);
         } else {
           reject(data);
