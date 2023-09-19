@@ -1,6 +1,6 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { SimpleRequestConfig } from "@/plugins/request";
-import { checkAuthFail } from "./authHelper";
+import { checkAuthFail, checkResponse } from "./authHelper";
 import { HttpResult } from "./HttpDefine";
 import { useRequest } from "./Request";
 import { ElMessage } from "element-plus";
@@ -63,8 +63,8 @@ export default function request<T>(
     useRequest()
       .request<HttpResult<T>>(requestConfig)
       .then((data) => {
-        if(data == undefined) {
-          reject({ code: -1, isSuccess: false, message: "响应数据错误！" });
+        if(!checkResponse(data)) {
+          reject(data);
           return;
         }
         data.isSuccess = data.code == 0;

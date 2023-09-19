@@ -14,6 +14,16 @@ export function setToken(token: string) {
   localStorage.set(tokenName);
 }
 
+export function checkResponse(data: any) {
+  if (data == undefined) {
+    router.replace({ name: "login" }).then(() => {
+      ElMessage.error("登录时间过期，请重新登录！");
+    });
+    return false;
+  }
+  return true;
+}
+
 export function checkAuthFail(code: number) {
   // auth fail code，back to login page.
   if (code == 401) {

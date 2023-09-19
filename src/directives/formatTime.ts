@@ -1,10 +1,12 @@
 import { Directive, DirectiveBinding, VueElement } from "vue";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import duration from "dayjs/plugin/duration";
 import { DirectiveTuple } from "./tuple";
 
 // dayjs支持utc格式
 dayjs.extend(utc);
+dayjs.extend(duration);
 
 const DEFAULT_PATTERN = "YYYY-MM-DD HH:mm:ss";
 const UTC_REG = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$/;
@@ -45,4 +47,14 @@ export function formatTimestamp(time: string | number, pattern?: string) {
   }
   pattern = pattern ?? DEFAULT_PATTERN;
   return dayjs(timestamp).format(pattern);
+}
+
+export function formatDuration(time: string | number) {
+  if (!time || time === "") {
+    return "";
+  }
+  const startTime = dayjs(time);
+  const now = dayjs();
+  const duration = dayjs.duration(now.diff(startTime));
+  return duration.format("D[天]H[小时]m[分钟]s[秒]").replace(/^0天|0小时|0分/, "").replace(/^0小时|0分/, "").replace(/^0分/, "");
 }

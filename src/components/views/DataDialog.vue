@@ -24,6 +24,7 @@
             v-bind="item.customProps"
             :controls-position="item.numberUsedMill ? 'right' : ''"
             :min="item.numberMin ?? 0"
+            :max="item.numberMax ?? Infinity"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             v-else-if="item.type == 'number'" @change="inputChange($event, item)" />
           <el-select v-else-if="item.type == 'select'" :multiple="item.multiple" v-model="model[item.fieldName]"

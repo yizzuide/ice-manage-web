@@ -58,6 +58,7 @@ export interface Board<T> {
   numberUsedMill?: boolean;
   // 最小数字（type='number'）
   numberMin?: number;
+  numberMax?: number;
   // select可过滤（type='select'）
   selectFilterable?: boolean;
   // select可选值列表（type='select'）
