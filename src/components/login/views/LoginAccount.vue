@@ -44,7 +44,11 @@ const account = ref({
 
 const verifyCodeUrl = ref("/api/code/render");
 const refreshCode = () => {
-  verifyCodeUrl.value = verifyCodeUrl.value + "#1";
+  const paramIndex = verifyCodeUrl.value.indexOf("?");
+  if (paramIndex !== -1) {
+    verifyCodeUrl.value = verifyCodeUrl.value.substring(0, paramIndex);
+  }
+  verifyCodeUrl.value = verifyCodeUrl.value + "?" + new Date().getTime();
 };
 
 // InstanceType<typeof ElForm>: 获取ElForm的实例类型（拥有构造函数的实例）
