@@ -4,6 +4,7 @@ import { ElLoading } from "element-plus";
 import { LoadingInstance } from "element-plus/es/components/loading/src/loading";
 import { getToken, setToken } from "./authHelper";
 import { AxiosHeaders } from "axios";
+import { RequestConfig } from "@/plugins/request";
 
 let instance: HttpRequest;
 
@@ -15,8 +16,10 @@ export function useRequest(): HttpRequest {
 
 export function Request(_?: App) {
   let loading: LoadingInstance;
+  let currentConfig: RequestConfig;
   HttpRequest.setGlobalInterceptor({
     onRequest(config) {
+      currentConfig = config;
       if (config.showLoading) {
         loading = ElLoading.service({
           lock: true,
@@ -27,11 +30,15 @@ export function Request(_?: App) {
       return config;
     },
     onResponse(response) {
-      loading?.close();
+      if (currentConfig?.showLoading) {
+        loading?.close();
+      }
       return response;
     },
     onResponseCatch(error) {
-      loading?.close();
+      if (currentConfig?.showLoading) {
+        loading?.close();
+      }
       return error;
     },
   });
