@@ -281,12 +281,16 @@ function onDialogClose(conform: boolean, conformWithError: boolean) {
 // npm install --save xlsx file-saver
 // npm i --save-dev @types/file-saver
 function onExport() {
-  const selectList = listTable.value?.getSelectionRows();
+  let selectList = listTable.value?.getSelectionRows();
   if(!selectList || !selectList.length) {
     ElMessage.warning("请先选择导出的行！");
     return;
   }
   preTableData.value = tableData.value;
+  selectList = JSON.parse(JSON.stringify(selectList));
+  selectList.forEach((item: any) => {
+    item.downloading = true;
+  });
   // 将选择的行赋值给表格Data
   tableData.value = selectList;
   // 在下一个渲染周期调用

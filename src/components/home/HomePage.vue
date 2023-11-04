@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref,onMounted } from "vue";
+import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import varColor from "@/styles/define.module.scss";
