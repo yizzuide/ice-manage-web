@@ -34,7 +34,7 @@ export const rules = {
       trigger: "blur",
     },
     {
-      pattern: /^[a-z2-9]{4}$/,
+      pattern: /^[a-z0-9]{4}$/,
       message: "验证码格式不正确！",
       trigger: "blur",
     },
