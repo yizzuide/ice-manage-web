@@ -2,8 +2,6 @@
   // https://www.typescriptlang.org/tsconfig
   "compilerOptions": {
     "target": "ESNext",
-    // 是否支持类字段定义（默认为true，safari不支持类字段'='赋值）
-    "useDefineForClassFields": false,
     "module": "ESNext",
     "moduleResolution": "Node",
     "strict": true,
@@ -14,6 +12,10 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
+    // 如果使用装饰器，设置为true
+    "experimentalDecorators": true,
+    // 是否支持类字段定义（默认为true，safari不支持类字段'='赋值）
+    "useDefineForClassFields": false,
     // 设置为true时，限制this为any不明确类型时编译不通过
     "noImplicitThis": true,
     // 支持自动默认导入：* as
