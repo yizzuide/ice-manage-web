@@ -141,11 +141,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
         ElMessage.warning("超级管理员用户不能删除！");
         return;
       }
-      const data = await usersStore.removeRecord(selectedRow!.id);
-      if (!data.isSuccess) {
-        ElMessage.error(data.message);
-        return;
-      }
+      await usersStore.removeRecord(selectedRow!.id);
       pageProxyHandler.refresh();
       return true;
     }

@@ -48,7 +48,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierMenu, Menu>({
         config.model.parentName = selectedRow.label;
         config.model.parentId = selectedRow.id;
       }
-      
+
       return;
     }
     if (name == "edit") {
@@ -63,11 +63,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierMenu, Menu>({
       return;
     }
     if (name == "remove") {
-      const data = await menuStore.removeRecord(selectedRow!.id);
-      if (!data.isSuccess) {
-        ElMessage.error(data.message);
-        return;
-      }
+      await menuStore.removeRecord(selectedRow!.id);
       pageProxyHandler.refresh();
       return true;
     }

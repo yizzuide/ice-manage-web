@@ -79,12 +79,8 @@ async function loginAction(isKeepPassword: boolean) {
       account.value.password,
       account.value.code
     );
-    if (!data.isSuccess && data.message) {
-      ElMessage.error(data.message);
-    }
     return Promise.resolve(data.isSuccess);
   } catch (error) {
-    ElMessage.error((error as HttpResult<any>).message);
     return Promise.resolve(false);
   }
 }

@@ -259,7 +259,6 @@ function doConform() {
     }).then((respData) => {
       let hasError = !respData.isSuccess;
       if (hasError) {
-        ElMessage.error(respData.message);
         // 更新出错时，退出对话框
         if (opsType == OperationType.UPDATE) {
           hasError = !hasError;

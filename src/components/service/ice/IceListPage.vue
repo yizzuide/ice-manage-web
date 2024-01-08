@@ -97,9 +97,6 @@ const pageProxyHandler = usePageProxyHandler<Job, JobInspectInfo>({
         },
       })
       .then((respData) => {
-        if (!respData.isSuccess) {
-          ElMessage.error(respData.message);
-        }
         tableData.value = iceStore.jobInfoList;
       });
   },

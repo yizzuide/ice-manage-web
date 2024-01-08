@@ -220,7 +220,7 @@ function search() {
   Object.keys(searchParams.value)
     .filter((k) => searchParams.value[k] === "")
     .forEach((k) => (searchParams.value[k] = undefined));
-  emit("search", searchParams.value, tableData, listTable as any);
+  emit("search", searchParams.value, tableData as Ref<T[]>, listTable as Ref<ListTable>);
 }
 
 function resetSearch() {

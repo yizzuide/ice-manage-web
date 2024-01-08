@@ -95,11 +95,7 @@ const pageProxyHandler = usePageProxyHandler<Role, Role>({
         selectedRow!.canceled = true;
         return;
       }
-      const data = await roleStore.removeRecord(selectedRow!.id);
-      if (!data.isSuccess) {
-        ElMessage.error(data.message);
-        return;
-      }
+      await roleStore.removeRecord(selectedRow!.id);
       pageProxyHandler.refresh();
       return true;
     }

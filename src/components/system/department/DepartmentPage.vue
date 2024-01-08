@@ -68,11 +68,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierDepartment, Department>({
       return;
     }
     if (name == "remove") {
-      const data = await departmentStore.removeRecord(selectedRow!.id);
-      if (!data.isSuccess) {
-        ElMessage.error(data.message);
-        return;
-      }
+      await departmentStore.removeRecord(selectedRow!.id);
       pageProxyHandler.refresh();
       return true;
     }
