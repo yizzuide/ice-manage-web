@@ -34,7 +34,7 @@ import DataDialog from "@/components/views/DataDialog.vue";
 import ListPage from "@/components/views/ListPage.vue";
 import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
 import varColor from "@/styles/define.module.scss";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { ref, watch } from "vue";
 import {
 UserRole,
@@ -152,6 +152,10 @@ async function onAssign() {
   const currentSelectedUser = pageProxyHandler.getCurrentSelectedRow();
   if (!currentSelectedUser) {
     ElMessage.warning("请选择用户！");
+    return;
+  }
+  if (currentSelectedUser.id === 1) {
+    ElMessageBox.confirm("超级管理员不需要分配角色！");
     return;
   }
   const roleIds = await usersStore.findRoleIds(currentSelectedUser.id);

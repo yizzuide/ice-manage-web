@@ -34,7 +34,6 @@ import varColor from "@/styles/define.module.scss";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { ref } from "vue";
 import { useMenuStore } from "../menu/store/menuStore";
-import { useUsersStore } from "../user/store/usersStore";
 import {
 RolePerm,
 assignDialogConfig,
@@ -48,12 +47,10 @@ const showAssignDialog = ref(false);
 const assignConfig = ref(assignDialogConfig);
 
 const roleStore = useRoleStore();
-const usersStore = useUsersStore();
 const menuStore = useMenuStore();
 
 const pageProxyHandler = usePageProxyHandler<Role, Role>({
   init() {
-    usersStore.fetchAll().then(() => pageProxyHandler.refresh());
     menuStore.fetchAll().then(() => initAssignDialogData(assignConfig, menuStore.menusAllSource));
   },
   onSearch(searchParams, tableData) {
