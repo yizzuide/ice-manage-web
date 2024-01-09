@@ -16,9 +16,7 @@ export function setToken(token: string) {
 
 export function checkResponse(data: any) {
   if (data == undefined) {
-    router.replace({ name: "login" }).then(() => {
-      ElMessage.error("登录时间过期，请重新登录！");
-    });
+    ElMessage.error("服务器连接失败，请稍后再试！");
     return false;
   }
   return true;
