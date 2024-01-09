@@ -4,7 +4,7 @@ import request from "@/http/uniformRequest";
 import { ContentType } from "@/plugins/request";
 import { defineStore } from "pinia";
 
-export interface ProxyStoreConfig {
+export interface ProxyStoreConfig<A, G> {
   // Pinia store name
   name: string;
   // 请求模块名（如果设置，优选取这个）
@@ -17,17 +17,17 @@ export interface ProxyStoreConfig {
     findAll?: string,
     delete?: string
   };
-  // 自定义getter方法
-  getters?: () => any;
   // 自定义请求方法
-  actions?: () => any;
+  actions?: A;
+  // 自定义getter方法
+  getters?: G;
 }
 
-export function extendAction<T>(store: any) {
+export function usedAction<T>(store: any) {
   return store as T;
 }
 
-export default function usePiniaStore<T extends Model>(config: ProxyStoreConfig) {
+export default function usePiniaStore<T extends Model, A = any, G = any>(config: ProxyStoreConfig<A, G>) {
   return defineStore(`${config.name}Store`, {
     state: () => {
       return {
@@ -44,7 +44,7 @@ export default function usePiniaStore<T extends Model>(config: ProxyStoreConfig)
       async fetchPage(pageData: QueryPageData<T>) {
         return request<PageData<T>>({
           url: config.urls?.findPage || `/api/manage/${config.moduleName || config.name}/list`,
-          method: "post",
+          method: "POST",
           contentType: ContentType.JSON,
           params: pageData,
           showLoading: true,
