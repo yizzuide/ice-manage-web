@@ -73,8 +73,6 @@ export default function request<T>(
             ElMessage.error(data.message);
           }
           resolve(data);
-        } else {
-          reject(data);
         }
       })
       .catch((error) => {

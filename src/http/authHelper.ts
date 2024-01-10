@@ -14,6 +14,22 @@ export function setToken(token: string) {
   localStorage.set(tokenName);
 }
 
+export function removeToken() {
+  localStorage.remove(tokenName);
+}
+
+export function getUserId(): number {
+  return toNumber(localStorage.get("userId"));
+}
+
+export function setUserId(userId: number) {
+  localStorage.set("userId", userId);
+}
+
+export function removeUserId() {
+  localStorage.remove("userId");
+}
+
 export function checkResponse(data: any) {
   if (data == undefined) {
     ElMessage.error("服务器连接失败，请稍后再试！");
@@ -25,11 +41,10 @@ export function checkResponse(data: any) {
 export function checkAuthFail(code: number) {
   // auth fail code，back to login page.
   if (code == 401) {
-    const valid = validToken()[1];
-    if (!valid) {
-      router.replace({ name: "login" }).then(() => {});
-      return false;
-    }
+    // remove token
+    removeToken();
+    router.replace({ name: "login" }).then(() => {});
+    return false;
   }
   return true;
 }
