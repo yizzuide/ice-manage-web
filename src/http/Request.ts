@@ -16,10 +16,8 @@ export function useRequest(): HttpRequest {
 
 export function Request(_?: App) {
   let loading: LoadingInstance;
-  let currentConfig: RequestConfig;
   HttpRequest.setGlobalInterceptor({
     onRequest(config) {
-      currentConfig = config;
       if (config.showLoading) {
         loading = ElLoading.service({
           lock: true,
@@ -30,13 +28,15 @@ export function Request(_?: App) {
       return config;
     },
     onResponse(response) {
-      if (currentConfig?.showLoading) {
+      const config = response.config as RequestConfig;
+      if (config.showLoading) {
         loading?.close();
       }
       return response;
     },
     onResponseCatch(error) {
-      if (currentConfig?.showLoading) {
+      const config = error.config as RequestConfig;
+      if (config.showLoading) {
         loading?.close();
       }
       return error;
