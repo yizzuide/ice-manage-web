@@ -31,7 +31,7 @@
             placeholder="请选择" :filterable="item.selectFilterable"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'">
             <el-option v-for="opt in item.selectOptions" :key="opt.value" :label="opt.label" :value="opt.value"
-              :disabled="opt.displayTest ? !opt.displayTest(getOpsType(), model) : false" />
+              :disabled="opt.displayTest ? !opt.displayTest(getOpsType(), model as T) : false" />
           </el-select>
           <el-checkbox
             v-model="model[item.fieldName]"
@@ -122,7 +122,7 @@ import { Plus } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
 import { isFunction } from "lodash";
-import { nextTick, ref, watch } from "vue";
+import { UnwrapRef, nextTick, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import JsonEditor from "vue3-ts-jsoneditor";
 import { Board, DialogConfig, LogData, Model, OperationType } from "./data-dialog";
@@ -149,7 +149,7 @@ let origModel = { ...props.config.model };
 
 // 组件在哪里修改，就在哪里定义Ref
 const showDialog = ref(props.visible);
-const model = ref<Model>(props.config.model);
+const model = ref<T>(props.config.model as T);
 const formRef = ref<FormInstance>();
 const conformDisabled = ref(false);
 
@@ -163,7 +163,7 @@ watch(
 watch(
   () => props.config.model,
   (newModel) => {
-    model.value = newModel;
+    model.value = newModel as UnwrapRef<T>;
     origModel = { ...newModel };
   });
 
@@ -225,14 +225,14 @@ function doConform() {
     props.config.board.forEach((item) => {
       if (opsType === OperationType.UPDATE) {
         if (model.value[item.fieldName] === origModel[item.fieldName]) {
-          model.value[item.fieldName] = undefined;
+          (model.value as Model)[item.fieldName] = undefined;
           ignoreFieldCount++;
           if (ignoreFieldCount === allFieldCount) {
             needUpdate = false;
           }
         }
       }
-      item.format && (model.value[item.fieldName] = item.format(
+      item.format && ((model.value as Model)[item.fieldName] = item.format(
         model.value[item.fieldName],
         opsType,
         model as any
@@ -259,6 +259,7 @@ function doConform() {
     }).then((respData) => {
       let hasError = !respData.isSuccess;
       if (hasError) {
+        ElMessage.error(respData.message);
         // 更新出错时，退出对话框
         if (opsType == OperationType.UPDATE) {
           hasError = !hasError;
@@ -267,9 +268,9 @@ function doConform() {
         if (!props.config.request.ignoreEmitLog) {
           //记录add edit操作日志
           const logData = <LogData>{
-            recordId: origModel.id,
+            recordId: origModel.id ?? (typeof respData.data === "number" ? respData.data : null),
             pageName: route.meta.title,
-            type: OperationType.ADD,
+            type: opsType,
             beforeValue: opsType === OperationType.ADD ? "" : JSON.stringify(origModel),
             afterValue: JSON.stringify(props.config.model)
           };
@@ -298,7 +299,7 @@ function hide(conform: boolean, conformWithError: boolean) {
 function inputChange(value: any, item: Board<T>) {
   if (item.numberFormatInt) {
     nextTick(() => {
-      model.value[item.fieldName] = parseInt(value);
+      (model.value as Model)[item.fieldName] = parseInt(value);
     });
   }
 }

@@ -11,21 +11,12 @@ export enum OperationType {
   DELETE
 }
 
-export interface SelectOptions {
+export interface SelectOptions<T> {
   label: string;
   value: number | string;
-  children?: SelectOptions[];
+  children?: SelectOptions<T>[];
   // 返回true则启用
-  displayTest?: (operationType: OperationType, row: any) => boolean;
-}
-
-export interface tableList {
-  mobilePhone:string,
-  createdAt: any,
-  level: string,
-  upCounty: any,
-  // 返回true则启用
-  displayTest?: (operationType: OperationType, row: any) => boolean;
+  displayTest?: (operationType: OperationType, row: T) => boolean;
 }
 
 export interface UploadSettings {
@@ -34,7 +25,7 @@ export interface UploadSettings {
   imageURL?: string;
   handleSuccess: (response: any, file: UploadFile) => void;
   beforeUpload?: (rawFile: UploadRawFile) => boolean;
-  handleProcess?:(event: any, file: UploadFile)=> void;
+  handleProcess?:(event: ProgressEvent, file: UploadFile)=> void;
 }
 
 export interface Board<T> {
@@ -62,15 +53,13 @@ export interface Board<T> {
   // select可过滤（type='select'）
   selectFilterable?: boolean;
   // select可选值列表（type='select'）
-  selectOptions?: SelectOptions[];
-  // selectOptions 默认选则
-  defaultValue?: boolean,
+  selectOptions?: SelectOptions<T>[];
+  // selectOptions 选项默认值
+  defaultValue?: boolean;
   // cascaded label作为值
-  cascadedLabelAsValue?: boolean,
+  cascadedLabelAsValue?: boolean;
   //cascaded 用于分隔选项的字符
   cascadedSeparator?: string;
-  // text列表（type='textOption'）
-  textOptions?: SelectOptions[];
   // date值类型（type='datePicker'）
   dateValueFormat?: string;
   // time类型（type='timeSelect'）
@@ -107,9 +96,9 @@ export interface DialogConfig<T extends Model> {
 }
 
 export interface LogData {
-  recordId: number,
-  pageName: string,
-  type: OperationType,
-  beforeValue: string,
-  afterValue: string
+  recordId: number;
+  pageName: string;
+  type: OperationType;
+  beforeValue: string;
+  afterValue: string;
 }

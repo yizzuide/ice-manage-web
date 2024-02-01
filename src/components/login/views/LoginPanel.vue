@@ -45,7 +45,7 @@ async function submit() {
     const userStore = useUserStore();
     Promise.all([
       userStore.fetchUserInfo(true),
-      userStore.fetchMenuList(true),
+      userStore.fetchMenuList(false),
     ]).then(() => {
       // 添加动态路由，使其在首次生效
       routerConfig.addDynamicRoute();

@@ -19,13 +19,13 @@
           </el-menu>
         </el-scrollbar>
       </el-aside>
-      <el-container class="body">
-        <el-header @click="() => $eventBus.emit('unselect')">
+      <el-container class="body" @click="() => $eventBus.emit('unselect')">
+        <el-header>
           <HeaderContent @change="(isExpand) => (isMenuCollapse = !isExpand)">
             <Breadcrumb></Breadcrumb>
           </HeaderContent>
         </el-header>
-        <nav @click="() => $eventBus.emit('unselect')">
+        <nav>
           <Tags></Tags>
         </nav>
         <el-scrollbar>
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import varColor from "@/styles/define.module.scss";
@@ -71,8 +71,13 @@ const isMenuCollapse = ref(false);
 //const selectedMenuIndex = ref<string>(homeStore.selectedMenuIndex);
 const { selectedMenuIndex } = storeToRefs(homeStore);
 
-// 监听取消选择行事件，取消单行选择
 const eventBus = useEventBus();
+onMounted(() => {
+  eventBus.on("operationLog", (data) => {
+    // 使用自定义Action类型
+    //usedAction<LogAction>(logStore).addLogRecord(data).then((_)=>{});
+  });
+});
 
 // 刷新时初始化为上次浏览的路由路径
 const route = useRoute();

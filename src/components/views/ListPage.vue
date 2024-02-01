@@ -75,6 +75,7 @@
         row-key="id"
         :default-expand-all="!page.struct.table.disableExpandAll"
         highlight-current-row
+        @row-click="clickRow"
         @current-change="changeSelectedRow">
         <el-table-column type="selection" width="50" />
         <template v-for="item in page.struct.table.items" :key="item.prop">
@@ -167,7 +168,7 @@ import useEventBus from "@/hooks/useEventBus";
 import * as XLSX from "xlsx";
 
 // 定义可取消的行类型
-type CancelableRow = T & {canceled: boolean};
+type CancelableRow = T & { canceled: boolean };
 type ListTable = InstanceType<typeof ElTable>;
 
 // 声明组件选项
@@ -191,7 +192,7 @@ const emit = defineEmits<{
 
 const listTable = ref<ListTable>();
 const tableData = ref<T[]>([]);
-const preTableData= ref<T[]>([]);
+const preTableData = ref<T[]>([]);
 const selectedRow = ref<T>();
 const searchParams = ref<SearchParams>({
   searchIndex: 1,
@@ -240,11 +241,22 @@ function changePageIndex(index: number) {
 
 const addRow = () => {
   let row: CancelableRow | undefined = undefined;
-  if(selectedRow.value) {
+  if (selectedRow.value) {
     row = <CancelableRow>{...selectedRow.value};
   }
   emit("operation", "add", dialogConfig as Ref<DialogConfig<T>>, row);
   showDialog.value = true;
+};
+
+const clickRow = (row: T, table: ListTable, event: Event) => {
+  if (event.stopPropagation) {
+    // 标准浏览器
+    event.stopPropagation(); // 阻止事件冒泡
+    event.preventDefault(); // 阻止默认事件
+  }
+  // IE浏览器
+  //event.cancelBubble = true;
+  //event.returnValue = false;
 };
 
 const changeSelectedRow = (row: T) => {
@@ -254,7 +266,7 @@ const changeSelectedRow = (row: T) => {
 
 const handleEdit = (index: number, row: CancelableRow) => {
   emit("operation", "edit", dialogConfig as Ref<DialogConfig<T>>, row);
-  if(row.canceled) {
+  if (row.canceled) {
     return;
   }
   showDialog.value = true;
@@ -282,7 +294,7 @@ function onDialogClose(conform: boolean, conformWithError: boolean) {
 // npm i --save-dev @types/file-saver
 function onExport() {
   let selectList = listTable.value?.getSelectionRows();
-  if(!selectList || !selectList.length) {
+  if (!selectList || !selectList.length) {
     ElMessage.warning("请先选择导出的行！");
     return;
   }

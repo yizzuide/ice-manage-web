@@ -1,5 +1,5 @@
 <template>
-  <div class="tag-container">
+  <div class="tag-container" v-horizontal-scroll>
     <el-tag
       v-for="tag in tagList"
       :key="tag.path"
@@ -72,17 +72,25 @@ watch(
 
 <style scoped lang="scss">
 .tag-container {
-  height: 32px;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-shrink: 0;
   align-items: center;
   padding: 0 20px;
   overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   .el-tag {
     cursor: pointer;
     user-select: none;
     margin-right: 15px;
+    line-height: 32px;
   }
 
   .el-tag:hover {
