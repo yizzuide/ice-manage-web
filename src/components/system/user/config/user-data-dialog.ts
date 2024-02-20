@@ -30,7 +30,7 @@ export function initDialogData(
   const inputItem = userListPage.value.struct.dialogConfig?.board.find(
     (item) => item.fieldName === "departmentId"
   );
-  const recurMap = (list: Department[]): SelectOptions[] => {
+  const recurMap = (list: Department[]): SelectOptions<ModifierUser>[] => {
     return list.map((depart) => ({
       label: depart.departmentName,
       value: depart.id,

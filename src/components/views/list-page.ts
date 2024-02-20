@@ -14,7 +14,7 @@ export interface SearchParams extends Model {
   searchDate?: Date[];
 }
 
-export interface SearchItem {
+export interface SearchItem<T> {
   type: "text" | "select" | "date";
   placeholder?: string;
   prop: string;
@@ -23,7 +23,7 @@ export interface SearchItem {
   // select选择框是否支持过滤
   selectFilterable?: boolean;
   // select选择框选项列表
-  selectOptions?: SelectOptions[];
+  selectOptions?: SelectOptions<T>[];
 }
 
 export interface TableItem<T extends Model> {
@@ -31,7 +31,7 @@ export interface TableItem<T extends Model> {
   label: string;
   width?: number;
   slotName?: string;
-  type?: string,
+  type?: undefined | "image" | "audio" | "video",
   format?: (row: T) => any;
 }
 
@@ -52,7 +52,7 @@ export interface Page<T extends Model> {
     search: {
       // 是否需要自定义（添加slot="search"），默认为false
       custom?: boolean;
-      items?: SearchItem[];
+      items?: SearchItem<T>[];
     };
     command?: {
       add?: {

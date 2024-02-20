@@ -12,9 +12,8 @@
           :color="varColor.successColor"
           style="color: white"
           @click="onPush"
-          v-if="usePermission().test(icePageConfig.perms.add)"
-          >推送</el-button
-        >
+          v-permission="icePageConfig.perms.add"
+          >推送</el-button>
       </template>
       <template #needRePushColumn="{ row }">
         <el-tag effect="light" :type="row.needRePush ? 'success' : 'danger'">{{
@@ -26,14 +25,14 @@
           <el-button
             :icon="MoreFilled"
             @click="onLoadJobDetail(row)"
-            v-if="usePermission().test(icePageConfig.perms.detail)"
+            v-permission="icePageConfig.perms.detail"
           ></el-button>
           <el-button
             :icon="TopRight"
             :color="varColor.dangerColor"
             @click="onRePushJob(row)"
             :disabled="!row.rePush"
-            v-if="usePermission().test(icePageConfig.perms.update)"
+            v-permission="icePageConfig.perms.update"
           ></el-button>
         </div>
       </template>
@@ -48,7 +47,6 @@
 
 <script setup lang="ts">
 import { useDashboardStore } from "@/components/home/store/dashboardStore";
-import usePermission from "@/components/login/hooks/usePermission";
 import DataDialog from "@/components/views/DataDialog.vue";
 import ListPage from "@/components/views/ListPage.vue";
 import { usePageProxyHandler } from "@/components/views/pageProxyHandler";

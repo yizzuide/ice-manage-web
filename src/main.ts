@@ -7,10 +7,11 @@ import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import Colada, { PiniaColadaPlugin } from "colada-plugin";
 import router from "./router";
-import registerDirectives from "./directives";
 import EventBus from "./plugins/EventBus";
 import { Request } from "./http/Request";
 import { NamedIcon } from "./plugins/NamedIcon";
+import registerDirectives from "./directives";
+import registerUserDirectives from "./components/login/directives";
 
 // 导入全局样式
 import "./styles/global.scss";
@@ -22,6 +23,7 @@ const app = createApp(App);
 
 // 注册自定义指令
 registerDirectives(app);
+registerUserDirectives(app);
 
 const pinia = createPinia();
 // pinia timeline plugin (Vue Dev)

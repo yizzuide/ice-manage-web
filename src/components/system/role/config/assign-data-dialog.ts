@@ -15,7 +15,7 @@ export function initDialogData(
   const inputItem = dataConfig.value.board.find(
     (item) => item.fieldName === "permIds"
   );
-  const recurMap = (list: Menu[]): SelectOptions[] => {
+  const recurMap = (list: Menu[]): SelectOptions<RolePerm>[] => {
     return list.map((menu) => ({
       label: menu.label,
       value: menu.id,

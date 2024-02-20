@@ -12,7 +12,7 @@
           :color="varColor.infoColor"
           style="color: white"
           @click="onAssign"
-          v-if="usePermission().test(rolePageConfig.perms.assign)">
+          v-permission="rolePageConfig.perms.assign">
           分配权限
         </el-button>
       </template>
@@ -26,7 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import usePermission from "@/components/login/hooks/usePermission";
 import DataDialog from "@/components/views/DataDialog.vue";
 import ListPage from "@/components/views/ListPage.vue";
 import { usePageProxyHandler } from "@/components/views/pageProxyHandler";

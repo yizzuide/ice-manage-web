@@ -54,7 +54,8 @@
           :color="varColor.successColor"
           style="color: white"
           @click="addRow"
-          v-if="(isNormalPageType || page.struct.command?.add) && usePermission().test(page.perms.add)"
+          v-permission="page.perms.add"
+          v-if="(isNormalPageType || page.struct.command?.add)"
           >{{ page.struct.command?.add?.label ?? "新增" }}</el-button>
         <slot name="command" v-else></slot>
         <el-button
@@ -118,13 +119,14 @@
                   :icon="Edit"
                   :color="varColor.warningColor"
                   @click="handleEdit(scope.$index, scope.row)"
-                  v-if="usePermission().test(page.perms.update)">
+                  v-permission="page.perms.update">
                 </el-button>
                 <el-button
                   :icon="Delete"
                   :color="varColor.dangerColor"
                   @click="handleDelete(scope.$index, scope.row)"
-                  v-if="isNormalPageType && usePermission().test(page.perms.delete)">
+                  v-permission="page.perms.delete"
+                  v-if="isNormalPageType">
                 </el-button>
               </slot>
               <slot name="additionOperation" :row="scope.row">
@@ -147,7 +149,7 @@
     </el-card>
     <DataDialog
       :visible="showDialog"
-      :config="(dialogConfig as any)"
+      :config="dialogConfig as DialogConfig<T>"
       @close="onDialogClose"
       v-if="page.struct.dialogConfig">
     </DataDialog>
@@ -160,7 +162,6 @@ import { Delete, Edit, Plus, Refresh, Search, Download } from "@element-plus/ico
 import dayjs from "dayjs";
 import { ElMessage, ElMessageBox, ElTable } from "element-plus";
 import { Ref, nextTick, onMounted, ref } from "vue";
-import usePermission from "../login/hooks/usePermission";
 import DataDialog from "./DataDialog.vue";
 import { DialogConfig, Model } from "./data-dialog";
 import { OperationNamed, Page, SearchParams } from "./list-page";

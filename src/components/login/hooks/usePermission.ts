@@ -1,10 +1,10 @@
 import { useUserInfo } from "./useUserInfo";
 
 export default function usePermission() {
-  const perms = useUserInfo().perms;
+  const {perms, isAdmin} = useUserInfo();
   return {
     test: (perm?: string) => {
-      if (!perm) {
+      if (!perm || isAdmin) {
         return true;
       }
       return perms.includes(perm);

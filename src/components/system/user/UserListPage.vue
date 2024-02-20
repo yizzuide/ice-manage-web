@@ -13,9 +13,8 @@
           :color="varColor.infoColor"
           style="color: white"
           @click="onAssign"
-          v-if="usePermission().test(userPageConfig.perms.assign)"
-          >分配角色</el-button
-        >
+          v-permission="userPageConfig.perms.assign"
+          >分配角色</el-button>
       </template>
     </ListPage>
     <DataDialog
@@ -27,7 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import usePermission from "@/components/login/hooks/usePermission";
 import { useDepartmentStore } from "@/components/system/department/store/departmentStore";
 import { useRoleStore } from "@/components/system/role/store/roleStore";
 import DataDialog from "@/components/views/DataDialog.vue";
