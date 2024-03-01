@@ -1,7 +1,6 @@
 import useUserStore from "../store/userStore";
 
-const userStore = useUserStore();
-
 export const useUserInfo = function () {
+  const userStore = useUserStore();
   return userStore.userInfo;
 };

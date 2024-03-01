@@ -12,7 +12,6 @@
 <script setup lang="ts">
 import ListPage from "@/components/views/ListPage.vue";
 import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
-import { ElMessage } from "element-plus";
 import { ModifierDepartment } from "./config/depart-data-dialog";
 import { departListPage } from "./config/depart-list-page";
 import { Department, useDepartmentStore } from "./store/departmentStore";

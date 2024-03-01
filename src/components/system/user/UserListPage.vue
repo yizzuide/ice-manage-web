@@ -115,6 +115,8 @@ const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
       };
       if (selectedRow) {
         config.model.departmentId = selectedRow.departmentId;
+      } else {
+        config.model.departmentId = 0;
       }
       return;
     }

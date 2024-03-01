@@ -6,44 +6,33 @@
       <div class="dialog-desc" v-if="config.desc">{{ config.desc }}</div>
     </template>
     <el-form :model="model" :rules="config.rules" ref="formRef">
-      <div v-for="item in config.board" :key="item.fieldName"
-      :style="dialogItemStyle(item)">
-        <el-form-item :label="item.label" :prop="item.fieldName" :label-width="item.layoutInline ? (item.layoutInlineStart ? '200px' : '0px') : '200px'">
+      <div v-for="item in config.board" :key="item.fieldName" :style="dialogItemStyle(item)">
+        <el-form-item :label="item.label" :prop="item.fieldName"
+          :label-width="item.layoutInline ? (item.layoutInlineStart ? '200px' : '0px') : '200px'">
           <div v-if="item.type === 'label'"></div>
-          <el-input
-            :type="item.multiple ? 'textarea' : 'text'"
-            v-model="model[item.fieldName]"
+          <el-input :type="item.multiple ? 'textarea' : 'text'" v-model="model[item.fieldName]"
             :show-password="item.isPassword"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
-            :autosize="item.multiple && { minRows: 3 }" autocomplete="off" clearable style="width: 300px"
-            v-else-if="(!item.type || item.type == 'text') &&
+            :autosize="item.multiple && { minRows: 3 }" autocomplete="off" clearable style="width: 300px" v-else-if="(!item.type || item.type == 'text') &&
               (item.displayTest
                 ? item.displayTest(getOpsType(), model as T) : true)" />
-          <el-input-number
-            v-model="model[item.fieldName]"
-            v-bind="item.customProps"
-            :controls-position="item.numberUsedMill ? 'right' : ''"
-            :min="item.numberMin ?? 0"
+          <el-input-number v-model="model[item.fieldName]" v-bind="item.customProps"
+            :controls-position="item.numberUsedMill ? 'right' : ''" :min="item.numberMin ?? 0"
             :max="item.numberMax ?? Infinity"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             v-else-if="item.type == 'number'" @change="inputChange($event, item)" />
           <el-select v-else-if="item.type == 'select'" :multiple="item.multiple" v-model="model[item.fieldName]"
-            placeholder="请选择" :filterable="item.selectFilterable"
+            placeholder="请选择" :filterable="item.selectFilterable" @change="item.selectChange"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'">
             <el-option v-for="opt in item.selectOptions" :key="opt.value" :label="opt.label" :value="opt.value"
               :disabled="opt.displayTest ? !opt.displayTest(getOpsType(), model as T) : false" />
           </el-select>
-          <el-checkbox
-            v-model="model[item.fieldName]"
-            v-bind="item.customProps"
+          <el-checkbox v-model="model[item.fieldName]" v-bind="item.customProps"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             v-else-if="item.type == 'checkbox'">
             {{ "" }}
           </el-checkbox>
-          <el-cascader
-            :options="item.selectOptions"
-            v-model="model[item.fieldName]"
-            v-bind="item.customProps"
+          <el-cascader :options="item.selectOptions" v-model="model[item.fieldName]" v-bind="item.customProps"
             :props="getCascaderProps(item)"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             clearable v-else-if="item.type == 'cascaded'" style="width: 300px"
@@ -66,9 +55,11 @@
               <img v-if="item.uploadSettings!.imageURL" :src="item.uploadSettings!.imageURL" class="placeholder" />
               <img v-else-if="model[item.fieldName]" :src="item.uploadSettings!.loadURL + model[item.fieldName]"
                 class="placeholder" />
-              <div v-else class="uploader-icon"><el-icon>
+              <div v-else class="uploader-icon">
+                <el-icon>
                   <Plus />
-                </el-icon></div>
+                </el-icon>
+              </div>
             </div>
             <div v-else-if="item.type === 'audioUpload'">
               <audio v-if="item.uploadSettings!.imageURL" :src="item.uploadSettings!.imageURL" class="audio-style"
@@ -98,8 +89,13 @@
             </div>
           </el-upload>
           <el-radio-group v-model="model[item.fieldName]" :disabled="item.isDisable" v-else-if="item.type == 'radio'">
-            <el-radio :label="opt.value" v-for="opt in item.selectOptions" v-bind:key="opt.value">{{ opt.label }}</el-radio>
+            <el-radio :label="opt.value" v-for="opt in item.selectOptions" v-bind:key="opt.value">
+            {{ opt.label}}
+            </el-radio>
           </el-radio-group>
+          <div v-else-if="item.type == 'actionButton'">
+            <ActionButton v-model="model[item.fieldName]" :config="item.actionSettings!" />
+          </div>
         </el-form-item>
       </div>
     </el-form>
@@ -126,7 +122,7 @@ import { UnwrapRef, nextTick, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import JsonEditor from "vue3-ts-jsoneditor";
 import { Board, DialogConfig, LogData, Model, OperationType } from "./data-dialog";
-
+import ActionButton from "./ActionButton.vue";
 
 const route = useRoute();
 const eventBus = useEventBus();
@@ -188,7 +184,7 @@ function getCascaderProps(item: Board<T>) {
   // 替换Value值为Label
   if (item.cascadedLabelAsValue) {
     return {
-       // 单选时，不关联父节点
+      // 单选时，不关联父节点
       checkStrictly: true,
       value: "label",
     };

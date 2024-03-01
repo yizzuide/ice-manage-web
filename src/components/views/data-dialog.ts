@@ -25,14 +25,21 @@ export interface UploadSettings {
   imageURL?: string;
   handleSuccess: (response: any, file: UploadFile) => void;
   beforeUpload?: (rawFile: UploadRawFile) => boolean;
-  handleProcess?:(event: ProgressEvent, file: UploadFile)=> void;
+  handleProcess?: (event: ProgressEvent, file: UploadFile) => void;
+}
+
+export interface ActionSettings {
+  url: string;
+  downloadUrl: string;
+  actionBtnName?: string;
+  dialogTitle?: string;
 }
 
 export interface Board<T> {
   label: string;
   fieldName: string;
   // text is default
-  type?: "label" | "text" | "textarea" | "number" | "select" | "checkbox" | "cascaded" | "colorPicker" | "datePicker" | "timeSelect" | "imageUpload" | "jsonEditor" | "radio" | "videoUpload" | "audioUpload";
+  type?: "label" | "text" | "textarea" | "number" | "select" | "checkbox" | "cascaded" | "colorPicker" | "datePicker" | "timeSelect" | "imageUpload" | "jsonEditor" | "radio" | "videoUpload" | "audioUpload" | "actionButton";
   layoutHeight?: number;
   // 并行显示
   layoutInline?: boolean;
@@ -66,6 +73,8 @@ export interface Board<T> {
   timeStep?: string;
   // 上传配置
   uploadSettings?: UploadSettings;
+  // 自定义动作按钮配置
+  actionSettings?: ActionSettings;
   // 自定义属性配置
   customProps?: any;
 
@@ -73,6 +82,8 @@ export interface Board<T> {
   displayTest?: (operationType: OperationType, row: T) => boolean;
   // 禁用判断，返回true则禁用
   disableTest?: (operationType: OperationType, row: T) => boolean;
+  // 选择框change事件
+  selectChange?: (value: any) => void;
   // 数据输出格式化
   format?: (value: any, operationType: OperationType, row: Ref<T>) => any;
 }

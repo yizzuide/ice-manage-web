@@ -2,13 +2,13 @@ import { Ref } from "vue";
 import { DialogConfig, Model, OperationType, LogData } from "./data-dialog";
 import { OperationNamed, SearchParams } from "./list-page";
 import useEventBus from "@/hooks/useEventBus";
-import router from "@/router";
 import { ElTable } from "element-plus";
+import { useRouter } from "vue-router";
 
 /**
  * Page处理器参数（D: Dialog模型类型，R: 表记录行的类型）
  */
-export interface PageHandlerParams<D extends Model, R> {
+export interface PageHandlerParams<D extends Model, R = D> {
   /**
    * 初始化
    */
@@ -18,7 +18,7 @@ export interface PageHandlerParams<D extends Model, R> {
    * @param searchParams 搜索参数
    * @param tableData 表数据引用
    */
-  onSearch(searchParams: SearchParams & R, tableData: Ref<Model[]>): void;
+  onSearch(searchParams: SearchParams & R, tableData: Ref<R[]>): void;
   /**
    * 执行操作
    * @param name 当前操作名
@@ -32,14 +32,15 @@ export interface PageHandlerParams<D extends Model, R> {
   ): Promise<void | boolean>;
 }
 
-export const usePageProxyHandler = function <D extends Model, R>(
+export const usePageProxyHandler = function <D extends Model, R = D>(
   params: PageHandlerParams<D, R>
 ) {
   let tableRef: Ref<InstanceType<typeof ElTable>>;
-  let tableDataRef: Ref<Model[]>;
+  let tableDataRef: Ref<R[]>;
   let reqParams: SearchParams;
   let currentSelectedRow: R;
   const eventBus = useEventBus();
+  const router = useRouter();
 
   params.init && params.init();
   return {
@@ -55,7 +56,7 @@ export const usePageProxyHandler = function <D extends Model, R>(
     onSelectRow(selectedRow: Model) {
       currentSelectedRow = selectedRow as R;
     },
-    onSearch(searchParams: SearchParams, tableData: Ref<Model[]>, table?: Ref<InstanceType<typeof ElTable>>) {
+    onSearch(searchParams: SearchParams, tableData: Ref<R[]>, table?: Ref<InstanceType<typeof ElTable>>) {
       reqParams = searchParams;
       tableDataRef = tableData;
       if(table) {

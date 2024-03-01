@@ -48,7 +48,7 @@ const assignConfig = ref(assignDialogConfig);
 const roleStore = useRoleStore();
 const menuStore = useMenuStore();
 
-const pageProxyHandler = usePageProxyHandler<Role, Role>({
+const pageProxyHandler = usePageProxyHandler<Role>({
   init() {
     menuStore.fetchAll().then(() => initAssignDialogData(assignConfig, menuStore.menusAllSource));
   },
