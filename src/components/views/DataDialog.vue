@@ -118,7 +118,7 @@ import { Plus } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
 import { isFunction } from "lodash";
-import { UnwrapRef, nextTick, ref, watch } from "vue";
+import { Ref, UnwrapRef, nextTick, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import JsonEditor from "vue3-ts-jsoneditor";
 import { Board, DialogConfig, LogData, Model, OperationType } from "./data-dialog";
@@ -222,24 +222,29 @@ function doConform() {
 
     // 参数格式化
     const opsType = model.value.id === undefined ? OperationType.ADD : OperationType.UPDATE;
-    let ignoreFieldCount = 0;
     const allFieldCount = props.config.board.length;
+    let ignoreFieldCount = 0;
     let needUpdate = true;
+    let requestData = <T>{};
+    if (opsType === OperationType.UPDATE) {
+      (requestData as Model).id = model.value.id;
+    }
     props.config.board.forEach((item) => {
       if (opsType === OperationType.UPDATE) {
         if (model.value[item.fieldName] === origModel[item.fieldName]) {
-          (model.value as Model)[item.fieldName] = undefined;
           ignoreFieldCount++;
           if (ignoreFieldCount === allFieldCount) {
             needUpdate = false;
           }
+        } else {
+          (requestData as Model)[item.fieldName] = model.value[item.fieldName];
+          item.format && ((requestData as Model)[item.fieldName] = item.format(
+            requestData[item.fieldName],
+            opsType,
+            model as Ref<T>
+          ));
         }
       }
-      item.format && ((model.value as Model)[item.fieldName] = item.format(
-        model.value[item.fieldName],
-        opsType,
-        model as any
-      ));
     });
     if (opsType == OperationType.UPDATE && !needUpdate) {
       ElMessageBox.confirm("当前无修改项，不需要更新！");
@@ -247,9 +252,9 @@ function doConform() {
       return;
     }
 
-    let requestData = model.value;
+    // 请求参数格式化
     if (props.config.request.requestDataFormat) {
-      requestData = props.config.request.requestDataFormat(model.value as T);
+      requestData = props.config.request.requestDataFormat(requestData);
     }
 
     request({
