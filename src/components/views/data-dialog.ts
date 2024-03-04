@@ -102,6 +102,12 @@ export interface DialogConfig<T extends Model> {
     type?: ContentType;
     ignoreEmitLog?: boolean;
     interceptor?: RequestInterceptor;
+    /**
+     * 请求前处理
+     * @param data 请求参数
+     * @returns true继续请求，false为取消请求
+     */
+    beforeRequest?: (data: T) => boolean;
     requestDataFormat?: (data: T) => any;
   };
 }

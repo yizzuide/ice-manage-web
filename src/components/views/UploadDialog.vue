@@ -14,54 +14,53 @@
             </el-icon>
             <template #file="{ file }">
               <template v-if="!file.url">
-              <!-- 远程地址 -->
-              <div class="imageBox" v-media-match="{ url: file.remoteURL, type: 0 }">
-                <div class="deleteIcon" @click="removeImage(file)">
-                  <el-icon>
-                    <Delete />
-                  </el-icon>
+                <!-- 远程地址 -->
+                <div class="imageBox" v-media-match="{ url: file.remoteURL, type: 0 }">
+                  <div class="deleteIcon" @click="removeImage(file)">
+                    <el-icon>
+                      <Delete />
+                    </el-icon>
+                  </div>
+                  <el-image :preview-src-list="[getUrl(file.remoteURL)]" class="placeholder"
+                    :src="getUrl(file.remoteURL)" />
                 </div>
-                <el-image :preview-src-list="[getUrl(file.remoteURL)]"
-                  class="placeholder" :src="getUrl(file.remoteURL)" />
-              </div>
-              <div class="imageBox" v-media-match="{ url: file.remoteURL, type: 1 }">
-                <div class="deleteIcon" @click="removeImage(file)">
-                  <el-icon>
-                    <Delete />
-                  </el-icon>
+                <div class="imageBox" v-media-match="{ url: file.remoteURL, type: 1 }">
+                  <div class="deleteIcon" @click="removeImage(file)">
+                    <el-icon>
+                      <Delete />
+                    </el-icon>
+                  </div>
+                  <video controls :src="getUrl(file.remoteURL)">
+                    <source :src="getUrl(file.remoteURL)" type="video/mp4" />
+                    <source :src="getUrl(file.remoteURL)" type="video/mov" />
+                    <source :src="getUrl(file.remoteURL)" type="video/avi" />
+                  </video>
                 </div>
-                <video controls :src="getUrl(file.remoteURL)">
-                  <source :src="getUrl(file.remoteURL)" type="video/mp4" />
-                  <source :src="getUrl(file.remoteURL)" type="video/mov" />
-                  <source :src="getUrl(file.remoteURL)" type="video/avi" />
-                </video>
-              </div>
+              </template>
+              <template v-else>
+                <!-- 本地地址 -->
+                <div class="imageBox" v-media-match="{ url: file.name, type: 0 }">
+                  <div class="deleteIcon" @click="removeImage(file)">
+                    <el-icon>
+                      <Delete />
+                    </el-icon>
+                  </div>
+                  <el-image :preview-src-list="[file.url]" class="placeholder" :src="file.url" />
+                </div>
+                <div class="imageBox" v-media-match="{ url: file.name, type: 1 }">
+                  <div class="deleteIcon" @click="removeImage(file)">
+                    <el-icon>
+                      <Delete />
+                    </el-icon>
+                  </div>
+                  <video controls :src="file.url">
+                    <source :src="file.url" type="video/mp4" />
+                    <source :src="file.url" type="video/mov" />
+                    <source :src="file.url" type="video/avi" />
+                  </video>
+                </div>
+              </template>
             </template>
-            <template v-else>
-              <!-- 本地地址 -->
-              <div class="imageBox" v-media-match="{ url: file.name, type: 0 }">
-                <div class="deleteIcon" @click="removeImage(file)">
-                  <el-icon>
-                    <Delete />
-                  </el-icon>
-                </div>
-                <el-image :preview-src-list="[file.url]" class="placeholder"
-                  :src="file.url" />
-              </div>
-              <div class="imageBox" v-media-match="{ url: file.name, type: 1 }">
-                <div class="deleteIcon" @click="removeImage(file)">
-                  <el-icon>
-                    <Delete />
-                  </el-icon>
-                </div>
-                <video controls :src="file.url">
-                  <source :src="file.url" type="video/mp4" />
-                  <source :src="file.url" type="video/mov" />
-                  <source :src="file.url" type="video/avi" />
-                </video>
-              </div>
-            </template>
-          </template>
           </el-upload>
         </el-form-item>
 
@@ -99,7 +98,7 @@ const emit = defineEmits<{
   close: [];
 }>();
 
-const modelValue = defineModel({type: Array<string>, default: () => []});
+const modelValue = defineModel({ type: Array<string>, default: () => [] });
 
 const visible = ref(props.show);
 const accept = ref(".jpg, .jpeg, .gif, .png, .webp, .webm, .mkv, .avi, .mpeg, .mp4, .flv");
@@ -111,10 +110,11 @@ watch(() => modelValue.value, (urls) => {
     return;
   }
   fileList.value = urls.map((url: string) => ({
-      url: undefined,
-      remoteURL: url,
-    })) as RemoteUploadUserFile[];
-});
+    url: undefined,
+    remoteURL: url,
+    name: url,
+  })) as RemoteUploadUserFile[];
+}, { immediate: true });
 
 
 watch(() => props.show, (val) => {
@@ -130,11 +130,25 @@ const exceed = () => {
 };
 
 function beforeUpload(file: UploadRawFile) {
-  const isLimitPic = file.size / 1024 / 1024 < 2;
-  if (!isLimitPic) {
-    ElMessage.warning("上传图片大小不能超过 2MB!");
+  const ext = file.name.substring(file.name.lastIndexOf(".") + 1);
+  // 图片判断
+  if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) {
+    const isLimitPic = file.size / 1024 / 1024 < 2;
+    if (!isLimitPic) {
+      ElMessage.warning("上传图片大小不能超过 2MB!");
+    }
+    return isLimitPic;
+
+    // 视频判断
+  } else if (["avi", "mkv", "mpeg", "mp4", "m4v", "flv", "webm"].includes(ext)) {
+    const isLimitPic = file.size / 1024 / 1024 < 20;
+    if (!isLimitPic) {
+      ElMessage.warning("上传视频大小不能超过 20MB!");
+    }
+    return isLimitPic;
+
   }
-  return isLimitPic;
+
 }
 
 const handleSuccess = (response: any, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
@@ -146,9 +160,17 @@ const removeImage = (file: UploadRawFile) => {
 };
 
 const submit = () => {
-  let list = fileList.value.map((item: any) => item.response.data.filePath);
+  let list = fileList.value.map((item: any) => {
+    // 如果远程地址存在，使用远程地址
+    if (item.remoteURL) {
+      return item.remoteURL;
+    } else if (item.response.data.filePath) {
+      // 本地使用服务器返回的地址
+      return item.response.data.filePath;
+    }
+  });
   modelValue.value = list;
-  emit("close");
+  close();
 };
 
 const close = () => {

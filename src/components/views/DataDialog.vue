@@ -36,7 +36,7 @@
             :props="getCascaderProps(item)"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             clearable v-else-if="item.type == 'cascaded'" style="width: 300px"
-            :separator="item.cascadedSeparator ? item.cascadedSeparator : '/'" />
+            :separator="item.cascadedSeparator ? item.cascadedSeparator : '/'" @change="item.selectChange" />
           <el-color-picker v-model="model[item.fieldName]" v-else-if="item.type == 'colorPicker'" />
           <el-date-picker v-model="model[item.fieldName]" type="date" placeholder="选择日期" format="YYYY 年 MM 月 DD 日"
             :default-value="dayjs().toDate()" :value-format="item.dateValueFormat" v-else-if="item.type == 'datePicker'">
@@ -211,6 +211,13 @@ function doConform() {
     if (!valid) {
       ElMessage.error("输入格式不正确！");
       return false;
+    }
+
+    if (props.config.request.beforeRequest) {
+      const isPass = props.config.request.beforeRequest(model.value as T);
+      if (!isPass) {
+        return false;
+      }
     }
 
     // 参数格式化
