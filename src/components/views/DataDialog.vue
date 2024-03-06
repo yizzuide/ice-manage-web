@@ -228,6 +228,8 @@ function doConform() {
     let requestData = <T>{};
     if (opsType === OperationType.UPDATE) {
       (requestData as Model).id = model.value.id;
+    } else {
+      requestData = model.value as T;
     }
     props.config.board.forEach((item) => {
       if (opsType === OperationType.UPDATE) {
@@ -236,15 +238,15 @@ function doConform() {
           if (ignoreFieldCount === allFieldCount) {
             needUpdate = false;
           }
-        } else {
-          (requestData as Model)[item.fieldName] = model.value[item.fieldName];
-          item.format && ((requestData as Model)[item.fieldName] = item.format(
+          return;
+        }
+        (requestData as Model)[item.fieldName] = model.value[item.fieldName];
+      }
+      item.format && ((requestData as Model)[item.fieldName] = item.format(
             requestData[item.fieldName],
             opsType,
             model as Ref<T>
           ));
-        }
-      }
     });
     if (opsType == OperationType.UPDATE && !needUpdate) {
       ElMessageBox.confirm("当前无修改项，不需要更新！");
