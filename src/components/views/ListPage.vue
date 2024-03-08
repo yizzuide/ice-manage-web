@@ -21,6 +21,7 @@
               :placeholder="item.placeholder"
               v-model="searchParams[item.prop]"
               :filterable="item.selectFilterable"
+              style="width: 180px"
               v-else-if="item.type == 'select'">
               <el-option
                 v-for="opt in item.selectOptions"

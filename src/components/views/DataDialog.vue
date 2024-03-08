@@ -8,12 +8,12 @@
     <el-form :model="model" :rules="config.rules" ref="formRef">
       <div v-for="item in config.board" :key="item.fieldName" :style="dialogItemStyle(item)">
         <el-form-item :label="item.label" :prop="item.fieldName"
-          :label-width="item.layoutInline ? (item.layoutInlineStart ? '200px' : '0px') : '200px'">
+          :label-width="item.layoutInline ? (item.layoutInlineStart ? '35%' : '0px') : '35%'">
           <div v-if="item.type === 'label'"></div>
           <el-input :type="item.multiple ? 'textarea' : 'text'" v-model="model[item.fieldName]"
             :show-password="item.isPassword"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
-            :autosize="item.multiple && { minRows: 3 }" autocomplete="off" clearable style="width: 300px" v-else-if="(!item.type || item.type == 'text') &&
+            :autosize="item.multiple && { minRows: 3 }" autocomplete="off" clearable style="width: 65%" v-else-if="(!item.type || item.type == 'text') &&
               (item.displayTest
                 ? item.displayTest(getOpsType(), model as T) : true)" />
           <el-input-number v-model="model[item.fieldName]" v-bind="item.customProps"
@@ -22,7 +22,7 @@
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             v-else-if="item.type == 'number'" @change="inputChange($event, item)" />
           <el-select v-else-if="item.type == 'select'" :multiple="item.multiple" v-model="model[item.fieldName]"
-            placeholder="请选择" :filterable="item.selectFilterable" @change="item.selectChange"
+            placeholder="请选择" :filterable="item.selectFilterable" @change="item.selectChange" style="width: 65%"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'">
             <el-option v-for="opt in item.selectOptions" :key="opt.value" :label="opt.label" :value="opt.value"
               :disabled="opt.displayTest ? !opt.displayTest(getOpsType(), model as T) : false" />
@@ -35,7 +35,7 @@
           <el-cascader :options="item.selectOptions" v-model="model[item.fieldName]" v-bind="item.customProps"
             :props="getCascaderProps(item)"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
-            clearable v-else-if="item.type == 'cascaded'" style="width: 300px"
+            clearable v-else-if="item.type == 'cascaded'" style="width: 65%"
             :separator="item.cascadedSeparator ? item.cascadedSeparator : '/'" @change="item.selectChange" />
           <el-color-picker v-model="model[item.fieldName]" v-else-if="item.type == 'colorPicker'" />
           <el-date-picker v-model="model[item.fieldName]" type="date" placeholder="选择日期" format="YYYY 年 MM 月 DD 日"
@@ -89,9 +89,8 @@
             </div>
           </el-upload>
           <el-radio-group v-model="model[item.fieldName]" :disabled="item.isDisable" v-else-if="item.type == 'radio'">
-            <el-radio :label="opt.value" v-for="opt in item.selectOptions" v-bind:key="opt.value">
-            {{ opt.label}}
-            </el-radio>
+            <el-radio :label="opt.value" v-for="opt in item.selectOptions" v-bind:key="opt.value">{{ opt.label
+            }}</el-radio>
           </el-radio-group>
           <div v-else-if="item.type == 'actionButton'">
             <ActionButton v-model="model[item.fieldName]" :config="item.actionSettings!" />
@@ -374,18 +373,5 @@ function inputChange(value: any, item: Board<T>) {
 
 .image-uploader:hover {
   border-color: #409eff;
-}
-</style>
-
-<!-- css module: class名添加hash后缀，在模板里通过$style.xxx引用，如果有命名(module="名称")，通过：名称.xxx -->
-<style lang="scss" module>
-.interactRow {
-  display: flex;
-  flex-wrap: wrap;
-
-  .searchItem {
-    margin-right: 15px;
-    margin-bottom: 15px;
-  }
 }
 </style>
