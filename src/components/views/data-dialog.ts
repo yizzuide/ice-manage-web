@@ -28,12 +28,17 @@ export interface UploadSettings {
   handleProcess?: (event: ProgressEvent, file: UploadFile) => void;
 }
 
-export interface ActionSettings {
+export interface DialogSettings {
+  title: string;
+  desc?: string;
+  show?: boolean;
+  width?: number;
+}
+
+export interface ActionSettings extends DialogSettings {
   url: string;
   downloadUrl: string;
   actionBtnName?: string;
-  dialogTitle?: string;
-  desc?: string;
 }
 
 export interface Board<T> {
@@ -84,7 +89,7 @@ export interface Board<T> {
   // 禁用判断，返回true则禁用
   disableTest?: (operationType: OperationType, row: T) => boolean;
   // 选择框change事件
-  selectChange?: (value: any) => void;
+  selectChange?: (data: {value: any, boards: Ref<Board<T>[]>}) => void;
   // 数据输出格式化
   format?: (value: any, operationType: OperationType, row: Ref<T>) => any;
 }

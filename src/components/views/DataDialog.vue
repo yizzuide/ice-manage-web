@@ -93,7 +93,7 @@
             }}</el-radio>
           </el-radio-group>
           <div v-else-if="item.type == 'actionButton'">
-            <ActionButton v-model="model[item.fieldName]" :config="item.actionSettings!" />
+            <ActionButton v-model="model[item.fieldName]" :="item.actionSettings!" />
           </div>
         </el-form-item>
       </div>
