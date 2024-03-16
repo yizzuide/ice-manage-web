@@ -33,6 +33,7 @@ export interface ActionSettings {
   downloadUrl: string;
   actionBtnName?: string;
   dialogTitle?: string;
+  desc?: string;
 }
 
 export interface Board<T> {

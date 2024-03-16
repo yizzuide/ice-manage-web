@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button type="primary" @click="visible = true">{{ config.actionBtnName }}</el-button>
-    <UploadDialog v-model="modelValue" :show="visible" :title="config.dialogTitle" :url="config.url"
+    <UploadDialog v-model="modelValue" :show="visible" :title="config.dialogTitle" :desc="config.desc" :url="config.url"
       :download-url="config.downloadUrl" @close="() => visible = false">
     </UploadDialog>
   </div>

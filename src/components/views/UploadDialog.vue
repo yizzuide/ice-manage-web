@@ -3,6 +3,7 @@
     <el-dialog v-model="visible" :close-on-click-modal="false" :before-close="close">
       <template #header>
         <div class="dialog-title">{{ title ?? "上传文件" }}</div>
+        <div class="dialog-desc" v-if="desc">{{ desc }}</div>
       </template>
       <el-form ref="formRef">
         <el-form-item label="选择图片与视频">
@@ -89,6 +90,7 @@ type RemoteUploadUserFile = UploadUserFile & {
 
 const props = defineProps<{
   title?: string,
+  desc?: string,
   show: boolean,
   url: string,
   downloadUrl: string,
