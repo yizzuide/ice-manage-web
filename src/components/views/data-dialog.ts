@@ -107,9 +107,20 @@ export interface DialogConfig<T extends Model> {
      * @param data 请求参数
      * @returns true继续请求，false为取消请求
      */
-    beforeRequest?: (data: T) => boolean;
+    beforeRequest?: (data: Readonly<T>) => boolean;
+    /**
+     * 请求数据格式化
+     * @param data  request data
+     * @returns 格式化后的数据（必需返回）
+     */
     requestDataFormat?: (data: T) => any;
   };
+  /**
+   * 面板显示前调用
+   * @param boards 面板结构
+   * @param model 模型数据
+   */
+  beforeRender?: (boards: Ref<Board<T>[]>, model: Readonly<T>) => void;
 }
 
 export interface LogData {

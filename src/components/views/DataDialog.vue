@@ -6,7 +6,7 @@
       <div class="dialog-desc" v-if="config.desc">{{ config.desc }}</div>
     </template>
     <el-form :model="model" :rules="config.rules" ref="formRef">
-      <div v-for="item in config.board" :key="item.fieldName" :style="dialogItemStyle(item)">
+      <div v-for="item in boards" :key="item.fieldName" :style="dialogItemStyle(item)">
         <el-form-item :label="item.label" :prop="item.fieldName"
           :label-width="item.layoutInline ? (item.layoutInlineStart ? '35%' : '0px') : '35%'">
           <div v-if="item.type === 'label'"></div>
@@ -22,7 +22,7 @@
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             v-else-if="item.type == 'number'" @change="inputChange($event, item)" />
           <el-select v-else-if="item.type == 'select'" :multiple="item.multiple" v-model="model[item.fieldName]"
-            placeholder="请选择" :filterable="item.selectFilterable" @change="item.selectChange" style="width: 65%"
+            placeholder="请选择" :filterable="item.selectFilterable" @change="item.selectChange && item.selectChange({value: $event, boards: ref(boards)})" style="width: 65%"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'">
             <el-option v-for="opt in item.selectOptions" :key="opt.value" :label="opt.label" :value="opt.value"
               :disabled="opt.displayTest ? !opt.displayTest(getOpsType(), model as T) : false" />
@@ -117,7 +117,7 @@ import { Plus } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
 import { isFunction } from "lodash";
-import { Ref, UnwrapRef, nextTick, ref, watch } from "vue";
+import { Ref, UnwrapRef, nextTick, readonly, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import JsonEditor from "vue3-ts-jsoneditor";
 import { Board, DialogConfig, LogData, Model, OperationType } from "./data-dialog";
@@ -145,6 +145,7 @@ let origModel = { ...props.config.model };
 // 组件在哪里修改，就在哪里定义Ref
 const showDialog = ref(props.visible);
 const model = ref<T>(props.config.model as T);
+const boards = ref<Board<T>[]>(props.config.board);
 const formRef = ref<FormInstance>();
 const conformDisabled = ref(false);
 
@@ -152,7 +153,12 @@ const conformDisabled = ref(false);
 // 监听父组件的修改来双向修改
 watch(
   () => props.visible,
-  (isVisible) => (showDialog.value = isVisible)
+  (isVisible) => {
+    showDialog.value = isVisible;
+    if (isVisible) {
+      props.config.beforeRender && props.config.beforeRender(boards, (readonly(model) as Ref<T>).value);
+    }
+  }
 );
 // 监听父组件提供的初始化数据
 watch(
@@ -213,7 +219,7 @@ function doConform() {
     }
 
     if (props.config.request.beforeRequest) {
-      const isPass = props.config.request.beforeRequest(model.value as T);
+      const isPass = props.config.request.beforeRequest((readonly(model) as Ref<T>).value);
       if (!isPass) {
         return false;
       }

@@ -8,7 +8,10 @@ import { DirectiveTuple } from "./tuple";
 dayjs.extend(utc);
 dayjs.extend(duration);
 
-const DEFAULT_PATTERN = "YYYY-MM-DD HH:mm:ss";
+export const DEFAULT_PATTERN = "YYYY-MM-DD HH:mm:ss";
+
+export const DATE_PATTERN = "YYYY-MM-DD";
+
 const UTC_REG = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$/;
 
 export default function (): DirectiveTuple<string> {
@@ -41,7 +44,7 @@ export function formatTimestamp(time: string | number, pattern?: string) {
   let timestamp = (
     typeof time === "string" ? parseInt(time as string) : time
   ) as number;
-  // 如果为秒，转为毫秒
+  // 如果为unix时间戳，转为毫秒时间戳
   if (`${time}`.length === 10) {
     timestamp = timestamp * 1000;
   }
@@ -57,4 +60,18 @@ export function formatDuration(time: string | number) {
   const now = dayjs();
   const duration = dayjs.duration(now.diff(startTime));
   return duration.format("D[天]H[小时]m[分钟]s[秒]").replace(/^0天|0小时|0分/, "").replace(/^0小时|0分/, "").replace(/^0分/, "");
+}
+
+export function unix2Mills(unixTime: number) {
+  if (`${unixTime}`.length === 10)
+    return unixTime * 1000;
+  return unixTime;
+}
+
+export function mills2Unix(millsTime: number) {
+  if(millsTime) {
+    if (millsTime.toString().length > 10)
+      return Math.floor(millsTime / 1000);
+    return millsTime;
+  }
 }
