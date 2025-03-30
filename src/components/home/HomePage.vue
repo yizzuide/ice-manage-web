@@ -137,6 +137,9 @@ function menuSelect(index: string) {
   }
 
   .body {
+    // 防止整个body区域的水平滚动
+    overflow-x: hidden;
+
     > .el-header {
       height: 50px;
       border-bottom: 1px solid $separatorLineColor;

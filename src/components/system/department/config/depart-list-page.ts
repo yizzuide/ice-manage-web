@@ -26,6 +26,8 @@ export const departListPage: Page<ModifierDepartment> = {
       ],
     },
     table: {
+      disableExpandAll: true,
+      hiddenPagination: true,
       items: [
         {
           prop: "id",

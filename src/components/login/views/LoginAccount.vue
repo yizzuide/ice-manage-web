@@ -37,18 +37,34 @@ import useUserStore from "../store/userStore";
 
 const localStorage = useLocalStorage();
 const account = ref({
-  username: localStorage.get("username") ?? "",
-  password: localStorage.get("password") ?? "",
+  username: localStorage.get("username") ?? "admin",
+  password: localStorage.get("password") ?? "123456",
   code: "",
+  uuid: "",
 });
 
-const verifyCodeUrl = ref("/api/code/render");
-const refreshCode = () => {
-  const paramIndex = verifyCodeUrl.value.indexOf("?");
-  if (paramIndex !== -1) {
-    verifyCodeUrl.value = verifyCodeUrl.value.substring(0, paramIndex);
+const getUUID = () => {
+  var s: (number | any)[] = [];
+  var x = "0123456789abcdef";
+  for (var i = 0; i < 36; i++) {
+    s[i] = x.substr(Math.floor(Math.random() * 0x10), 1);
   }
-  verifyCodeUrl.value = verifyCodeUrl.value + "?" + new Date().getTime();
+  s[14] = "4";
+  s[19] = x.substr((s[19] & 0x3) | 0x8, 1);
+  s[8] = s[13] = s[18] = s[23] = "-";
+  var uuid = s.join("");
+  return uuid;
+};
+
+const uuid = getUUID();
+const verifyCodeUrl = ref("/api/code/render/");
+verifyCodeUrl.value = verifyCodeUrl.value + uuid;
+account.value.uuid = uuid;
+
+const refreshCode = () => {
+  const uuid = getUUID();
+  verifyCodeUrl.value = `/api/code/render/${uuid}`;
+  account.value.uuid = uuid;
 };
 
 // InstanceType<typeof ElForm>: 获取ElForm的实例类型（拥有构造函数的实例）
@@ -77,7 +93,8 @@ async function loginAction(isKeepPassword: boolean) {
     const data = await userStore.accountLogin(
       account.value.username,
       account.value.password,
-      account.value.code
+      account.value.code,
+      account.value.uuid
     );
     return Promise.resolve(data.isSuccess);
   } catch (error) {

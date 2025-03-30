@@ -23,7 +23,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierDepartment, Department>({
     departmentStore
       .fetchPage({
         pageStart: searchParams.searchIndex,
-        pageSize: searchParams.searchPageSize,
+        pageSize: -1,
         startDate: searchParams.searchDate?.[0],
         endDate: searchParams.searchDate?.[1],
         entity: {

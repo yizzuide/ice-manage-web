@@ -85,7 +85,7 @@ export default defineStore("user", {
         },
       });
     },
-    async accountLogin(username: string, password: string, code: string) {
+    async accountLogin(username: string, password: string, code: string, uuid: string) {
       return cachedRequest<any>({
         requestConfig: {
           url: "/api/login",
@@ -93,6 +93,7 @@ export default defineStore("user", {
             username,
             password,
             code,
+            uuid,
           },
           method: "post",
           contentType: ContentType.FORM,
