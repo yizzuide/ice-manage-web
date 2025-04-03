@@ -65,6 +65,18 @@ export default defineStore("user", {
             // API返回的菜单列表第一个从0开始
             order: -1,
           } as Menu);
+          if (import.meta.env.MODE === "dev") {
+            this.menuList?.push({
+              id: -1,
+              name: "模板生成",
+              icon: "Files",
+              routeName: "template",
+              routePath: "/index/template",
+              componentPath: "/template/TemplateGeneratorPage",
+              order: this.menuList.length - 1,
+            } as Menu);
+          }
+
           // 更新菜单排序值
           for (const menu of this.menuList) {
             menu.order = menu.order + 1;

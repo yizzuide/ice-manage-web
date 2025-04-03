@@ -1,0 +1,44 @@
+import { Page, SearchParamsProp } from "@/components/views/list-page";
+import { {{moduleName}} } from "../store/{{camelCase moduleName}}Store";
+import { {{camelCase moduleName}}DialogConfig } from "./{{camelCase moduleName}}-data-dialog";
+import { formatTimestamp } from "@/directives/formatTime";
+
+export const {{camelCase moduleName}}ListPage:Page<{{moduleName}}> = {
+  type: "normal",
+  perms: {
+  },
+  // 页面结构
+  struct: {
+    // 搜索栏
+    search: {
+      items: [
+        {{#each searchFields}}
+        {
+          type: "text",
+          placeholder: "请输入{{this.keyName}}",
+          // 实体属性名
+          prop: "{{this.keyName}}",
+        },
+        {{/each}}
+      ],
+    },
+    // 表格
+    table: {
+      hiddenOperationColumn: false,
+      items: [
+        {
+          prop: "id",
+          label: "ID",
+        },
+        // ...其他属性
+        {
+          prop: "createdAt",
+          label: "创建时间",
+          width: 200,
+          format: (row: {{moduleName}}) => formatTimestamp(row.createdAt),
+        },
+      ],
+    },
+    dialogConfig: {{camelCase moduleName}}DialogConfig,
+  },
+};

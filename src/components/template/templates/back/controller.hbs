@@ -1,0 +1,56 @@
+package {{package}}.controller;
+
+import com.github.yizzuide.milkomeda.comet.core.CometParam;
+import com.github.yizzuide.milkomeda.hydrogen.uniform.ResultVO;
+import com.github.yizzuide.milkomeda.hydrogen.uniform.UniformPage;
+import com.github.yizzuide.milkomeda.hydrogen.uniform.UniformQueryPageData;
+import com.github.yizzuide.milkomeda.hydrogen.uniform.UniformResult;
+import {{package}}.domain.{{moduleName}};
+import {{package}}.service.{{moduleName}}Service;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.annotation.Resource;
+import java.util.List;
+
+
+@RequestMapping("/manage/{{camelCase moduleName}}")
+@RestController
+public class {{moduleName}}Controller {
+
+    @Resource
+    private {{moduleName}}Service {{camelCase moduleName}}Service;
+
+    @GetMapping("list")
+    public ResultVO<?> queryPage(@CometParam UniformQueryPageData<{{moduleName}}> queryPageData) {
+        UniformPage<{{moduleName}}> uniformPage = {{camelCase moduleName}}Service.selectByPage(queryPageData);
+        return UniformResult.ok(uniformPage);
+    }
+
+    @GetMapping("all")
+    public ResultVO<List<{{moduleName}}>> queryAll() {
+        return UniformResult.ok({{camelCase moduleName}}Service.list());
+    }
+
+    @PostMapping("add")
+    public ResultVO<?> save(@CometParam {{moduleName}} {{camelCase moduleName}}) {
+        {{camelCase moduleName}}Service.save({{camelCase moduleName}});
+        return UniformResult.ok(null);
+    }
+
+    @PutMapping("update")
+    public ResultVO<?> update(@CometParam {{moduleName}} {{camelCase moduleName}}) {
+        {{camelCase moduleName}}Service.updateById({{camelCase moduleName}});
+        return UniformResult.ok(null);
+    }
+
+    @DeleteMapping("del")
+    public ResultVO<?> remove(Long id) {
+        {{moduleName}} {{camelCase moduleName}} = new {{moduleName}}();
+        {{camelCase moduleName}}.setId(id);
+        boolean isRemoved = {{camelCase moduleName}}Service.removeBeforeCheckRef({{camelCase moduleName}});
+        if (!isRemoved) {
+            return UniformResult.error("23", "当前记录被引用，不能删除！");
+        }
+        return UniformResult.ok(null);
+    }
+}

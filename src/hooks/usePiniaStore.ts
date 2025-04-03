@@ -52,7 +52,7 @@ export default function usePiniaStore<T extends Model, A = any, G = any>(config:
           const { pageCount, totalSize, list } = respData.data!;
           this.pageCount = pageCount;
           this.totalSize = totalSize;
-          this.list = list as any;
+          this.list = list as [];
         });
       },
       async fetchAll() {

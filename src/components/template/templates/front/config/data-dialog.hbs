@@ -1,0 +1,26 @@
+import { DialogConfig } from "@/components/views/data-dialog";
+import { {{moduleName}} } from "../store/{{camelCase moduleName}}Store";
+
+export const {{camelCase moduleName}}DialogConfig: DialogConfig<{{moduleName}}> = {
+  title: "",
+  model: <{{moduleName}}>{},
+  request: {
+    url: "",
+    method: "post",
+  },
+  rules: {
+    {{#each searchFields}}
+    {{this.keyName}}: [
+      { required: true, message: "{{this.keyName}} is required", trigger: "blur" },
+    ],
+    {{/each}}
+  },
+  board: [
+    {{#each searchFields}}
+    {
+      label: "{{this.keyName}}",
+      fieldName: "{{this.keyName}}",
+    }
+    {{/each}}
+  ],
+};

@@ -1,0 +1,44 @@
+<template>
+  <div>
+    <ListPage
+      :page="{{camelCase moduleName}}ListPage"
+      :pageCount="pageStore.pageCount"
+      :total="pageStore.totalSize"
+      @search="pageProxyHandler.onSearch"
+      @operation="pageProxyHandler.onOperation"
+    >
+    </ListPage>
+  </div>
+</template>
+
+<script setup lang="ts">
+import ListPage from "@/components/views/ListPage.vue";
+import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
+import { {{camelCase moduleName}}ListPage } from "./config/{{camelCase moduleName}}-list-page";
+import { {{moduleName}}, usePageStore } from "./store/{{camelCase moduleName}}Store";
+
+const pageStore = usePageStore();
+
+const pageProxyHandler = usePageProxyHandler<Log>({
+  // searchParams 是所有json配置里 search.items.prop 属性列表的挂载对象
+  onSearch(searchParams, tableData) {
+    pageStore
+      .fetchPage({
+        // 当前页
+        pageStart: searchParams.searchIndex,
+        // 每页显示数量
+        pageSize: searchParams.searchPageSize,
+        // 搜索的实体参数（实体的参数都是在interface定义的实体属性）
+        entity: {
+          {{#each searchFields}}
+          {{this.keyName}}: searchParams.{{this.keyName}},
+          {{/each}}
+        },
+      })
+      .then(() => (tableData.value = pageStore.list));
+  },
+});
+
+</script>
+
+<style scoped></style>

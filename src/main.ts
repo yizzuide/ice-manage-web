@@ -5,6 +5,7 @@ import "animate.css";
 import "gsap";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import { VueQueryPlugin } from "@tanstack/vue-query";
 import Colada, { PiniaColadaPlugin } from "colada-plugin";
 import router from "./router";
 import EventBus from "./plugins/EventBus";
@@ -33,6 +34,7 @@ pinia.use(piniaPluginPersistedstate);
 
 app.use(router);
 app.use(pinia);
+app.use(VueQueryPlugin);
 app.use(Colada);
 app.use(EventBus);
 app.use(Request);

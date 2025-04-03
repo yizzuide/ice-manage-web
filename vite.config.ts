@@ -30,6 +30,8 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
         "@": path.resolve(__dirname, "src"),
       },
     },
+    // 确保支持 ?raw 导入
+    assetsInclude: ["**/*.hbs"],
     css: {
       preprocessorOptions: {
         // 添加变量预处理

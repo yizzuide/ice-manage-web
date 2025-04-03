@@ -22,13 +22,15 @@ const routes: RouteRecordRaw[] = [
     // 主页模板路由挂载匿名顶级路由
     children: [],
   },
-  { path: "/:pathMatch(.*)", redirect: "/" },
+  { path: "/:pathMatch(.*)", name: "other", redirect: "/" },
 ];
 
 const router = createRouter({
   routes,
   history: createWebHashHistory(),
 });
+
+const initRoutes = ["login", "index", "other"];
 
 router.beforeEach(async (to, from) => {
   const result = validToken();
@@ -37,6 +39,7 @@ router.beforeEach(async (to, from) => {
     const isValid = result[1];
     // token is expire
     if (!isValid) {
+      resetRouter();
       if (to.name !== "login") {
         return { name: "login" };
       }
@@ -45,7 +48,7 @@ router.beforeEach(async (to, from) => {
       }
     }
 
-    // add Routes when had login before 
+    // add Routes when had login before
     const added = addDynamicRoute();
 
     // redirect auth user from login to index/dashboard
@@ -59,9 +62,14 @@ router.beforeEach(async (to, from) => {
     }
     // redirect not auth user to login
   } else if (to.name !== "login") {
+    resetRouter();
     return { name: "login" };
   }
 });
+
+export function resetRouter() {
+  router.getRoutes().filter((r) => !initRoutes.includes(r.name as string)).forEach(r => router.removeRoute(r.name as string));
+}
 
 export function addDynamicRoute() {
   if (router.hasRoute("dashboard")) {
