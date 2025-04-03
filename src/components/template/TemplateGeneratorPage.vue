@@ -17,12 +17,19 @@
           <el-form-item label="模块名称">
             <el-input v-model="metadata.moduleName" placeholder="请输入模块名称（例如：User）" @blur="loadTemplateFiles"></el-input>
           </el-form-item>
-          <el-form-item label="TS实体代码">
+
+          <!-- TS实体代码输入框，仅前端模板显示 -->
+          <el-form-item v-if="selectedTemplate === 'front'" label="TS实体代码">
             <el-input type="textarea" v-model="metadata.entity" placeholder="interface User { ... }"></el-input>
           </el-form-item>
 
+          <!-- 包名输入框，仅后端模板显示 -->
+          <el-form-item v-if="selectedTemplate === 'back'" label="包名">
+            <el-input v-model="metadata.package" placeholder="请输入包名（例如：com.example）"></el-input>
+          </el-form-item>
+
           <!-- 可以根据需要添加更多表单项 -->
-          <el-form-item label="搜索字段配置">
+          <el-form-item label="搜索字段配置" v-if="selectedTemplate === 'front'">
             <div class="search-fields">
               <el-button @click="addField" type="primary" plain size="small">添加</el-button>
               <div v-for="(item, index) in metadata.searchFields" :key="index" class="search-item">
@@ -75,12 +82,14 @@ const isDev = computed(() => {
 
 // 模板数据
 const templates = [
-  { id: "front", name: "Vue前端组件模块" },
+  { id: "front", name: "Vue前端组件" },
+  { id: "back", name: "Java后端控制器" },
 ];
 
 // 配置元数据
 const metadata = reactive({
   moduleName: "",
+  package: "",
   entity: "",
   searchFields: [] as { keyName: string; }[],
 });
@@ -102,6 +111,9 @@ async function loadTemplateFiles() {
     const configDataDialog= await import("./templates/front/config/data-dialog.hbs?raw");
     const frontStore = await import("./templates/front/store/store.hbs?raw");
 
+    // 加载后端模板
+    const backController = await import("./templates/back/controller.hbs?raw");
+
     // 设置模板内容
     const moduleName = convertCamelCase(metadata.moduleName);
     templateContents["front"] = {
@@ -109,6 +121,11 @@ async function loadTemplateFiles() {
       [`config/${moduleName}-list-page.ts`]: configListPage.default,
       [`config/${moduleName}-data-dialog.ts`]: configDataDialog.default,
       [`store/${moduleName}Store.ts`]: frontStore.default
+    };
+
+    // 设置后端模板内容
+    templateContents["back"] = {
+      [`${metadata.moduleName}Controller.java`]: backController.default
     };
   } catch (error) {
     console.error("加载模板文件失败:", error);
@@ -130,6 +147,7 @@ function removeField(index: number) {
 function resetForm() {
   Object.assign(metadata, {
     moduleName: "",
+    package: "",
     entity: "",
     searchFields: [],
   });
@@ -170,7 +188,7 @@ async function generateTemplate() {
     ElMessage.warning("请输入模块名称");
     return;
   }
-  if (!metadata.entity) {
+  if (!metadata.entity && selectedTemplate.value === "front") {
     ElMessage.warning("请输入TS实体代码");
     return;
   }
@@ -180,8 +198,6 @@ async function generateTemplate() {
   try {
     const templateFiles = templateContents[selectedTemplate.value];
     const zip = new JSZip();
-    const folderName = convertCamelCase(metadata.moduleName);
-    const folder = zip.folder(folderName);
 
     // 清空预览文件
     previewFiles.value = [];
@@ -189,17 +205,38 @@ async function generateTemplate() {
     // 过滤空的搜索字段
     metadata.searchFields = metadata.searchFields.filter(field => field.keyName.trim() !== "");
 
+    // 检查后端模板是否设置了包名
+    if (selectedTemplate.value === "back" && !metadata.package) {
+      metadata.package = "com.example";
+    }
+
+    var zipFileName = "";
     // 处理每个模板文件
     for (const [fileName, content] of Object.entries(templateFiles)) {
       const template = Handlebars.compile(content);
       const renderedContent = template(metadata);
 
       // 添加到 zip
-      if(fileName.includes("/")) {
-        const [folderName, newfileName] = fileName.split("/");
-        folder?.folder(folderName)?.file(newfileName, renderedContent);
+      if (selectedTemplate.value === "front") {
+        // 前端模板保持原有逻辑，包含目录结构
+        const folderName = convertCamelCase(metadata.moduleName);
+        const folder = zip.folder(folderName);
+
+        if(fileName.includes("/")) {
+          const [folderName, newfileName] = fileName.split("/");
+          folder?.folder(folderName)?.file(newfileName, renderedContent);
+        } else {
+          folder?.file(fileName, renderedContent);
+        }
+
+        // 生成 zip 文件名
+        zipFileName = `${folderName}Component.zip`;
       } else {
-        folder?.file(fileName, renderedContent);
+        // 后端模板直接添加文件，不包含目录结构
+        zip.file(fileName, renderedContent);
+
+        // 生成 zip 文件名
+        zipFileName = `${metadata.moduleName}Controller.zip`;
       }
 
       // 添加到预览
@@ -211,7 +248,7 @@ async function generateTemplate() {
 
     // 生成 zip 文件
     const zipContent = await zip.generateAsync({ type: "blob" });
-    saveAs(zipContent, `${folderName}.zip`);
+    saveAs(zipContent, zipFileName);
 
     // 切换到预览标签
     activeTab.value = "result";
