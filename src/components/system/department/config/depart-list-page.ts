@@ -1,7 +1,8 @@
 import { Page, SearchParamsProp } from "@/components/views/list-page";
-import { departDialogConfig, ModifierDepartment } from "./depart-data-dialog";
+import { departDialogConfig } from "./depart-data-dialog";
+import { Department } from "../store/departmentStore";
 
-export const departListPage: Page<ModifierDepartment> = {
+export const departListPage: Page<Department> = {
   perms: {
     add: "sys:department:add",
     update: "sys:department:edit",

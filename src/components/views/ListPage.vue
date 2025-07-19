@@ -157,20 +157,18 @@
   </div>
 </template>
 
-<script lang="ts" setup generic="T extends Model">
+<script lang="ts" setup generic="T">
 import varColor from "@/styles/define.module.scss";
 import { Delete, Edit, Plus, Refresh, Search, Download } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 import { ElMessage, ElMessageBox, ElTable } from "element-plus";
 import { Ref, nextTick, onMounted, ref } from "vue";
 import DataDialog from "./DataDialog.vue";
-import { DialogConfig, Model } from "./data-dialog";
+import { DialogConfig } from "./data-dialog";
 import { OperationNamed, Page, SearchParams } from "./list-page";
 import useEventBus from "@/hooks/useEventBus";
 import * as XLSX from "xlsx";
 
-// 定义可取消的行类型
-type CancelableRow = T & { canceled: boolean };
 type ListTable = InstanceType<typeof ElTable>;
 
 // 声明组件选项
@@ -188,7 +186,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   search: [searchParams: SearchParams, tableData: Ref<T[]>, table: Ref<ListTable>],
   // 操作事件（selectedRow：除了name="add"时为空，其它都有值）
-  operation: [name: OperationNamed, dialogConfig: Ref<DialogConfig<T>>, selectedRow?: CancelableRow],
+  operation: [name: OperationNamed, dialogConfig: Ref<DialogConfig<T>>, selectedRow?: CancelableRow<T>],
   selectRow: [selectedRow: T]
 }>();
 
@@ -196,7 +194,7 @@ const listTable = ref<ListTable>();
 const tableData = ref<T[]>([]);
 const preTableData = ref<T[]>([]);
 const selectedRow = ref<T>();
-const searchParams = ref<SearchParams>({
+const searchParams = ref<TypeModel<SearchParams>>({
   searchIndex: 1,
   searchPageSize: 10,
   searchKeyName: "",
@@ -242,9 +240,9 @@ function changePageIndex(index: number) {
 }
 
 const addRow = () => {
-  let row: CancelableRow | undefined = undefined;
+  let row: CancelableRow<T> | undefined = undefined;
   if (selectedRow.value) {
-    row = <CancelableRow>{...selectedRow.value};
+    row = <CancelableRow<T>>{...selectedRow.value};
   }
   emit("operation", "add", dialogConfig as Ref<DialogConfig<T>>, row);
   showDialog.value = true;
@@ -266,7 +264,7 @@ const changeSelectedRow = (row: T) => {
   emit("selectRow", row);
 };
 
-const handleEdit = (index: number, row: CancelableRow) => {
+const handleEdit = (index: number, row: CancelableRow<T>) => {
   emit("operation", "edit", dialogConfig as Ref<DialogConfig<T>>, row);
   if (row.canceled) {
     return;
@@ -274,7 +272,7 @@ const handleEdit = (index: number, row: CancelableRow) => {
   showDialog.value = true;
 };
 
-const handleDelete = (index: number, row: CancelableRow) => {
+const handleDelete = (index: number, row: CancelableRow<T>) => {
   ElMessageBox.confirm("确定删除吗？", "警告").then(() => {
     emit("operation", "remove", dialogConfig as Ref<DialogConfig<T>>, row);
   });
@@ -302,6 +300,9 @@ function onExport() {
   }
   preTableData.value = tableData.value;
   selectList = JSON.parse(JSON.stringify(selectList));
+  if(selectList === undefined) {
+    return;
+  }
   selectList.forEach((item: any) => {
     item.downloading = true;
   });

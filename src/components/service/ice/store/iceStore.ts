@@ -1,11 +1,10 @@
-import { defineStore } from "pinia";
-import { Model } from "@/components/views/data-dialog";
 import { PageData } from "@/http/HttpDefine";
-import request from "@/http/uniformRequest";
-import { Job } from "../config/ice-data-dialog";
+import request from "@/http/UniformRequest";
 import { ContentType } from "@/plugins/request";
+import { defineStore } from "pinia";
+import { Job } from "../config/ice-data-dialog";
 
-export interface JobInspectInfo extends Model {
+export interface JobInspectInfo {
   id: string;
   topic: string;
   applicationName: string;

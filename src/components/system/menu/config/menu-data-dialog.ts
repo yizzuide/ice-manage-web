@@ -1,27 +1,14 @@
-import { DialogConfig, Model } from "@/components/views/data-dialog";
+import { DialogConfig } from "@/components/views/data-dialog";
+import { Menu } from "../store/menuStore";
 
-export interface ModifierMenu extends Model {
-  id?: number;
-  label: string;
-  icon: string;
-  code: string;
-  // 0 is menu directory, 1 is menu, 2 is button action
-  type: number;
-  routePath: string;
-  routeName: string;
-  componentPath: string;
-  order: number;
-  parentId?: number;
-  parentName?: string;
-}
 
-export const menuDialogConfig: DialogConfig<ModifierMenu> = {
+export const menuDialogConfig: DialogConfig<Menu> = {
   title: "",
   request: {
     url: "",
     method: "post",
   },
-  model: <ModifierMenu>{},
+  model: <Menu>{},
   rules: {
     label: [
       {

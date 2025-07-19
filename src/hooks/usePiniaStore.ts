@@ -1,6 +1,5 @@
-import { Model } from "@/components/views/data-dialog";
 import { PageData, QueryPageData } from "@/http/HttpDefine";
-import request from "@/http/uniformRequest";
+import request from "@/http/UniformRequest";
 import { ContentType } from "@/plugins/request";
 import { defineStore } from "pinia";
 

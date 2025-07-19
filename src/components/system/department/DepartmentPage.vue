@@ -10,15 +10,14 @@
 </template>
 
 <script setup lang="ts">
-import ListPage from "@/components/views/ListPage.vue";
+import ListPage from "@/components/views/ListPage.vue"
 import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
-import { ModifierDepartment } from "./config/depart-data-dialog";
 import { departListPage } from "./config/depart-list-page";
 import { Department, useDepartmentStore } from "./store/departmentStore";
 
 const departmentStore = useDepartmentStore();
 
-const pageProxyHandler = usePageProxyHandler<ModifierDepartment, Department>({
+const pageProxyHandler = usePageProxyHandler<Department>({
   onSearch(searchParams, tableData) {
     departmentStore
       .fetchPage({
@@ -39,7 +38,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierDepartment, Department>({
       config.desc = "添加子级部门前，需要先选中一个部门！";
       config.request.url = "/api/manage/department/add";
       config.request.method = "post";
-      config.model = <ModifierDepartment>{
+      config.model = <Department>{
         pid: 0,
         parentName: "",
         orderNum: 0,

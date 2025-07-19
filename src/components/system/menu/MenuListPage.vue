@@ -12,13 +12,12 @@
 import ListPage from "@/components/views/ListPage.vue";
 import { usePageProxyHandler } from "@/components/views/pageProxyHandler";
 import { ElMessage } from "element-plus";
-import { ModifierMenu } from "./config/menu-data-dialog";
 import { menuListPage } from "./config/menu-list-page";
 import { Menu, useMenuStore } from "./store/menuStore";
 
 const menuStore = useMenuStore();
 
-const pageProxyHandler = usePageProxyHandler<ModifierMenu, Menu>({
+const pageProxyHandler = usePageProxyHandler<Menu>({
   onSearch(searchParams, tableData) {
     menuStore
       .fetchPage({

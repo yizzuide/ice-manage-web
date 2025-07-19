@@ -85,5 +85,33 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
         },
       },
     },
+    build: {
+      // 禁用CSS代码分割，将所有CSS打包到JS中
+      cssCodeSplit: false,
+      rollupOptions: {
+        output: {
+          // 自定义文件命名，使用hash
+          entryFileNames: 'js/[name].[hash].js',
+          chunkFileNames: 'js/[name].[hash].js',
+          assetFileNames: (assetInfo) => {
+            // 图片资源放在images目录，使用hash
+            // 遍历assetInfo.names
+            let len = assetInfo.names.length;
+            for(var i = 0; i < len; i++) {
+              if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.names[i] || '')) {
+                return 'images/[name].[hash].[ext]';
+              }
+              // 其他资源使用hash
+              return 'assets/[name].[hash].[ext]';
+            }
+          },
+          // 手动控制代码分割，减少chunk数量
+          manualChunks: {
+            vue: ['vue', 'vue-router', 'pinia'],
+            elementPlus: ['element-plus']
+          }
+        }
+      }
+    }
   };
 });

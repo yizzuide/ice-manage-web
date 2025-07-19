@@ -13,8 +13,7 @@ module.exports = {
   // 继承的配置
   extends: [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
+    "@typescript-eslint/recommended",
     "plugin:vue/vue3-essential",
   ],
   overrides: [],

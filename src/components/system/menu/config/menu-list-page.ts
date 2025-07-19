@@ -1,5 +1,6 @@
 import { Page, SearchParamsProp } from "@/components/views/list-page";
-import { menuDialogConfig, ModifierMenu } from "./menu-data-dialog";
+import { menuDialogConfig } from "./menu-data-dialog";
+import { Menu } from "../store/menuStore";
 
 enum MenuType {
   DIRECTORY,
@@ -7,7 +8,7 @@ enum MenuType {
   BUTTON,
 }
 
-export const menuListPage: Page<ModifierMenu> = {
+export const menuListPage: Page<Menu> = {
   perms: {
     add: "sys:menu:add",
     update: "sys:menu:edit",

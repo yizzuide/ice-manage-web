@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T extends string">
 import { ref, defineModel } from "vue";
 import { ActionSettings } from "./data-dialog";
 import UploadDialog from "./UploadDialog.vue";

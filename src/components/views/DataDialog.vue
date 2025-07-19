@@ -5,7 +5,7 @@
       <div class="dialog-title">{{ config.title }}</div>
       <div class="dialog-desc" v-if="config.desc">{{ config.desc }}</div>
     </template>
-    <el-form :model="model" :rules="config.rules" ref="formRef">
+    <el-form :model="model as Model" :rules="config.rules" ref="formRef">
       <div v-for="item in boards" :key="item.fieldName" :style="dialogItemStyle(item)">
         <el-form-item :label="item.label" :prop="item.fieldName"
           :label-width="item.layoutInline ? (item.layoutInlineStart ? '35%' : '0px') : '35%'">
@@ -13,9 +13,8 @@
           <el-input :type="item.multiple ? 'textarea' : 'text'" v-model="model[item.fieldName]"
             :show-password="item.isPassword"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
-            :autosize="item.multiple && { minRows: 3 }" autocomplete="off" clearable style="width: 65%" v-else-if="(!item.type || item.type == 'text') &&
-              (item.displayTest
-                ? item.displayTest(getOpsType(), model as T) : true)" />
+            :autosize="item.multiple && { minRows: 3 }" autocomplete="off" clearable style="width: 65%"
+            v-else-if="(!item.type || item.type == 'text') && (item.displayTest ? item.displayTest(getOpsType(), model as T) : true)" />
           <el-input-number v-model="model[item.fieldName]" v-bind="item.customProps"
             :controls-position="item.numberUsedMill ? 'right' : ''" :min="item.numberMin ?? 0"
             :max="item.numberMax ?? Infinity"
@@ -36,7 +35,7 @@
             :props="getCascaderProps(item)"
             :disabled="item.isDisable || (item.disableTest && item.disableTest(getOpsType(), model as T)) || config.type == 'readonly'"
             clearable v-else-if="item.type == 'cascaded'" style="width: 65%"
-            :separator="item.cascadedSeparator ? item.cascadedSeparator : '/'" @change="item.selectChange" />
+            :separator="item.cascadedSeparator ? item.cascadedSeparator : '/'" @change="item.selectChange && item.selectChange({value: $event, boards: ref(boards)})" />
           <el-color-picker v-model="model[item.fieldName]" v-else-if="item.type == 'colorPicker'" />
           <el-date-picker v-model="model[item.fieldName]" type="date" placeholder="选择日期" format="YYYY 年 MM 月 DD 日"
             :default-value="dayjs().toDate()" :value-format="item.dateValueFormat" v-else-if="item.type == 'datePicker'">
@@ -109,9 +108,9 @@
   </el-dialog>
 </template>
 
-<script setup lang="ts" generic="T extends Model">
+<script setup lang="ts" generic="T">
 import useEventBus from "@/hooks/useEventBus";
-import request from "@/http/uniformRequest";
+import request from "@/http/UniformRequest";
 import { ContentType } from "@/plugins/request";
 import { Plus } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
@@ -120,8 +119,8 @@ import { isFunction } from "lodash";
 import { Ref, UnwrapRef, nextTick, readonly, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import JsonEditor from "vue3-ts-jsoneditor";
-import { Board, DialogConfig, LogData, Model, OperationType } from "./data-dialog";
 import ActionButton from "./ActionButton.vue";
+import { Board, DialogConfig, LogData, OperationType } from "./data-dialog";
 
 const route = useRoute();
 const eventBus = useEventBus();
@@ -140,7 +139,7 @@ const emit = defineEmits<{
   close: [conform: boolean, conformWithError: boolean];
 }>();
 
-let origModel = { ...props.config.model };
+let origModel: TypeModel<T> = { ...props.config.model } as TypeModel<T>;
 
 // 组件在哪里修改，就在哪里定义Ref
 const showDialog = ref(props.visible);
@@ -165,7 +164,7 @@ watch(
   () => props.config.model,
   (newModel) => {
     model.value = newModel as UnwrapRef<T>;
-    origModel = { ...newModel };
+    origModel = { ...newModel } as TypeModel<T>;
   });
 
 
@@ -212,16 +211,16 @@ function onClose(command: () => void) {
 }
 
 function doConform() {
-  formRef.value?.validate((valid, fields) => {
+  formRef.value?.validate((valid, invalidFields) => {
     if (!valid) {
       ElMessage.error("输入格式不正确！");
-      return false;
+      return;
     }
 
     if (props.config.request.beforeRequest) {
       const isPass = props.config.request.beforeRequest((readonly(model) as Ref<T>).value);
       if (!isPass) {
-        return false;
+        return;
       }
     }
 
@@ -230,11 +229,11 @@ function doConform() {
     const allFieldCount = props.config.board.length;
     let ignoreFieldCount = 0;
     let needUpdate = true;
-    let requestData = <T>{};
+    let requestData = <Model>{};
     if (opsType === OperationType.UPDATE) {
-      (requestData as Model).id = model.value.id;
+      requestData.id = model.value.id;
     } else {
-      requestData = model.value as T;
+      requestData = model.value;
     }
     props.config.board.forEach((item) => {
       if (opsType === OperationType.UPDATE) {
@@ -245,9 +244,9 @@ function doConform() {
           }
           return;
         }
-        (requestData as Model)[item.fieldName] = model.value[item.fieldName];
+        requestData[item.fieldName] = model.value[item.fieldName];
       }
-      item.format && ((requestData as Model)[item.fieldName] = item.format(
+      item.format && (requestData[item.fieldName] = item.format(
             requestData[item.fieldName],
             opsType,
             model as Ref<T>
@@ -261,10 +260,10 @@ function doConform() {
 
     // 请求参数格式化
     if (props.config.request.requestDataFormat) {
-      requestData = props.config.request.requestDataFormat(requestData);
+      requestData = props.config.request.requestDataFormat(requestData as T);
     }
 
-    request({
+    request<T>({
       url: props.config.request.url,
       method: props.config.request.method,
       params: requestData,

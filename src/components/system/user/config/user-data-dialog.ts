@@ -1,36 +1,24 @@
 import { useUserInfo } from "@/components/login/hooks/useUserInfo";
 import {
   DialogConfig,
-  Model,
   OperationType,
   SelectOptions,
 } from "@/components/views/data-dialog";
 import { Page } from "@/components/views/list-page";
 import { Ref } from "vue";
 import { Department } from "../../department/store/departmentStore";
-import { useUsersStore } from "../store/usersStore";
+import { User, useUsersStore } from "../store/usersStore";
 
-export interface ModifierUser extends Model {
-  id?: number;
-  username: string;
-  password?: string;
-  realName: string;
-  nickName: string;
-  gender: number;
-  departmentId: number;
-  departmentName?: string;
-  phone: string;
-  email?: string;
-}
+
 // department list -> selectOption list
 export function initDialogData(
-  userListPage: Ref<Page<ModifierUser>>,
+  userListPage: Ref<Page<User>>,
   list: Department[]
 ) {
   const inputItem = userListPage.value.struct.dialogConfig?.board.find(
     (item) => item.fieldName === "departmentId"
   );
-  const recurMap = (list: Department[]): SelectOptions<ModifierUser>[] => {
+  const recurMap = (list: Department[]): SelectOptions<User>[] => {
     return list.map((depart) => ({
       label: depart.departmentName,
       value: depart.id,
@@ -40,13 +28,13 @@ export function initDialogData(
   inputItem!.selectOptions = recurMap(list);
 }
 
-export const userDialogConfig: DialogConfig<ModifierUser> = {
+export const userDialogConfig: DialogConfig<User> = {
   title: "",
   request: {
     url: "",
     method: "post",
   },
-  model: <ModifierUser>{},
+  model: <User>{},
   rules: {
     username: [
       {

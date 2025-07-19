@@ -2,8 +2,6 @@ import { ContentType, RequestInterceptor } from "@/plugins/request";
 import { UploadFile, UploadRawFile } from "element-plus";
 import { Ref } from "vue";
 
-export type Model = Record<string, any>;
-
 // dialog operation type
 export enum OperationType {
   ADD,
@@ -94,7 +92,7 @@ export interface Board<T> {
   format?: (value: any, operationType: OperationType, row: Ref<T>) => any;
 }
 
-export interface DialogConfig<T extends Model> {
+export interface DialogConfig<T> {
   type?: "normal" | "readonly";
   width?: string;
   title: string;

@@ -1,7 +1,8 @@
 import { Page, SearchParamsProp } from "@/components/views/list-page";
-import { ModifierUser, userDialogConfig } from "./user-data-dialog";
+import { userDialogConfig } from "./user-data-dialog";
+import { User } from "../store/usersStore";
 
-export const userListPage: Page<ModifierUser> = {
+export const userListPage: Page<User> = {
   perms: {
     add: "sys:user:add",
     update: "sys:user:edit",

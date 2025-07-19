@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import { ContentType } from "@/plugins/request";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import request, { cachedRequest } from "@/http/uniformRequest";
+import request, { cachedRequest } from "@/http/UniformRequest";
+import { ContentType } from "@/plugins/request";
 import { DynamicMenu } from "@/tools/dynamicRoutes";
+import { defineStore } from "pinia";
 
 export interface UserInfo {
   uid: number;

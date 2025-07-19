@@ -1,14 +1,14 @@
 import { Ref } from "vue";
-import { DialogConfig, Model, OperationType, LogData } from "./data-dialog";
+import { DialogConfig, OperationType, LogData } from "./data-dialog";
 import { OperationNamed, SearchParams } from "./list-page";
 import useEventBus from "@/hooks/useEventBus";
 import { ElTable } from "element-plus";
 import { useRouter } from "vue-router";
 
 /**
- * Page处理器参数（D: Dialog模型类型，R: 表记录行的类型）
+ * Page处理器参数（R: 表记录行的类型）
  */
-export interface PageHandlerParams<D extends Model, R = D> {
+export interface PageHandlerParams<R> {
   /**
    * 初始化
    */
@@ -27,13 +27,13 @@ export interface PageHandlerParams<D extends Model, R = D> {
    */
   onOperation?(
     name: OperationNamed,
-    dialogConfig: Ref<DialogConfig<D>>,
-    selectedRow?: R & {canceled: boolean}
+    dialogConfig: Ref<DialogConfig<R>>,
+    selectedRow?: CancelableRow<R>
   ): Promise<void | boolean>;
 }
 
-export const usePageProxyHandler = function <D extends Model, R = D>(
-  params: PageHandlerParams<D, R>
+export const usePageProxyHandler = function <R>(
+  params: PageHandlerParams<R>
 ) {
   let tableRef: Ref<InstanceType<typeof ElTable>>;
   let tableDataRef: Ref<R[]>;
@@ -53,8 +53,8 @@ export const usePageProxyHandler = function <D extends Model, R = D>(
     refresh() {
       this.onSearch(reqParams, tableDataRef);
     },
-    onSelectRow(selectedRow: Model) {
-      currentSelectedRow = selectedRow as R;
+    onSelectRow(selectedRow: R) {
+      currentSelectedRow = selectedRow;
     },
     onSearch(searchParams: SearchParams, tableData: Ref<R[]>, table?: Ref<InstanceType<typeof ElTable>>) {
       reqParams = searchParams;
@@ -66,8 +66,8 @@ export const usePageProxyHandler = function <D extends Model, R = D>(
     },
     onOperation(
       name: OperationNamed,
-      dialogConfig: Ref<DialogConfig<D>>,
-      selectedRow?: R & {canceled: boolean, id:number}
+      dialogConfig: Ref<DialogConfig<R>>,
+      selectedRow?: CancelableRow<R>
     ) {
       if (params.onOperation) {
         params.onOperation(name, dialogConfig, selectedRow).then(res => {

@@ -58,6 +58,7 @@ import { Job, icePushDataDialog } from "./config/ice-data-dialog";
 import { iceListPage, initPageData } from "./config/ice-list-page";
 import { JobInspectInfo, useIceStore } from "./store/iceStore";
 
+
 const showPushDialog = ref(false);
 const pushDialogConfig = ref(icePushDataDialog);
 const icePageConfig = ref(iceListPage);
@@ -65,7 +66,7 @@ const icePageConfig = ref(iceListPage);
 const iceStore = useIceStore();
 const dashboardStore = useDashboardStore();
 
-const pageProxyHandler = usePageProxyHandler<Job, JobInspectInfo>({
+const pageProxyHandler = usePageProxyHandler<JobInspectInfo>({
   init() {
     // 加载主题
     if (dashboardStore.jobStatInfo.topics) {
@@ -83,7 +84,7 @@ const pageProxyHandler = usePageProxyHandler<Job, JobInspectInfo>({
       .fetchPage({
         pageStart: searchParams.searchIndex,
         pageSize: searchParams.searchPageSize,
-        order: searchParams.order ?? -1,
+        order: (searchParams as TypeModel<JobInspectInfo>).order ?? -1,
         entity: {
           id: searchParams.id,
           // 使用redis存储方法，必须提供：id + topic

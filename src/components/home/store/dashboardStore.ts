@@ -1,4 +1,4 @@
-import request from "@/http/uniformRequest";
+import request from "@/http/UniformRequest";
 import { defineStore } from "pinia";
 
 export type KVItem = { name: string; value: number };

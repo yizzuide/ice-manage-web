@@ -1,4 +1,4 @@
-import { DialogConfig, Model, SelectOptions } from "./data-dialog";
+import { DialogConfig, SelectOptions } from "./data-dialog";
 
 export type OperationNamed = "add" | "edit" | "remove";
 
@@ -7,7 +7,7 @@ export enum SearchParamsProp {
   searchDate = "searchDate",
 }
 
-export interface SearchParams extends Model {
+export interface SearchParams {
   searchIndex: number;
   searchPageSize: number;
   searchKeyName?: string;
@@ -26,7 +26,7 @@ export interface SearchItem<T> {
   selectOptions?: SelectOptions<T>[];
 }
 
-export interface TableItem<T extends Model> {
+export interface TableItem<T> {
   prop: string;
   label: string;
   width?: number;
@@ -35,7 +35,7 @@ export interface TableItem<T extends Model> {
   format?: (row: T) => any;
 }
 
-export interface Page<T extends Model> {
+export interface Page<T> {
   // 默认为normal（支持add/edit/remove），audit为审计类型（仅支持修改），readonly方式为自定义（slot=command/operation）
   type?: "normal" | "audit" | "readonly";
   // 动作权限

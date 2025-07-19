@@ -40,7 +40,6 @@ assignDialogConfig,
 initDialogData as initAssignDialogData,
 } from "./config/assign-data-dialog";
 import {
-ModifierUser,
 initDialogData as initUserDialogData,
 } from "./config/user-data-dialog";
 import { userListPage } from "./config/user-list-page";
@@ -54,7 +53,7 @@ const usersStore = useUsersStore();
 const departmentStore = useDepartmentStore();
 const roleStore = useRoleStore();
 
-const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
+const pageProxyHandler = usePageProxyHandler<User>({
   init() {
     // init load department list
     if (!departmentStore.departmentAllTree.length) {
@@ -109,7 +108,7 @@ const pageProxyHandler = usePageProxyHandler<ModifierUser, User>({
       config.title = "添加用户";
       config.request.url = "/api/manage/user/add";
       config.request.method = "post";
-      config.model = <ModifierUser>{
+      config.model = <User>{
         gender: 0,
         departmentId: 1,
       };

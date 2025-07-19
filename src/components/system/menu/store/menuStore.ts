@@ -1,5 +1,5 @@
 import { PageData, QueryPageData } from "@/http/HttpDefine";
-import request from "@/http/uniformRequest";
+import request from "@/http/UniformRequest";
 import { ContentType } from "@/plugins/request";
 import { buildProxyNodeTree, Node } from "@/tools/nodeTree";
 import { defineStore } from "pinia";

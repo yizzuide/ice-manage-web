@@ -13,25 +13,25 @@
               <template #file="{ file }">
                 <template v-if="!file.url">
                   <!-- 远程地址 -->
-                  <div class="imageBox" v-media-match="{ url: file.remoteURL, type: 0 }">
+                  <div class="imageBox" v-media-match="{ url: (file as RemoteUploadUserFile).remoteURL, type: 0 }">
                     <div class="deleteIcon" @click="removeImage(file)">
                       <el-icon>
                         <Delete />
                       </el-icon>
                     </div>
-                    <el-image :preview-src-list="[getUrl(file.remoteURL)]" class="placeholder"
-                      :src="getUrl(file.remoteURL)" />
+                    <el-image :preview-src-list="[getUrl((file as RemoteUploadUserFile).remoteURL)]" class="placeholder"
+                      :src="getUrl((file as RemoteUploadUserFile).remoteURL)" />
                   </div>
-                  <div class="imageBox" v-media-match="{ url: file.remoteURL, type: 1 }">
+                  <div class="imageBox" v-media-match="{ url: (file as RemoteUploadUserFile).remoteURL, type: 1 }">
                     <div class="deleteIcon" @click="removeImage(file)">
                       <el-icon>
                         <Delete />
                       </el-icon>
                     </div>
-                    <video controls :src="getUrl(file.remoteURL)">
-                      <source :src="getUrl(file.remoteURL)" type="video/mp4" />
-                      <source :src="getUrl(file.remoteURL)" type="video/mov" />
-                      <source :src="getUrl(file.remoteURL)" type="video/avi" />
+                    <video controls :src="getUrl((file as RemoteUploadUserFile).remoteURL)">
+                      <source :src="getUrl((file as RemoteUploadUserFile).remoteURL)" type="video/mp4" />
+                      <source :src="getUrl((file as RemoteUploadUserFile).remoteURL)" type="video/mov" />
+                      <source :src="getUrl((file as RemoteUploadUserFile).remoteURL)" type="video/avi" />
                     </video>
                   </div>
                 </template>
@@ -98,11 +98,11 @@ watch(() => modelValue.value, (urls) => {
     fileList.value = [];
     return;
   }
-  fileList.value = urls.map((url: string) => ({
+  fileList.value = urls.map((url: string) => (<RemoteUploadUserFile>{
     url: undefined,
     remoteURL: url,
     name: url,
-  })) as RemoteUploadUserFile[];
+  }));
 }, { immediate: true });
 
 
@@ -145,7 +145,7 @@ const handleSuccess = (response: any, uploadFile: UploadFile, uploadFiles: Uploa
 
 };
 
-const removeImage = (file: UploadRawFile) => {
+const removeImage = (file: UploadFile) => {
   fileList.value = fileList.value.filter(item => item.name !== file.name);
 };
 
