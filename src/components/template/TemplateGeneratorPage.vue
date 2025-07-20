@@ -210,7 +210,7 @@ async function generateTemplate() {
       metadata.package = "com.example";
     }
 
-    var zipFileName = "";
+    let zipFileName = "";
     // 处理每个模板文件
     for (const [fileName, content] of Object.entries(templateFiles)) {
       const template = Handlebars.compile(content);

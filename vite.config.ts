@@ -11,13 +11,14 @@ import {
   ElementPlusResolve,
 } from "vite-plugin-style-import";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ command, mode }: ConfigEnv) => {
-  console.log("vite mode: ", mode);
+export default defineConfig((_env: ConfigEnv) => {
+  const env = loadEnv(
+    _env.mode,
+    path.resolve(process.cwd(), "./src/config"),
+    "__"
+  );
   console.log("node mode: ", process.env.NODE_ENV);
-  const env = loadEnv(mode, path.resolve(process.cwd(), "./src/config"), "__");
   console.log("env: ", env);
-  // 环境配置可根据 mode =? dev or prod
   return {
     envDir: path.resolve(process.cwd(), "./src/config"),
     envPrefix: ["VITE", "__"],
@@ -88,6 +89,8 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
     build: {
       // 禁用CSS代码分割，将所有CSS打包到JS中
       cssCodeSplit: false,
+      // 资源目录
+      //assetsDir: "assets",
       rollupOptions: {
         output: {
           // 自定义文件命名，使用hash
@@ -97,7 +100,7 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
             // 图片资源放在images目录，使用hash
             // 遍历assetInfo.names
             let len = assetInfo.names.length;
-            for(var i = 0; i < len; i++) {
+            for(let i = 0; i < len; i++) {
               if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.names[i] || '')) {
                 return 'images/[name].[hash].[ext]';
               }
@@ -106,12 +109,17 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
             }
           },
           // 手动控制代码分割，减少chunk数量
-          manualChunks: {
-            vue: ['vue', 'vue-router', 'pinia'],
-            elementPlus: ['element-plus']
-          }
-        }
-      }
-    }
+          manualChunks: (moduleId, meta) => {
+            if (["vue", "vue-router", "pinia"].includes(moduleId)) {
+              return "vue";
+            }
+            if (moduleId.includes("element-plus")) {
+              return "element-plus";
+            }
+            return null;
+          },
+        },
+      },
+    },
   };
 });

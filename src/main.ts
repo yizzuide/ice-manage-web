@@ -6,6 +6,7 @@ import "gsap";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { VueQueryPlugin } from "@tanstack/vue-query";
+// @ts-ignore
 import Colada, { PiniaColadaPlugin } from "colada-plugin";
 import router from "./router";
 import EventBus from "./plugins/EventBus";
