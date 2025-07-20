@@ -104,6 +104,9 @@ export default defineConfig((_env: ConfigEnv) => {
               if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.names[i] || '')) {
                 return 'images/[name].[hash].[ext]';
               }
+              if (/\.(css)$/i.test(assetInfo.names[i])) {
+                return "css/[name].[hash].[ext]";
+              }
               // 其他资源使用hash
               return 'assets/[name].[hash].[ext]';
             }
