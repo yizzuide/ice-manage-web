@@ -113,7 +113,7 @@ export default defineConfig((_env: ConfigEnv) => {
           },
           // 手动控制代码分割，减少chunk数量
           manualChunks: (moduleId, meta) => {
-            if (["vue", "vue-router", "pinia"].includes(moduleId)) {
+            if (moduleId.includes("vue")) {
               return "vue";
             }
             if (moduleId.includes("element-plus")) {
